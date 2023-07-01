@@ -181,7 +181,7 @@ function Sidebar(props) {
               <Box p={2} mt="auto">
                 <Button
                   variant="gradient"
-                  color="info"
+                  color="secondary"
                   onClick={() => Navigate("/sign-in")}
                 >
                   Sign Out

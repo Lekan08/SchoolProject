@@ -161,13 +161,11 @@ function SignIn() {
                     src={logo}
                     alt="companylogo"
                     style={{
-                      height: "15vh",
-                      width: "40vh",
+                      width: "5vw",
                       borderRadius: "10px",
                       marginLeft: "auto",
                       marginRight: "auto",
                       display: "flex",
-                      marginTop: "3vw",
                     }}
                   />
                   {/* <h1
@@ -266,12 +264,13 @@ function SignIn() {
                     <Box mb={1} mt={-1} textAlign="center">
                       <Typography
                         component={Link}
-                        to="/authentication/resetpassword"
-                        onClick={() => Navigate("/reset-password")}
+                        // to="/authentication/resetpassword"
+                        // onClick={() => Navigate("/reset-password")}
                         variant="button"
-                        color="info"
+                        color="primary"
                         fontWeight="medium"
                         id="forgotpassword"
+                        size="small"
                       >
                         FORGOT PASSWORD?
                       </Typography>
