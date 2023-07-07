@@ -15,36 +15,15 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 
 // reactstrap components
-import logo from "assets/img/react-logo.png";
-import Link from "@mui/material/Link";
-import TextField from "@mui/material/TextField";
-import FormControl from "@mui/material/FormControl";
-import Visibility from "@mui/icons-material/Visibility";
-import InputLabel from "@mui/material/InputLabel";
-import IconButton from "@mui/material/IconButton";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  Chip,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
-import Backdrop from "@mui/material/Backdrop";
-import CircularProgress from "@mui/material/CircularProgress";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputAdornment from "@mui/material/InputAdornment";
-import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
-import Swal from "sweetalert2";
+import { Button, ButtonGroup } from "@mui/material";
+import { Card, Col } from "reactstrap";
 import "../userProfile/Css.css";
 import "../Css.css";
-import { Container } from "@mui/system";
 import { useNavigate } from "react-router-dom";
-import { Grid } from "@mui/material";
+import Students from "./students.jpg";
 
 import { styled } from "@mui/material/styles";
 function SignIn() {
@@ -53,10 +32,6 @@ function SignIn() {
     if (window.location.pathname === "/sign-in") Navigate("/");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const [username, setUsername] = useState("");
-  const [opened, setOpened] = useState(false);
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const handleClick = () => {
     Navigate("/dashboard");
     // setOpened(true);
@@ -145,9 +120,13 @@ function SignIn() {
   }));
   return (
     <>
-      <div className="bubble">
+      <img
+        src={Students}
+        alt="img"
+        style={{ position: "absolute", zIndex: 1, width: "100vw", marginTop: -50, borderRadius: 50 }}
+      />
+      <div className="bubble2">
         {/* <Col md="12"> */}
-
         <Widget
           style={{
             marginTop: "3rem",
@@ -160,7 +139,7 @@ function SignIn() {
           </ButtonGroup>
         </Widget>
         <div
-        className="row-res"
+          className="row-res"
           style={{
             // height: "100vh",
             padding: 10,
@@ -173,6 +152,7 @@ function SignIn() {
             marginLeft: "auto",
             alignItems: "center",
             justifyContent: "center",
+            zIndex: 100,
             gridGap: "10vw",
           }}
         >
@@ -181,7 +161,8 @@ function SignIn() {
             className="resizer2"
             style={{
               textAlign: "center",
-              borderRadius: 500,
+            zIndex: 100,
+            borderRadius: 500,
             }}
           >
             <Col
@@ -202,7 +183,8 @@ function SignIn() {
             // className="signbox"
             className="resizer2"
             style={{
-              borderRadius: 500,
+            zIndex: 100,
+            borderRadius: 500,
               textAlign: "center",
             }}
           >
@@ -221,13 +203,6 @@ function SignIn() {
             </Col>
           </Card>
         </div>
-        {/* </Col> */}
-        <Backdrop
-          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={opened}
-        >
-          <CircularProgress sx={{ color: "white" }} />
-        </Backdrop>
       </div>
     </>
   );
