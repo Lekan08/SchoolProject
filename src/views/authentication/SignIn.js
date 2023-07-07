@@ -150,14 +150,14 @@ function SignIn() {
 
         <Container maxWidth="lg" id="home" style={{ position: "absolute" }}>
           <Widget
-            sx={{
+            style={{
               marginTop: "3rem",
               justifyContent: "center",
               textAlign: "center",
             }}
           >
             <ButtonGroup variant="text" aria-label="text button group">
-              <Button>College portal</Button>
+              <Button>School Portal</Button>
             </ButtonGroup>
           </Widget>
         </Container>
