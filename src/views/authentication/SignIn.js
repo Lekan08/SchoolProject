@@ -147,8 +147,6 @@ function SignIn() {
     <>
       <div className="bubble">
         {/* <Col md="12"> */}
-
-        <Container maxWidth="lg" id="home" style={{ position: "absolute" }}>
           <Widget
             style={{
               marginTop: "3rem",
@@ -160,7 +158,6 @@ function SignIn() {
               <Button>School Portal</Button>
             </ButtonGroup>
           </Widget>
-        </Container>
         <div
           style={{
             height: "95vh",
