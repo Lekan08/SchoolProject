@@ -262,7 +262,7 @@ function SignInStudent() {
                     >
                       LOGIN
                     </button>
-                    <Box mb={1} mt={-1} textAlign="center">
+                    <Box mb={1} mt={1} textAlign="center">
                       <Typography
                         component={Link}
                         // to="/authentication/resetpassword"

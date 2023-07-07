@@ -160,10 +160,12 @@ function SignIn() {
           </ButtonGroup>
         </Widget>
         <div
+        className="row-res"
           style={{
-            height: "95vh",
+            // height: "100vh",
             padding: 10,
             margin: 10,
+            marginTop: "10vw",
             display: "grid",
             gridTemplateColumns: "30vw 30vw",
             gridColumnGap: "5vw",
@@ -184,10 +186,11 @@ function SignIn() {
           >
             <Col
               // lg="5"
+              className="col-res"
               style={{
                 marginRight: "auto",
                 cursor: "pointer",
-                lineHeight: "80px",
+                lineHeight: "4rem",
                 marginLeft: "auto",
               }}
               onClick={() => Navigate("/sign-in-student")}
@@ -204,11 +207,12 @@ function SignIn() {
             }}
           >
             <Col
+              className="col-res"
               // lg="5"
               style={{
                 cursor: "pointer",
                 marginRight: "auto",
-                lineHeight: "80px",
+                lineHeight: "4rem",
                 marginLeft: "auto",
               }}
               onClick={() => Navigate("/sign-in-admin")}

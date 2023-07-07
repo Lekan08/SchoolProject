@@ -14,6 +14,12 @@
   transform:translateY(-20px);
 }
 @media screen and (max-width: 450px) {
+  .col-res {
+    line-height: 2rem !important;
+  }
+  .row-res {
+    margin-top: 40vw !important;
+  }
   .signbox {
     width: 95vw !important;
     display: flex !important;

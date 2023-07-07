@@ -7,7 +7,7 @@
   z-index: -1;
   width: 100%;
   background-color: #53f1d7;
-  height: 85%;
+  height: 95%;
   animation: glow 6s infinite;
 }
 @keyframes glow {
