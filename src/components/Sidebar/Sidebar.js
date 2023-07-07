@@ -127,7 +127,8 @@ function Sidebar(props) {
       );
     }
   }
-
+  console.log(routes);
+  console.log(sessionStorage.getItem("admin"));
   return (
     <BackgroundColorContext.Consumer>
       {({ color }) => (
@@ -144,39 +145,81 @@ function Sidebar(props) {
               </div>
             ) : null}
             <Nav>
-              {routes.map((prop, key) => {
-                if (prop.redirect) return null;
-                return (
-                  <li
-                    className={
-                      activeRoute(prop.path) + (prop.pro ? " active-pro" : "")
-                    }
-                    key={key}
-                  >
-                    <NavLink
-                      to={prop.path}
-                      className="nav-link"
-                      onClick={props.toggleSidebar}
-                    >
-                      {/* <i className={prop.icon} /> */}
-                      {/* <Icon style={{maginTop: "30px"}}>{prop.icon}</Icon> */}
-                      <div>
-                        <Icon
-                          style={{
-                            position: "absolute",
-                            display: "inline-block",
-                          }}
+              {JSON.parse(sessionStorage.getItem("admin"))
+                ? routes.map((prop, key) => {
+                    if (prop.redirect) return null;
+                    if (prop.admin)
+                      return (
+                        <li
+                          className={
+                            activeRoute(prop.path) +
+                            (prop.pro ? " active-pro" : "")
+                          }
+                          key={key}
                         >
-                          {prop.icon}
-                        </Icon>
-                        <p style={{ marginLeft: "40px", fontSize: "13px" }}>
-                          {rtlActive ? prop.rtlName : prop.name}
-                        </p>
-                      </div>
-                    </NavLink>
-                  </li>
-                );
-              })}
+                          <NavLink
+                            to={prop.path}
+                            className="nav-link"
+                            onClick={props.toggleSidebar}
+                          >
+                            {/* <i className={prop.icon} /> */}
+                            {/* <Icon style={{maginTop: "30px"}}>{prop.icon}</Icon> */}
+                            <div>
+                              <Icon
+                                style={{
+                                  position: "absolute",
+                                  display: "inline-block",
+                                }}
+                              >
+                                {prop.icon}
+                              </Icon>
+                              <p
+                                style={{ marginLeft: "40px", fontSize: "13px" }}
+                              >
+                                {rtlActive ? prop.rtlName : prop.name}
+                              </p>
+                            </div>
+                          </NavLink>
+                        </li>
+                      );
+                  })
+                : routes.map((prop, key) => {
+                    if (prop.redirect) return null;
+                    if (prop.admin === false)
+                      return (
+                        <li
+                          className={
+                            activeRoute(prop.path) +
+                            (prop.pro ? " active-pro" : "")
+                          }
+                          key={key}
+                        >
+                          <NavLink
+                            to={prop.path}
+                            className="nav-link"
+                            onClick={props.toggleSidebar}
+                          >
+                            {/* <i className={prop.icon} /> */}
+                            {/* <Icon style={{maginTop: "30px"}}>{prop.icon}</Icon> */}
+                            <div>
+                              <Icon
+                                style={{
+                                  position: "absolute",
+                                  display: "inline-block",
+                                }}
+                              >
+                                {prop.icon}
+                              </Icon>
+                              <p
+                                style={{ marginLeft: "40px", fontSize: "13px" }}
+                              >
+                                {rtlActive ? prop.rtlName : prop.name}
+                              </p>
+                            </div>
+                          </NavLink>
+                        </li>
+                      );
+                  })}
               <li className="active-pro"></li>
               <Box p={2} mt="auto">
                 <Button

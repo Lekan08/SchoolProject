@@ -20,7 +20,11 @@ import Notifications from "views/notification/Notifications.js";
 import SignIn from "views/authentication/SignIn";
 import TestCompo from "views/testComponent";
 import Icons from "examples/Icons";
+import Settings from "views/settings";
 import ViewProfile from "views/userProfile/ViewProfile";
+import SignInAdmin from "views/authentication/SignInAdmin";
+import SignInStudent from "views/authentication/SignInStudent";
+import DashboardStudent from "views/dashboard/DashboardStudent";
 var routes = [
   {
     path: "/sign-in",
@@ -29,123 +33,45 @@ var routes = [
     component: SignIn,
   },
   {
+    path: "/sign-in-admin",
+    name: "Sign In As An Admin",
+    redirect: "true",
+    component: SignInAdmin,
+  },
+  {
+    path: "/sign-in-student",
+    name: "Sign In As A Student",
+    redirect: "true",
+    component: SignInStudent,
+  },
+  {
     path: "/dashboard",
-    name: "Dashboard",
+    name: "Admin Dashboard",
     icon: "dashboard",
     component: Dashboard,
+    admin: true,
   },
-  // {
-  //   path: "/customers",
-  //   name: "customers",
-  //   icon: "people",
-  //   component: Customers,
-  // },
-  // {
-  //   path: "/customers/view",
-  //   name: "view customer",
-  //   // icon: "people",
-  //   redirect: "true",
-  //   component: ViewCustomer,
-  // },
-  // {
-  //   path: "/customers/referral",
-  //   name: "customer's referral",
-  //   // icon: "people",
-  //   redirect: "true",
-  //   component: CustomerReferrals,
-  // },
-  // {
-  //   path: "/riders",
-  //   name: "riders",
-  //   icon: "two_wheeler",
-  //   component: Riders,
-  // },
-  // {
-  //   path: "/riders/verify",
-  //   name: "verify rider",
-  //   // icon: "people",
-  //   redirect: "true",
-  //   component: Verification,
-  // },
-  // {
-  //   path: "/riders/view",
-  //   name: "view rider",
-  //   // icon: "people",
-  //   redirect: "true",
-  //   component: ViewRider,
-  // },
-  // {
-  //   path: "/riders/referral",
-  //   name: "rider's referral",
-  //   // icon: "people",
-  //   redirect: "true",
-  //   component: RiderReferrals,
-  // },
-  // {
-  //   path: "/trips",
-  //   name: "Trips",
-  //   icon: "near_me",
-  //   component: Trips,
-  // },
-  // {
-  //   path: "/trips/riders",
-  //   name: "Trips Rider",
-  //   component: AssignRiders,
-  //   icon: "settings",
-  //   redirect: "true",
-  // },
-  // {
-  //   path: "/trips/view",
-  //   name: "View Trip",
-  //   component: ViewTrip,
-  //   icon: "settings",
-  //   redirect: "true",
-  // },
-  // {
-  //   path: "/payment-requests",
-  //   name: "Payment Requests",
-  //   icon: "payment",
-  //   component: PaymentRequests,
-  // },
-  // {
-  //   path: "/locations",
-  //   name: "Locations & Pricing",
-  //   icon: "language",
-  //   component: Location,
-  // },
-  // {
-  //   path: "/locations/gets",
-  //   name: "Locations",
-  //   component: Locationgets,
-  //   icon: "settings",
-  //   redirect: "true",
-  // },
-  // {
-  //   path: "/locations/pricing",
-  //   name: "Pricing",
-  //   component: Pricing,
-  //   icon: "settings",
-  //   redirect: "true",
-  // },
-  // {
-  //   path: "/locations/pricing/update",
-  //   name: "Pricing",
-  //   component: UpdatePricing,
-  //   icon: "settings",
-  //   redirect: "true",
-  // },
+  {
+    path: "/dashboard-student",
+    name: "Student Dashboard",
+    icon: "dashboard",
+    component: DashboardStudent,
+    admin: false,
+  },
   {
     path: "/icons",
     name: "icons",
     icon: "flag",
     component: Icons,
     // redirect: "true",
+    admin: true,
   },
   {
     path: "/notifications",
     name: "Notifications",
     icon: "notifications_active",
     component: Notifications,
+    admin: false,
     // redirect: "true",
   },
 
@@ -155,6 +81,7 @@ var routes = [
     icon: "account_circle",
     component: ViewProfile,
     // redirect: "true",
+    admin: false,
   },
   {
     path: "/testC",
@@ -162,37 +89,18 @@ var routes = [
     icon: "verified_user",
     component: TestCompo,
     // redirect: "true",
+    admin: true,
   },
-  // {
-  //   path: "/roles",
-  //   name: "Roles",
-  //   icon: "assignment",
-  //   component: Roles,
-  // },
-  // {
-  //   path: "/permissions",
-  //   name: "permissions",
-  //   icon: "assignment",
-  //   component: Permissions,
-  //   redirect: "true",
-  // },
-  // {
-  //   path: "/user-management",
-  //   name: "User Management",
-  //   icon: "supervised_user_circle",
-  //   component: UserManagement,
-  //   // redirect: "true",
-  // },
-  // {
-  //   path: "/settings",
-  //   name: "Settings",
-  //   icon: "settings",
-  //   component: Settings,
-  //   // redirect: "true",
-  // },
+  {
+    path: "/settings",
+    name: "settings",
+    icon: "settings",
+    component: Settings,
+    // redirect: "true",
+    admin: true,
+  },
 ];
 export default routes;
-
 
 // import UserProfile from "views/userProfile/UserProfile.js";
 // import Location from "views/locations";
@@ -201,7 +109,6 @@ export default routes;
 // import UpdatePricing from "views/locations/pricing/update";
 // import Trips from "views/trips";
 // import AssignRiders from "views/trips/riders";
-// import Settings from "views/settings";
 // import Riders from "views/riders";
 // import Customers from "views/customers";
 // import ViewCustomer from "views/customers/view";

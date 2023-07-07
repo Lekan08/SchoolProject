@@ -7,6 +7,12 @@
 .paperz {
   margin-left: 20px;
 }
+.resizer2 {
+  transition: all ease 2s;
+}
+.resizer2:hover {
+  transform:translateY(-20px);
+}
 @media screen and (max-width: 450px) {
   .signbox {
     width: 95vw !important;

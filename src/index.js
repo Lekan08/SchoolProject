@@ -32,6 +32,8 @@ import SignIn from "views/authentication/SignIn";
 import ResetPassword from "views/authentication/ResetPassword";
 import Invitation from "views/invitation";
 import CompleteResetPassword from "views/authentication/complete-resetPassword";
+import SignInAdmin from "views/authentication/SignInAdmin";
+import SignInStudent from './views/authentication/SignInStudent';
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
@@ -40,7 +42,10 @@ root.render(
       <BrowserRouter>
         <Routes>
 
-          <Route path="/" element={<SignIn />} />
+        <Route path="/" element={<SignIn />} />
+        <Route path="/sign-in-admin" element={<SignInAdmin />} />
+        <Route path="/sign-in-student" element={<SignInStudent />} />
+
           {/* <Route path="/reset-password" element={<ResetPassword />} /> */}
           {/* <Route path="/authentication/complete-reset-Password" element={<CompleteResetPassword />} /> */}
           {/* <Route path="/authentication/complete-invite-user" element={<Invitation />} /> */}
