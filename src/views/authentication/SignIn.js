@@ -19,15 +19,21 @@ import React, { useState, useEffect } from "react";
 
 // reactstrap components
 import logo from "assets/img/react-logo.png";
-import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
-import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
 import Visibility from "@mui/icons-material/Visibility";
 import InputLabel from "@mui/material/InputLabel";
 import IconButton from "@mui/material/IconButton";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Chip,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -36,9 +42,11 @@ import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
 import Swal from "sweetalert2";
 import "../userProfile/Css.css";
 import "../Css.css";
+import { Container } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import { Grid } from "@mui/material";
 
+import { styled } from "@mui/material/styles";
 function SignIn() {
   const Navigate = useNavigate();
   useEffect(() => {
@@ -121,12 +129,38 @@ function SignIn() {
     //     });
     //   });
   };
-
+  const Widget = styled("div")(({ theme }) => ({
+    padding: 16,
+    borderRadius: 16,
+    maxWidth: "100%",
+    boxShadow: "0px 0px 50px rgba(255,255,255,0.805)",
+    margin: "auto",
+    position: "relative",
+    zIndex: 1,
+    backgroundColor:
+      theme.palette.mode === "dark"
+        ? "rgba(0,0,0,0.6)"
+        : "rgba(255,255,255,0.805)",
+    backdropFilter: "blur(40px)",
+  }));
   return (
     <>
       <div className="bubble">
         {/* <Col md="12"> */}
 
+        <Container maxWidth="lg" id="home" style={{ position: "absolute" }}>
+          <Widget
+            sx={{
+              marginTop: "3rem",
+              justifyContent: "center",
+              textAlign: "center",
+            }}
+          >
+            <ButtonGroup variant="text" aria-label="text button group">
+              <Button>College portal</Button>
+            </ButtonGroup>
+          </Widget>
+        </Container>
         <div
           style={{
             height: "95vh",
@@ -168,7 +202,7 @@ function SignIn() {
             className="resizer2"
             style={{
               borderRadius: 500,
-              textAlign: "center"
+              textAlign: "center",
             }}
           >
             <Col
