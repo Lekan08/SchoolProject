@@ -148,17 +148,17 @@ function SignIn() {
       <div className="bubble">
         {/* <Col md="12"> */}
 
-          <Widget
-            style={{
-              marginTop: "3rem",
-              justifyContent: "center",
-              textAlign: "center",
-            }}
-          >
-            <ButtonGroup variant="text" aria-label="text button group">
-              <Button>School Portal</Button>
-            </ButtonGroup>
-          </Widget>
+        <Widget
+          style={{
+            marginTop: "3rem",
+            justifyContent: "center",
+            textAlign: "center",
+          }}
+        >
+          <ButtonGroup variant="text" aria-label="text button group">
+            <Button>School Portal</Button>
+          </ButtonGroup>
+        </Widget>
         <div
           style={{
             height: "95vh",
