@@ -123,6 +123,7 @@ function SignIn() {
       <img
         src={Students}
         alt="img"
+        className="img-res"
         style={{ position: "absolute", zIndex: 1, width: "100vw", marginTop: -50, borderRadius: 50 }}
       />
       <div className="bubble2">

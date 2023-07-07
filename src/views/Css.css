@@ -20,6 +20,9 @@
   .row-res {
     margin-top: 40vw !important;
   }
+  .img-res {
+    height: 70vh !important;
+  }
   .signbox {
     width: 95vw !important;
     display: flex !important;
