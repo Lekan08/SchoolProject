@@ -25,6 +25,15 @@ import ViewProfile from "views/userProfile/ViewProfile";
 import SignInAdmin from "views/authentication/SignInAdmin";
 import SignInStudent from "views/authentication/SignInStudent";
 import DashboardStudent from "views/dashboard/DashboardStudent";
+import Students from "views/students";
+import StudentAdd from "views/students/Add";
+import StudentMultiple from "views/students/Multiple";
+import Departments from "views/departments";
+import DepartmentAdd from "views/departments/Add";
+import DepartmentMultiple from "views/departments/Multiple";
+import Faculties from "views/faculties";
+import FacultyAdd from "views/faculties/Add";
+import FacultyMultiple from "views/faculties/Multiple";
 var routes = [
   {
     path: "/sign-in",
@@ -52,6 +61,69 @@ var routes = [
     admin: true,
   },
   {
+    path: "/students",
+    name: "Students",
+    icon: "school",
+    component: Students,
+    admin: true,
+  },
+  {
+    path: "/students/add",
+    name: "Add student",
+    icon: "school",
+    component: StudentAdd,
+    redirect: true,
+  },
+  {
+    path: "/students/multiple",
+    name: "Add multiple students",
+    icon: "school",
+    component: StudentMultiple,
+    redirect: true,
+  },
+  {
+    path: "/departments",
+    name: "Departments",
+    icon: "class",
+    component: Departments,
+    admin: true,
+  },
+  {
+    path: "/departments/add",
+    name: "Add department",
+    icon: "school",
+    component: DepartmentAdd,
+    redirect: true,
+  },
+  {
+    path: "/departments/multiple",
+    name: "Add multiple departments",
+    icon: "school",
+    component: DepartmentMultiple,
+    redirect: true,
+  },
+  {
+    path: "/faculties",
+    name: "faculties",
+    icon: "corporate_fare",
+    component: Faculties,
+    admin: true,
+  },
+  {
+    path: "/faculties/add",
+    name: "Add faculty",
+    icon: "school",
+    component: FacultyAdd,
+    redirect: true,
+  },
+  {
+    path: "/faculties/multiple",
+    name: "Add multiple faculties",
+    icon: "school",
+    component: FacultyMultiple,
+    redirect: true,
+  },
+  {
     path: "/dashboard-student",
     name: "Student Dashboard",
     icon: "dashboard",
@@ -63,7 +135,7 @@ var routes = [
     name: "icons",
     icon: "flag",
     component: Icons,
-    // redirect: "true",
+    redirect: "true",
     admin: true,
   },
   {
@@ -72,7 +144,7 @@ var routes = [
     icon: "notifications_active",
     component: Notifications,
     admin: false,
-    // redirect: "true",
+    redirect: "true",
   },
 
   {
@@ -80,7 +152,7 @@ var routes = [
     name: "view Profile",
     icon: "account_circle",
     component: ViewProfile,
-    // redirect: "true",
+    redirect: "true",
     admin: false,
   },
   {
@@ -88,7 +160,7 @@ var routes = [
     name: "test Component",
     icon: "verified_user",
     component: TestCompo,
-    // redirect: "true",
+    redirect: "true",
     admin: true,
   },
   {
@@ -96,7 +168,7 @@ var routes = [
     name: "settings",
     icon: "settings",
     component: Settings,
-    // redirect: "true",
+    redirect: "true",
     admin: true,
   },
 ];
