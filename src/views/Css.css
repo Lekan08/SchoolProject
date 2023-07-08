@@ -8,7 +8,7 @@
   margin-left: 20px;
 }
 .resizer2 {
-  transition: all ease 2s;
+  transition: all ease 2s !important;
 }
 .resizer2:hover {
   transform:translateY(-20px);

@@ -18,7 +18,7 @@
 import React, { useEffect } from "react";
 
 // reactstrap components
-import { Button, ButtonGroup } from "@mui/material";
+import { Button, ButtonGroup, Paper } from "@mui/material";
 import { Card, Col } from "reactstrap";
 import "../userProfile/Css.css";
 import "../Css.css";
@@ -124,7 +124,13 @@ function SignIn() {
         src={Students}
         alt="img"
         className="img-res"
-        style={{ position: "absolute", zIndex: 1, width: "100vw", marginTop: -50, borderRadius: 50 }}
+        style={{
+          position: "absolute",
+          zIndex: 1,
+          width: "100vw",
+          marginTop: -50,
+          borderRadius: 10,
+        }}
       />
       <div className="bubble2">
         {/* <Col md="12"> */}
@@ -157,16 +163,18 @@ function SignIn() {
             gridGap: "10vw",
           }}
         >
-          <Card
+          <Paper
+          elevation={8}
             // className="signbox"
             className="resizer2"
             style={{
               textAlign: "center",
-            zIndex: 100,
-            borderRadius: 500,
+              marginTop: 10,
+              zIndex: 100,
+              borderRadius: 500,
             }}
           >
-            <Col
+            <div
               // lg="5"
               className="col-res"
               style={{
@@ -178,18 +186,20 @@ function SignIn() {
               onClick={() => Navigate("/sign-in-student")}
             >
               Log in as a student
-            </Col>
-          </Card>
-          <Card
+            </div>
+          </Paper>
+          <Paper
+          elevation={8}
             // className="signbox"
             className="resizer2"
             style={{
-            zIndex: 100,
-            borderRadius: 500,
+              zIndex: 100,
+              marginTop: 10,
+              borderRadius: 500,
               textAlign: "center",
             }}
           >
-            <Col
+            <div
               className="col-res"
               // lg="5"
               style={{
@@ -201,8 +211,8 @@ function SignIn() {
               onClick={() => Navigate("/sign-in-admin")}
             >
               Log in as an admin
-            </Col>
-          </Card>
+            </div>
+          </Paper>
         </div>
       </div>
     </>
