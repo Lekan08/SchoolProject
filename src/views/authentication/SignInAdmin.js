@@ -44,82 +44,63 @@ function SignInAdmin() {
     if (window.location.pathname === "/sign-in") Navigate("/");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const [username, setUsername] = useState("");
+  const [usernamex, setUsername] = useState("");
   const [opened, setOpened] = useState(false);
-  const [password, setPassword] = useState("");
+  const [passwordx, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [passwordShown, setPasswordShown] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const togglePassword = () => {
+    // When the handler is invoked
+    // inverse the boolean state of passwordShown
+    setPasswordShown(!passwordShown);
+  };
+
   const handleClick = () => {
     sessionStorage.setItem("admin", true);
     Navigate("/dashboard");
     // setOpened(true);
-    // const myHeaders = new Headers();
-    // myHeaders.append("Content-Type", "application/json");
-    // const raw = JSON.stringify({
-    //   username: username,
-    //   password: password,
-    //   userType: 3,
-    // });
-    // // console.log(raw);
-    // const requestOptions = {
-    //   method: "POST",
-    //   headers: myHeaders,
-    //   body: raw,
-    //   redirect: "follow",
-    // };
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    const raw = JSON.stringify({
+      username: usernamex,
+      password: passwordx,
+      npassword: passwordx,
+    });
+    console.log(raw);
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
     // setOpened(true);
-    // fetch(`${process.env.REACT_APP_MAZA_URL}/login/`, requestOptions)
-    //   .then(async (res) => {
-    //     // console.log(res.headers);;;;
-    //     const aToken = res.headers.get("token-1");
-    //     localStorage.setItem("rexxdex1", aToken);
-    //     return res.json();
-    //   })
-    //   .then((result) => {
-    //     if (result.status === "SUCCESS") {
-    //       // console.log(result);
-    //       const raw2 = JSON.stringify({
-    //         email: username,
-    //       });
-    //       const requestOptions2 = {
-    //         method: "POST",
-    //         headers: myHeaders,
-    //         body: raw2,
-    //         redirect: "follow",
-    //       };
-    //       fetch(
-    //         `${process.env.REACT_APP_MAZA_URL}/users/getByEmail`,
-    //         requestOptions2
-    //       )
-    //         .then(async (res) => {
-    //           const aToken = res.headers.get("token-1");
-    //           localStorage.setItem("rexxdex", aToken);
-    //           return res.json();
-    //         })
-    //         .then((result) => {
-    //           // console.log(result);
-    //           localStorage.setItem("user1", JSON.stringify(result));
-    //           setOpened(false);
-    //           Navigate("/dashboard");
-    //           // setResultd(result);
-    //         });
-    //     } else {
-    //       // alert(result.message);
-    //       setOpened(false);
-    //       Swal.fire({
-    //         title: result.status,
-    //         icon: "error",
-    //         text: result.message,
-    //       });
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     setOpened(false);
-    //     Swal.fire({
-    //       title: error.status,
-    //       icon: "error",
-    //       text: error.message,
-    //     });
-    //   });
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/staffLogin/doLogin`,
+      requestOptions
+    )
+      .then(async (res) => {
+        // console.log(res.headers);;;;
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex1", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        console.log(result);
+        if (result.status === "SUCCESS") {
+          Navigate("/dashboard");
+          localStorage.setItem(result.data);
+        }
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
   };
 
   return (
@@ -212,7 +193,24 @@ function SignInAdmin() {
                           },
                         }}
                       />
-                      <br />
+                    </div>
+                    <div style={{ padding: 10, lineHeight: "7vh" }}>
+                      {/* <TextField
+                        id="outlined-required"
+                        type={passwordShown ? "text" : "password"}
+                        label="Password"
+                        value={passwordx}
+                        onChange={(e) => setPassword(e.target.value)}
+                        sx={{
+                          input: {
+                            // color: "white",
+                            width: "15rem",
+                            fontSize: "0.8em",
+                            height: "1vh",
+                          },
+                        }}
+                      /> */}
+                      {/* <br /> */}
                       <FormControl
                         sx={{ m: 1, width: "17rem" }}
                         variant="outlined"
@@ -221,9 +219,16 @@ function SignInAdmin() {
                           password
                         </InputLabel>
                         <OutlinedInput
+                          id="outlined-required"
+                          type={passwordShown ? "text" : "password"}
+                          // label="Password"
+                          value={passwordx}
                           onChange={(e) => setPassword(e.target.value)}
-                          id="outlined-adornment-password"
-                          type={showPassword ? "text" : "password"}
+                          s
+                          // value={confirmPassword}
+                          // onChange={(e) => setConfirmPassword(e.target.value)}
+                          // id="outlined-adornment-password"
+                          // type={passwordShown ? "text" : "password"}
                           sx={{
                             input: {
                               // color: "white",
@@ -235,7 +240,7 @@ function SignInAdmin() {
                             <InputAdornment position="end">
                               <IconButton
                                 aria-label="toggle password visibility"
-                                onClick={() => setShowPassword(!showPassword)}
+                                onClick={() => togglePassword()}
                                 edge="end"
                               >
                                 {showPassword ? (
@@ -250,6 +255,21 @@ function SignInAdmin() {
                         />
                       </FormControl>
                     </div>
+                    <Box mb={1} mt={-1} textAlign="center">
+                      Don't have an account? &nbsp;
+                      <Typography
+                        component={Link}
+                        // to="/authentication/sign-up-staff"
+                        onClick={() => Navigate("/sign-up-staff")}
+                        variant="button"
+                        color="primary"
+                        fontWeight="medium"
+                        id="forgotpassword"
+                        size="small"
+                      >
+                        Sign Up
+                      </Typography>
+                    </Box>
                     <button
                       type="submit"
                       className="btn btn-custom btn-xs"

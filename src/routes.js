@@ -25,6 +25,8 @@ import ViewProfile from "views/userProfile/ViewProfile";
 import SignInAdmin from "views/authentication/SignInAdmin";
 import SignInStudent from "views/authentication/SignInStudent";
 import DashboardStudent from "views/dashboard/DashboardStudent";
+import SignUpAdmin from "views/authentication/SIgnUpAdmin";
+
 var routes = [
   {
     path: "/sign-in",
@@ -43,6 +45,13 @@ var routes = [
     name: "Sign In As A Student",
     redirect: "true",
     component: SignInStudent,
+  },
+  {
+    path: "/sign-up-staff",
+    name: "Sign up As A Staff",
+    redirect: "true",
+    component: SignUpAdmin,
+    admin: true,
   },
   {
     path: "/dashboard",
