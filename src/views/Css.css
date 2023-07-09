@@ -8,12 +8,21 @@
   margin-left: 20px;
 }
 .resizer2 {
-  transition: all ease 2s;
+  transition: all ease 2s !important;
 }
 .resizer2:hover {
-  transform:translateY(-20px);
+  transform: translateY(-20px);
 }
 @media screen and (max-width: 450px) {
+  .col-res {
+    line-height: 2rem !important;
+  }
+  .row-res {
+    margin-top: 40vw !important;
+  }
+  .img-res {
+    height: 70vh !important;
+  }
   .signbox {
     width: 95vw !important;
     display: flex !important;

@@ -182,7 +182,7 @@ function SignInAdmin() {
                     <div style={{ padding: 10, lineHeight: "7vh" }}>
                       <TextField
                         id="outlined-required"
-                        label="username"
+                        label="email"
                         onChange={(e) => setUsername(e.target.value)}
                         sx={{
                           input: {
@@ -282,7 +282,7 @@ function SignInAdmin() {
                     >
                       LOGIN
                     </button>
-                    <Box mb={1} mt={-1} textAlign="center">
+                    <Box mb={1} mt={1} textAlign="center">
                       <Typography
                         component={Link}
                         // to="/authentication/resetpassword"
