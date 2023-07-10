@@ -25,12 +25,17 @@ import ViewProfile from "views/userProfile/ViewProfile";
 import SignInAdmin from "views/authentication/SignInAdmin";
 import SignInStudent from "views/authentication/SignInStudent";
 import DashboardStudent from "views/dashboard/DashboardStudent";
-import SignUpAdmin from "views/authentication/SIgnUpAdmin";
+import SignUpAdmin from "views/authentication/registration/staff";
+import InviteLecturers from "views/inviteLecturer";
+import SchoolInformation from "views/authentication/registration/addSchool";
+import Faculty from "views/authentication/registration/faculty";
+import Departments from "views/authentication/registration/department";
+// import SignUpAdmin from "views/authentication/SIgnUpAdmin";
 
 import Students from "views/students";
 import StudentAdd from "views/students/Add";
 import StudentMultiple from "views/students/Multiple";
-import Departments from "views/departments";
+// import Departments from "views/departments";
 import DepartmentAdd from "views/departments/Add";
 import DepartmentMultiple from "views/departments/Multiple";
 import Faculties from "views/faculties";
@@ -55,18 +60,46 @@ var routes = [
     redirect: "true",
     component: SignInStudent,
   },
-  {
-    path: "/sign-up-staff",
-    name: "Sign up As A Staff",
-    redirect: "true",
-    component: SignUpAdmin,
-    admin: true,
-  },
+  // {
+  //   path: "/registration",
+  //   name: "Registration",
+  //   redirect: "true",
+  //   component: Registration,
+  //   admin: true,
+  // },
   {
     path: "/dashboard",
     name: "Admin Dashboard",
     icon: "dashboard",
     component: Dashboard,
+    admin: true,
+  },
+  {
+    path: "/schoolInformation",
+    // name: "Admin Dashboard",
+    // icon: "dashboard",
+    component: SchoolInformation,
+    admin: true,
+  },
+  {
+    path: "/sign-up-admin",
+    // name: "Admin Dashboard",
+    // icon: "dashboard",
+    component: SignUpAdmin,
+    admin: true,
+  },
+  {
+    path: "/faculty",
+    // name: "Admin Dashboard",
+    // icon: "dashboard",
+    component: Faculty,
+    admin: true,
+  },
+  {
+    path: "/inviteLecturer",
+    name: "Invite Lecturers",
+    icon: "invite",
+    component: InviteLecturers,
     admin: true,
   },
   {

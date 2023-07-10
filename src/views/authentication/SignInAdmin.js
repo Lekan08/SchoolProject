@@ -59,7 +59,7 @@ function SignInAdmin() {
 
   const handleClick = () => {
     sessionStorage.setItem("admin", true);
-    Navigate("/dashboard");
+    // Navigate("/dashboard");
     // setOpened(true);
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -82,15 +82,15 @@ function SignInAdmin() {
     )
       .then(async (res) => {
         // console.log(res.headers);;;;
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex1", aToken);
+        // const aToken = res.headers.get("token-1");
+        // localStorage.setItem("rexxdex1", aToken);
         return res.json();
       })
       .then((result) => {
         console.log(result);
         if (result.status === "SUCCESS") {
           Navigate("/dashboard");
-          localStorage.setItem(result.data);
+          localStorage.setItem("user", result.data);
         }
       })
       .catch((error) => {
@@ -260,7 +260,7 @@ function SignInAdmin() {
                       <Typography
                         component={Link}
                         // to="/authentication/sign-up-staff"
-                        onClick={() => Navigate("/sign-up-staff")}
+                        onClick={() => Navigate("/schoolInformation")}
                         variant="button"
                         color="primary"
                         fontWeight="medium"
