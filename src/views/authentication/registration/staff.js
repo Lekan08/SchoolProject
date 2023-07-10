@@ -60,7 +60,7 @@ function SignUpAdmin() {
   const handleClick = () => {
     sessionStorage.setItem("admin", true);
     // Navigate("/dashboard");
-    // setOpened(true);
+    setOpened(true);
 
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -102,6 +102,7 @@ function SignUpAdmin() {
           return res.json();
         })
         .then((result) => {
+          setOpened(false);
           if (result.status === "SUCCESS") {
             // localStorage.setItem("admin4", result.data);
             // Navigate("/dashboard");
@@ -128,6 +129,7 @@ function SignUpAdmin() {
                 return res.json();
               })
               .then((result) => {
+                setOpened(false);
                 if (result.status === "SUCCESS") {
                   //   localStorage.setItem("admin", result.data);
                   MySwal.fire({

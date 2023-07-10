@@ -64,7 +64,7 @@ function SignUpAdmin() {
   const handleClick = () => {
     sessionStorage.setItem("admin", true);
     // Navigate("/dashboard");
-    // setOpened(true);
+    setOpened(true);
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     const raw = JSON.stringify({

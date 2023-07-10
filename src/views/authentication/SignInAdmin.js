@@ -34,6 +34,7 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import InputAdornment from "@mui/material/InputAdornment";
 import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
 import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import "../userProfile/Css.css";
 import "../Css.css";
 import { useNavigate } from "react-router-dom";
@@ -50,6 +51,8 @@ function SignInAdmin() {
   const [showPassword, setShowPassword] = useState(false);
   const [passwordShown, setPasswordShown] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showLoader, setShowLoader] = useState(false);
+  const MySwal = withReactContent(Swal);
 
   const togglePassword = () => {
     // When the handler is invoked
@@ -59,8 +62,9 @@ function SignInAdmin() {
 
   const handleClick = () => {
     sessionStorage.setItem("admin", true);
+    setShowLoader(true);
     // Navigate("/dashboard");
-    // setOpened(true);
+    setOpened(true);
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     const raw = JSON.stringify({
@@ -87,15 +91,22 @@ function SignInAdmin() {
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         console.log(result);
         if (result.status === "SUCCESS") {
           Navigate("/dashboard");
           localStorage.setItem("user", result.data);
+        } else {
+          MySwal.fire({
+            title: result.status,
+            type: "error",
+            text: result.message,
+          });
         }
       })
       .catch((error) => {
         setOpened(false);
-        Swal.fire({
+        MySwal.fire({
           title: error.status,
           icon: "error",
           text: error.message,
@@ -279,6 +290,7 @@ function SignInAdmin() {
                         marginTop: "4%",
                       }}
                       onClick={handleClick}
+                      loading={showLoader}
                     >
                       LOGIN
                     </button>
@@ -307,7 +319,7 @@ function SignInAdmin() {
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={opened}
         >
-          <CircularProgress sx={{ color: "white" }} />
+          <CircularProgress sx={{ color: "info" }} />
         </Backdrop>
       </div>
     </>

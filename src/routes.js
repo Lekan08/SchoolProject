@@ -79,6 +79,7 @@ var routes = [
     // name: "Admin Dashboard",
     // icon: "dashboard",
     component: SchoolInformation,
+    redirect: "true",
     admin: true,
   },
   {
@@ -86,6 +87,7 @@ var routes = [
     // name: "Admin Dashboard",
     // icon: "dashboard",
     component: SignUpAdmin,
+    redirect: "true",
     admin: true,
   },
   {
@@ -93,6 +95,7 @@ var routes = [
     // name: "Admin Dashboard",
     // icon: "dashboard",
     component: Faculty,
+    redirect: "true",
     admin: true,
   },
   {
@@ -100,6 +103,7 @@ var routes = [
     name: "Invite Lecturers",
     icon: "invite",
     component: InviteLecturers,
+    redirect: "true",
     admin: true,
   },
   {
