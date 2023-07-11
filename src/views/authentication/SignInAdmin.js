@@ -96,7 +96,7 @@ function SignInAdmin() {
         if (result.status === "SUCCESS") {
           Navigate("/dashboard");
           localStorage.setItem("user", result.data);
-          localStorage.setItem("user1", JSON.stringify(result));
+          localStorage.setItem("user1", JSON.stringify(result.data));
         } else {
           Swal.fire({
             title: result.status,
@@ -124,7 +124,7 @@ function SignInAdmin() {
             marginRight: "auto",
             marginLeft: "auto",
             paddingLeft: "2vw",
-            marginTop: "10vh",
+            marginTop: "5vh",
             width: "40vw",
           }}
         >
@@ -207,22 +207,7 @@ function SignInAdmin() {
                       />
                     </div>
                     <div style={{ padding: 10, lineHeight: "7vh" }}>
-                      {/* <TextField
-                        id="outlined-required"
-                        type={passwordShown ? "text" : "password"}
-                        label="Password"
-                        value={passwordx}
-                        onChange={(e) => setPassword(e.target.value)}
-                        sx={{
-                          input: {
-                            // color: "white",
-                            width: "15rem",
-                            fontSize: "0.8em",
-                            height: "1vh",
-                          },
-                        }}
-                      /> */}
-                      {/* <br /> */}
+          
                       <FormControl
                         sx={{ m: 1, width: "17rem" }}
                         variant="outlined"

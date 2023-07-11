@@ -101,7 +101,7 @@ function Sidebar(props) {
           // target="_blank"
           onClick={props.toggleSidebar}
         >
-          {data11?.firstName || "Student"} {data11?.lastName}
+          {data11?.firstName} {data11?.lastName}
         </a>
       );
     } else {
@@ -127,8 +127,6 @@ function Sidebar(props) {
       );
     }
   }
-  console.log(routes);
-  console.log(sessionStorage.getItem("admin"));
   return (
     <BackgroundColorContext.Consumer>
       {({ color }) => (
