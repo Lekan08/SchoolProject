@@ -2,29 +2,116 @@ import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
+import AllCountriesAndStates from "countries-states-master/countries";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import { AccountCircleSharp, LocationCity, School } from "@mui/icons-material";
+import { Form } from "react-bootstrap";
 import { Card } from "@mui/material";
-import {
-  Button,
-  FormGroup,
-  Form,
-  Input,
-  Row,
-  Col,
-  CardBody,
-  //   Card,
-} from "reactstrap";
+import { Button, FormGroup, Input, Row, Col, CardBody } from "reactstrap";
+import Navigate from "useNavigate";
 
 export default function SchoolAdd() {
   const [opened, setOpened] = useState(false);
-  //   const [items, setItems] = useState([]);
-  //   const { allPHeaders: myHeaders } = PHeaders();
-  //   const { allGHeaders: miHeaders } = GHeaders();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [head, setHead] = useState("");
+  const [city, setCity] = useState("");
+  const [street, setStreet] = useState("");
+  const { countriesAndStates: AlCountry } = AllCountriesAndStates();
+  const [allStates, setAllStates] = useState([]);
+  const [residentialStatex, setResidentialState] = useState("");
+  const [residentialCountryx, setResidentialCountry] = useState("");
+
+  const handleOnChangeRCCountry = (e) => {
+    console.log(type);
+    if (e.target.value) {
+      const filteredItems = AlCountry.filter(
+        (item) => item.name === e.target.value
+      );
+      setAllStates(filteredItems[0].states);
+      setResidentialCountry(e.target.value);
+    } else {
+      setResidentialCountry(e.target.value);
+      setAllStates([]);
+    }
+  };
+
+  const handleOnChangeRCState = (e) => {
+    setResidentialState(e.target.value);
+  };
+  const [type, setType] = useState("");
+  const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
   //   const queryString = window.location.search;
   //   const urlParams = new URLSearchParams(queryString);
   //   const idx = urlParams.get("id");
+  const handleAdd = () => {
+    // const data11 = JSON.parse(localStorage.getItem("user1"));
+    // const id = data11.id;
+
+    const raw = JSON.stringify({
+      name: name,
+      email: email,
+      head: head,
+      city: city,
+      street: street,
+      state: residentialStatex,
+      country: residentialCountryx,
+      schoolType: Number(type),
+    });
+    console.log(raw);
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+    setOpened(true);
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/schools/add`, requestOptions)
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        if (result.message === "Expired Access") {
+          Navigate("/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          Navigate("/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          Navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        console.log(result);
+        if (result.status === "SUCCESS") {
+          Swal.fire({
+            title: result.status,
+            icon: "success",
+            text: result.message,
+          });
+        } else {
+          Swal.fire({
+            title: result.status,
+            icon: "error",
+            text: result.message,
+          });
+        }
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
 
   return (
     <div className="content">
@@ -44,7 +131,7 @@ export default function SchoolAdd() {
               <FormGroup>
                 <label>Name</label>
                 <Input
-                  onChange={() => {}}
+                  onChange={(e) => setName(e.target.value)}
                   // defaultValue={`${data11.firstName}`}
                   placeholder="First Name"
                   //   value={firstName}
@@ -57,6 +144,7 @@ export default function SchoolAdd() {
               <FormGroup>
                 <label htmlFor="exampleInputEmail1">Email address</label>
                 <Input
+                  onChange={(e) => setEmail(e.target.value)}
                   // value=""
                   placeholder="School mail goes here"
                   type="email"
@@ -69,11 +157,11 @@ export default function SchoolAdd() {
               <FormGroup>
                 <label>Head</label>
                 <Input
-                  onChange={() => {}}
                   // defaultValue={`${data11.lastName}`}
                   placeholder="head"
                   //   onChange={() => console.log()}
                   type="text"
+                  onChange={(e) => setHead(e.target.value)}
                   //   value={items[0]?.walletBalance}
                   // disabled
                 />
@@ -82,15 +170,17 @@ export default function SchoolAdd() {
             <Col md="6" className="pl-md-1">
               <FormGroup>
                 <label>School Type</label>
-                <Input
-                  onChange={() => {}}
-                  // defaultValue={`${data11.lastName}`}
-                  placeholder="school"
-                  //   onChange={() => console.log()}
-                  type="text"
-                  //   value={items[0]?.walletBalance}
-                  // disabled
-                />
+                <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  value={type || ""}
+                  aria-label="Default select example"
+                  onChange={(e) => setType(e.target.value)}
+                >
+                  <option value="">--Select Type--</option>
+                  <option value="0">University</option>
+                  <option value="1">Polythenic</option>
+                  <option value="2">College Of Education</option>
+                </Form.Select>
               </FormGroup>
             </Col>{" "}
           </Row>
@@ -100,6 +190,7 @@ export default function SchoolAdd() {
                 <label>City</label>
                 <Input
                   // defaultValue={`${data11.city}`}
+                  onChange={(e) => setCity(e.target.value)}
                   placeholder="City"
                   type="text"
                 />
@@ -108,21 +199,36 @@ export default function SchoolAdd() {
             <Col className="pl-md-3" md="4">
               <FormGroup>
                 <label>Country</label>
-                <Input
-                  // defaultValue={`${data11.state}`}
-                  placeholder="School country"
-                  type="text"
-                />
+                <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  value={residentialCountryx || ""}
+                  aria-label="Default select example"
+                  onChange={handleOnChangeRCCountry}
+                >
+                  <option value="">--Select Country--</option>
+                  {AlCountry.map((apic) => (
+                    <option key={apic.code3} value={apic.name}>
+                      {apic.name}
+                    </option>
+                  ))}
+                </Form.Select>
               </FormGroup>
             </Col>
             <Col className="pl-md-3" md="4">
               <FormGroup>
                 <label>State</label>
-                <Input
-                  // defaultValue={`${data11.state}`}
-                  placeholder="School state"
-                  type="text"
-                />
+                <Form.Select
+                  value={residentialStatex || ""}
+                  aria-label="Default select example"
+                  onChange={handleOnChangeRCState}
+                >
+                  <option>--Select State--</option>
+                  {allStates.map((apis) => (
+                    <option key={apis.code} value={apis.name}>
+                      {apis.name}
+                    </option>
+                  ))}
+                </Form.Select>
               </FormGroup>
             </Col>
           </Row>
@@ -131,7 +237,7 @@ export default function SchoolAdd() {
               <FormGroup>
                 <label>Street</label>
                 <Input
-                  onChange={() => {}}
+                  onChange={(e) => setStreet(e.target.value)}
                   // defaultValue={`${data11.lastName}`}
                   placeholder="street"
                   //   onChange={() => console.log()}
@@ -151,7 +257,7 @@ export default function SchoolAdd() {
               marginTop: "20px",
             }}
             color="success"
-            // onClick={() => handleGetStates()}
+            onClick={() => handleAdd()}
           >
             Add School
           </Button>

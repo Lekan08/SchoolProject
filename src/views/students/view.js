@@ -6,7 +6,7 @@ import GHeaders from "getHeader";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import { AccountCircleSharp, School } from "@mui/icons-material";
-import { Card, TextField } from "@mui/material";
+import { Card, TextField, Typography } from "@mui/material";
 import {
   Button,
   FormGroup,
@@ -18,7 +18,7 @@ import {
 } from "reactstrap";
 import { Form } from "react-bootstrap";
 
-export default function StudentAdd() {
+export default function StudentView() {
   const [opened, setOpened] = useState(false);
   const [phonex, setPhonex] = useState(0);
   const [dob, setDob] = useState("");
@@ -38,27 +38,40 @@ export default function StudentAdd() {
     <div className="content">
       <Card mx={2}>
         <CardBody>
-          <School
-            sx={{
-              fontSize: 230,
-              marginLeft: "auto",
+          <Button
+            tag="label"
+            className="data1"
+            color="success"
+            style={{
+              width: "40vw",
+              fontSize: "20px",
               marginRight: "auto",
-              display: "flex",
+              marginLeft: "auto",
+              // height: "50px",
+              marginTop: "20px",
             }}
-          />
+          >
+            <Typography
+              style={{ color: "white", fontSize: "1.5rem" }}
+              variant="h5"
+              className="headz"
+            >
+              Name Of Student
+            </Typography>
+          </Button>
           <br />
           <Row>
             <Col className="pl-md-1" md="6">
               <FormGroup>
                 <label>First Name</label>
                 <Input
-                  onChange={(e) => {
-                    setFname(e.target.value);
-                  }}
+                  //   onChange={(e) => {
+                  //     setFname(e.target.value);
+                  //   }}
                   // defaultValue={`${data11.firstName}`}
                   placeholder="First Name"
                   //   value={firstName}
-                  //   disabled
+                  disabled
                   type="text"
                 />
               </FormGroup>

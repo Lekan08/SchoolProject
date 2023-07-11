@@ -183,10 +183,28 @@ export default function Students() {
                 return `${params.row.firstName} ${params.row.lastName}`;
               },
             },
-            { Header: "Balance", accessor: "walletBalance" },
+            { Header: "Matric number", accessor: "matricNumber" },
+            { Header: "department", accessor: "department" },
+            { Header: "faculty", accessor: "faculty" },
+            { Header: "school", accessor: "school" },
+            { Header: "sex", accessor: "sex" },
             { Header: "city", accessor: "city" },
             { Header: "state", accessor: "state" },
             { Header: "country", accessor: "country" },
+            { Header: "phone number", accessor: "phoneNumber" },
+            { Header: "email", accessor: "email" },
+            {
+              Header: "Date Of Birth",
+              width: 200,
+              accessor: "dateOfBirth",
+              renderCell: (params) => {
+                return `${new Date(
+                  params.row.dateOfBirth
+                ).toLocaleTimeString()}, ${new Date(
+                  params.row.dateOfBirth
+                ).toLocaleDateString()}`;
+              },
+            },
             {
               Header: "options",
               accessor: "id",
@@ -209,7 +227,7 @@ export default function Students() {
                     <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}
                       onClick={() => {
-                        Navigate(`/customers/view?id=${cell.row.id}`);
+                        Navigate(`/students/view?id=${cell.row.id}`);
                       }}
                     >
                       View
@@ -217,12 +235,10 @@ export default function Students() {
                     <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}
                       onClick={() =>
-                        Navigate(
-                          `/customers/referral?id=${cell.row.id}&name=${cell.row.firstName} ${cell.row.lastName}`
-                        )
+                        Navigate(`/students/update?id=${cell.row.id}`)
                       }
                     >
-                      View Referrals
+                      Update
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
@@ -232,60 +248,6 @@ export default function Students() {
           rows: items,
         }}
       />
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <div className="row" style={{ marginTop: "40px" }}>
-            <div className="col-sm-6">
-              <Form.Select
-                value={residentialCountryx || ""}
-                aria-label="Default select example"
-                onChange={handleOnChangeRCCountry}
-              >
-                <option value="">--Select Country--</option>
-                {AlCountry.map((apic) => (
-                  <option key={apic.code3} value={apic.name}>
-                    {apic.name}
-                  </option>
-                ))}
-              </Form.Select>
-            </div>
-            <div className="col-sm-6">
-              <Form.Select
-                value={residentialStatex || ""}
-                aria-label="Default select example"
-                onChange={handleOnChangeRCState}
-              >
-                <option>--Select State--</option>
-                {allStates.map((apis) => (
-                  <option key={apis.code} value={apis.name}>
-                    {apis.name}
-                  </option>
-                ))}
-              </Form.Select>
-            </div>
-          </div>
-          <Box mt={8}>
-            <Button
-              variant="gradient"
-              style={{
-                marginLeft: "auto",
-                marginRight: "auto",
-                display: "flex",
-              }}
-              color="info"
-              //   onClick={() => handleUpdate()}
-            >
-              Get Riders
-            </Button>
-          </Box>
-          <br />
-        </Box>
-      </Modal>
       <Backdrop
         sx={{ color: "white", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={opened}

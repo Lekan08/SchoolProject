@@ -43,6 +43,8 @@ import FacultyAdd from "views/faculties/Add";
 import FacultyMultiple from "views/faculties/Multiple";
 import Schools from "views/school";
 import SchoolAdd from "views/school/Add";
+import StudentView from "views/students/view";
+import StudentUpdate from "views/students/update";
 var routes = [
   {
     path: "/sign-in",
@@ -110,7 +112,7 @@ var routes = [
   },
   {
     path: "/schools",
-    name: "Schools",
+    name: "School Profile",
     icon: "location_city",
     component: Schools,
     admin: true,
@@ -120,7 +122,6 @@ var routes = [
     name: "Schools",
     icon: "location_city",
     component: SchoolAdd,
-    admin: true,
     redirect: true,
   },
   {
@@ -135,6 +136,20 @@ var routes = [
     name: "Add student",
     icon: "school",
     component: StudentAdd,
+    redirect: true,
+  },
+  {
+    path: "/students/view",
+    name: "View student",
+    icon: "school",
+    component: StudentView,
+    redirect: true,
+  },
+  {
+    path: "/students/update",
+    name: "Update student",
+    icon: "school",
+    component: StudentUpdate,
     redirect: true,
   },
   {
