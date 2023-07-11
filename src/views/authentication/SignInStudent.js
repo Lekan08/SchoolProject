@@ -50,6 +50,7 @@ function SignInStudent() {
   const [showPassword, setShowPassword] = useState(false);
   const handleClick = () => {
     sessionStorage.setItem("admin", false);
+    localStorage.setItem("user1", JSON.stringify({firstName: "A Student"}));
     Navigate("/dashboard-student");
     // setOpened(true);
     // const myHeaders = new Headers();
