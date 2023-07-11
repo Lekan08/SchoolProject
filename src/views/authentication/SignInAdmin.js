@@ -72,7 +72,7 @@ function SignInAdmin() {
       password: passwordx,
       npassword: passwordx,
     });
-    console.log(raw);
+    // console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -92,7 +92,7 @@ function SignInAdmin() {
       })
       .then((result) => {
         setOpened(false);
-        console.log(result);
+        // console.log(result);
         if (result.status === "SUCCESS") {
           Navigate("/dashboard");
           localStorage.setItem("user", result.data);
