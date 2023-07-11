@@ -178,7 +178,7 @@ export default function SchoolAdd() {
                 >
                   <option value="">--Select Type--</option>
                   <option value="0">University</option>
-                  <option value="1">Polythenic</option>
+                  <option value="1">Polytechnic</option>
                   <option value="2">College Of Education</option>
                 </Form.Select>
               </FormGroup>

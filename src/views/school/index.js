@@ -57,29 +57,29 @@ export default function Schools() {
     p: 4,
     textAlign: "center",
   };
-  //   useEffect(() => {
-  //     setOpened(true);
-  //     const headers = miHeaders;
-  //     fetch(`${process.env.REACT_APP_SCH_URL}/students/gets/{id}`, { headers })
-  //       .then(async (res) => {
-  //         const aToken = res.headers.get("token-1");
-  //         localStorage.setItem("rexxdex", aToken);
-  //         return res.json();
-  //       })
-  //       .then((result) => {
-  //         setOpened(false);
-  //         console.log(result);
-  //         setItems(result);
-  //       })
-  //       .catch((error) => {
-  //         setOpened(false);
-  //         Swal.fire({
-  //           title: error.status,
-  //           icon: "error",
-  //           text: error.message,
-  //         });
-  //       });
-  //   }, []);
+  useEffect(() => {
+    setOpened(true);
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/schools/gets`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setItems(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  }, []);
   return (
     <div className="content">
       <Paper elevation={8}>
@@ -152,58 +152,61 @@ export default function Schools() {
       <DataTable
         data={{
           columns: [
+            { Header: "Name", accessor: "name" },
+            { Header: "head", accessor: "head" },
+            { Header: "city", accessor: "city" },
+            { Header: "state", accessor: "state" },
+            { Header: "country", accessor: "country" },
             {
-              Header: "Name",
-              accessor: "firstName",
+              Header: "type",
+              accessor: "schoolType",
               renderCell: (params) => {
-                return `${params.row.firstName} ${params.row.lastName}`;
+                if (params.row.schoolType === 1) return "Polytechnic";
+                if (params.row.schoolType === 2) return "College";
+                return "University";
               },
             },
-            { Header: "description", accessor: "description" },
-            { Header: "head", accessor: "head" },
-            { Header: "school", accessor: "school" },
-            { Header: "college", accessor: "college" },
-            {
-              Header: "options",
-              accessor: "id",
-              renderCell: (cell) => (
-                <Dropdown style={{ position: "absolute" }}>
-                  <Dropdown.Toggle
-                    style={{ width: "5rem", height: "30px", padding: 0 }}
-                    variant="info"
-                    size="lg"
-                  >
-                    <Settings
-                      sx={{
-                        textAlign: "center",
-                        fontSize: "18px",
-                      }}
-                    />
-                  </Dropdown.Toggle>
+            // {
+            //   Header: "options",
+            //   accessor: "id",
+            //   renderCell: (cell) => (
+            //     <Dropdown style={{ position: "absolute" }}>
+            //       <Dropdown.Toggle
+            //         style={{ width: "5rem", height: "30px", padding: 0 }}
+            //         variant="info"
+            //         size="lg"
+            //       >
+            //         <Settings
+            //           sx={{
+            //             textAlign: "center",
+            //             fontSize: "18px",
+            //           }}
+            //         />
+            //       </Dropdown.Toggle>
 
-                  <Dropdown.Menu>
-                    <Dropdown.Item
-                      style={{ fontweight: "bold", color: "black" }}
-                      onClick={() => {
-                        Navigate(`/customers/view?id=${cell.row.id}`);
-                      }}
-                    >
-                      View
-                    </Dropdown.Item>
-                    {/* <Dropdown.Item
-                      style={{ fontweight: "bold", color: "black" }}
-                      onClick={() =>
-                        Navigate(
-                          `/customers/referral?id=${cell.row.id}&name=${cell.row.firstName} ${cell.row.lastName}`
-                        )
-                      }
-                    >
-                      View Referrals
-                    </Dropdown.Item> */}
-                  </Dropdown.Menu>
-                </Dropdown>
-              ),
-            },
+            //       <Dropdown.Menu>
+            //         <Dropdown.Item
+            //           style={{ fontweight: "bold", color: "black" }}
+            //           onClick={() => {
+            //             Navigate(`/customers/view?id=${cell.row.id}`);
+            //           }}
+            //         >
+            //           View
+            //         </Dropdown.Item>
+            //         {/* <Dropdown.Item
+            //           style={{ fontweight: "bold", color: "black" }}
+            //           onClick={() =>
+            //             Navigate(
+            //               `/customers/referral?id=${cell.row.id}&name=${cell.row.firstName} ${cell.row.lastName}`
+            //             )
+            //           }
+            //         >
+            //           View Referrals
+            //         </Dropdown.Item> */}
+            //       </Dropdown.Menu>
+            //     </Dropdown>
+            //   ),
+            // },
           ],
           rows: items,
         }}
