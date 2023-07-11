@@ -41,6 +41,8 @@ import DepartmentMultiple from "views/departments/Multiple";
 import Faculties from "views/faculties";
 import FacultyAdd from "views/faculties/Add";
 import FacultyMultiple from "views/faculties/Multiple";
+import Schools from "views/school";
+import SchoolAdd from "views/school/Add";
 var routes = [
   {
     path: "/sign-in",
@@ -105,6 +107,21 @@ var routes = [
     component: InviteLecturers,
     redirect: "true",
     admin: true,
+  },
+  {
+    path: "/schools",
+    name: "Schools",
+    icon: "location_city",
+    component: Schools,
+    admin: true,
+  },
+  {
+    path: "/schools/add",
+    name: "Schools",
+    icon: "location_city",
+    component: SchoolAdd,
+    admin: true,
+    redirect: true,
   },
   {
     path: "/students",

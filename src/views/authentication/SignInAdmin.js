@@ -96,10 +96,11 @@ function SignInAdmin() {
         if (result.status === "SUCCESS") {
           Navigate("/dashboard");
           localStorage.setItem("user", result.data);
+          localStorage.setItem("user1", JSON.stringify(result));
         } else {
-          MySwal.fire({
+          Swal.fire({
             title: result.status,
-            type: "error",
+            icon: "error",
             text: result.message,
           });
         }
@@ -230,12 +231,9 @@ function SignInAdmin() {
                           password
                         </InputLabel>
                         <OutlinedInput
-                          id="outlined-required"
                           type={passwordShown ? "text" : "password"}
                           // label="Password"
-                          value={passwordx}
                           onChange={(e) => setPassword(e.target.value)}
-                          s
                           // value={confirmPassword}
                           // onChange={(e) => setConfirmPassword(e.target.value)}
                           // id="outlined-adornment-password"
@@ -266,21 +264,6 @@ function SignInAdmin() {
                         />
                       </FormControl>
                     </div>
-                    <Box mb={1} mt={-1} textAlign="center">
-                      Don't have an account? &nbsp;
-                      <Typography
-                        component={Link}
-                        // to="/authentication/sign-up-staff"
-                        onClick={() => Navigate("/schoolInformation")}
-                        variant="button"
-                        color="primary"
-                        fontWeight="medium"
-                        id="forgotpassword"
-                        size="small"
-                      >
-                        Sign Up
-                      </Typography>
-                    </Box>
                     <button
                       type="submit"
                       className="btn btn-custom btn-xs"
@@ -306,6 +289,22 @@ function SignInAdmin() {
                         size="small"
                       >
                         FORGOT PASSWORD?
+                      </Typography>
+                    </Box>
+                    <br />
+                    <Box mb={1} mt={-1} textAlign="center">
+                      Don't have an account? &nbsp;
+                      <Typography
+                        component={Link}
+                        // to="/authentication/sign-up-staff"
+                        onClick={() => Navigate("/schoolInformation")}
+                        variant="button"
+                        color="primary"
+                        fontWeight="medium"
+                        id="forgotpassword"
+                        size="small"
+                      >
+                        Sign Up
                       </Typography>
                     </Box>
                   </div>
