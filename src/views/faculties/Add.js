@@ -6,25 +6,119 @@ import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import { AccountCircleSharp, School } from "@mui/icons-material";
 import { Card } from "@mui/material";
+import { Form } from "react-bootstrap";
 import {
   Button,
   FormGroup,
-  Form,
   Input,
   Row,
   Col,
   CardBody,
   //   Card,
 } from "reactstrap";
+import Navigate from "useNavigate";
 
 export default function FacultyAdd() {
   const [opened, setOpened] = useState(false);
-  //   const [items, setItems] = useState([]);
-  //   const { allPHeaders: myHeaders } = PHeaders();
-  //   const { allGHeaders: miHeaders } = GHeaders();
+  const [items, setItems] = useState([]);
+  const [school, setSchool] = useState("");
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [head, setHead] = useState("");
+  const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
   //   const queryString = window.location.search;
   //   const urlParams = new URLSearchParams(queryString);
   //   const idx = urlParams.get("id");
+  useEffect(() => {
+    setOpened(true);
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/schools/getAll`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setItems(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  }, []);
+  const handleAdd = () => {
+    // const data11 = JSON.parse(localStorage.getItem("user1"));
+    // const id = data11.id;
+
+    const raw = JSON.stringify({
+      name: name,
+      description: description,
+      schoolID: school,
+      head: head,
+      // college:
+    });
+    console.log(raw);
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+    setOpened(true);
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/faculties/add`,
+      requestOptions
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        if (result.message === "Expired Access") {
+          Navigate("/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          Navigate("/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          Navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        console.log(result);
+        if (result.status === "SUCCESS") {
+          Swal.fire({
+            title: result.status,
+            icon: "success",
+            text: result.message,
+          }).then(() => Navigate("/faculties"));
+        } else {
+          Swal.fire({
+            title: result.status,
+            icon: "error",
+            text: result.message,
+          });
+        }
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
 
   return (
     <div className="content">
@@ -44,7 +138,9 @@ export default function FacultyAdd() {
               <FormGroup>
                 <label>Name</label>
                 <Input
-                  onChange={() => {}}
+                  onChange={(e) => {
+                    setName(e.target.value);
+                  }}
                   // defaultValue={`${data11.firstName}`}
                   placeholder="First Name"
                   //   value={firstName}
@@ -57,7 +153,9 @@ export default function FacultyAdd() {
               <FormGroup>
                 <label>Description</label>
                 <Input
-                  onChange={() => {}}
+                  onChange={(e) => {
+                    setDescription(e.target.value);
+                  }}
                   // defaultValue={`${data11.lastName}`}
                   placeholder="description"
                   //   onChange={() => console.log()}
@@ -73,7 +171,9 @@ export default function FacultyAdd() {
               <FormGroup>
                 <label>Head</label>
                 <Input
-                  onChange={() => {}}
+                  onChange={(e) => {
+                    setHead(e.target.value);
+                  }}
                   // defaultValue={`${data11.lastName}`}
                   placeholder="head"
                   //   onChange={() => console.log()}
@@ -86,15 +186,19 @@ export default function FacultyAdd() {
             <Col md="4" className="pl-md-1">
               <FormGroup>
                 <label>School</label>
-                <Input
-                  onChange={() => {}}
-                  // defaultValue={`${data11.lastName}`}
-                  placeholder="school"
-                  //   onChange={() => console.log()}
-                  type="text"
-                  //   value={items[0]?.walletBalance}
-                  // disabled
-                />
+                <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  value={school || ""}
+                  aria-label="Default select example"
+                  onChange={(e) => setSchool(e.target.value)}
+                >
+                  <option value="">--Select School--</option>
+                  {items.map((apic) => (
+                    <option key={apic.id} value={apic.id}>
+                      {apic.name}
+                    </option>
+                  ))}
+                </Form.Select>
               </FormGroup>
             </Col>{" "}
             <Col md="4" className="pl-md-1">
@@ -121,7 +225,7 @@ export default function FacultyAdd() {
               marginTop: "20px",
             }}
             color="success"
-            // onClick={() => handleGetStates()}
+            onClick={() => handleAdd()}
           >
             Add Faculty
           </Button>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Box, Modal, Paper, Typography } from "@mui/material";
-import { Button, Card } from "reactstrap";
+import { Button, Card, FormGroup, Col } from "reactstrap";
 import DataTable from "examples/TableList";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -16,7 +16,7 @@ import "../Css.css";
 export default function Faculties() {
   const { countriesAndStates: AlCountry } = AllCountriesAndStates();
   const [allStates, setAllStates] = useState([]);
-
+  const [schools, setSchools] = useState([]);
   const [residentialStatex, setResidentialState] = useState("");
   const [residentialCountryx, setResidentialCountry] = useState("");
   const handleOnChangeRCCountry = (e) => {
@@ -57,29 +57,56 @@ export default function Faculties() {
     p: 4,
     textAlign: "center",
   };
-  //   useEffect(() => {
-  //     setOpened(true);
-  //     const headers = miHeaders;
-  //     fetch(`${process.env.REACT_APP_SCH_URL}/students/gets/{id}`, { headers })
-  //       .then(async (res) => {
-  //         const aToken = res.headers.get("token-1");
-  //         localStorage.setItem("rexxdex", aToken);
-  //         return res.json();
-  //       })
-  //       .then((result) => {
-  //         setOpened(false);
-  //         console.log(result);
-  //         setItems(result);
-  //       })
-  //       .catch((error) => {
-  //         setOpened(false);
-  //         Swal.fire({
-  //           title: error.status,
-  //           icon: "error",
-  //           text: error.message,
-  //         });
-  //       });
-  //   }, []);
+  useEffect(() => {
+    setOpened(true);
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/schools/getAll`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setSchools(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  }, []);
+  const handleFaculty = (val) => {
+    // const data11 = JSON.parse(localStorage.getItem("user1"));
+    // const id = data11.id;
+    setOpened(true);
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/faculties/gets/${val}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setItems(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
   return (
     <div className="content">
       <Paper elevation={8}>
@@ -173,20 +200,37 @@ export default function Faculties() {
         </Card>
       </Paper>
       <br />
+      <Col
+        md="4"
+        className="pl-md-1"
+        style={{
+          justifyContent: "center",
+          marginLeft: "auto",
+          marginRight: "auto",
+        }}
+      >
+        <FormGroup>
+          <Form.Select
+            style={{ marginBottom: "20px" }}
+            // value={idx || ""}
+            aria-label="Default select example"
+            onChange={(e) => handleFaculty(e.target.value)}
+          >
+            <option value="">--Select School--</option>
+            {schools.map((apic) => (
+              <option key={apic.id} value={apic.id}>
+                {apic.name}
+              </option>
+            ))}
+          </Form.Select>
+        </FormGroup>
+      </Col>
       <DataTable
         data={{
           columns: [
-            {
-              Header: "Name",
-              accessor: "firstName",
-              renderCell: (params) => {
-                return `${params.row.firstName} ${params.row.lastName}`;
-              },
-            },
+            { Header: "Name", accessor: "name" },
             { Header: "description", accessor: "description" },
             { Header: "head", accessor: "head" },
-            { Header: "school", accessor: "school" },
-            { Header: "college", accessor: "college" },
             {
               Header: "options",
               accessor: "id",

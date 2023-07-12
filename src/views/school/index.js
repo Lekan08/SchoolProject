@@ -60,7 +60,7 @@ export default function Schools() {
   useEffect(() => {
     setOpened(true);
     const headers = miHeaders;
-    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/schools/gets`, { headers })
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/schools/getAll`, { headers })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -166,47 +166,47 @@ export default function Schools() {
                 return "University";
               },
             },
-            // {
-            //   Header: "options",
-            //   accessor: "id",
-            //   renderCell: (cell) => (
-            //     <Dropdown style={{ position: "absolute" }}>
-            //       <Dropdown.Toggle
-            //         style={{ width: "5rem", height: "30px", padding: 0 }}
-            //         variant="info"
-            //         size="lg"
-            //       >
-            //         <Settings
-            //           sx={{
-            //             textAlign: "center",
-            //             fontSize: "18px",
-            //           }}
-            //         />
-            //       </Dropdown.Toggle>
+            {
+              Header: "options",
+              accessor: "id",
+              renderCell: (cell) => (
+                <Dropdown style={{ position: "absolute" }}>
+                  <Dropdown.Toggle
+                    style={{ width: "5rem", height: "30px", padding: 0 }}
+                    variant="info"
+                    size="lg"
+                  >
+                    <Settings
+                      sx={{
+                        textAlign: "center",
+                        fontSize: "18px",
+                      }}
+                    />
+                  </Dropdown.Toggle>
 
-            //       <Dropdown.Menu>
-            //         <Dropdown.Item
-            //           style={{ fontweight: "bold", color: "black" }}
-            //           onClick={() => {
-            //             Navigate(`/customers/view?id=${cell.row.id}`);
-            //           }}
-            //         >
-            //           View
-            //         </Dropdown.Item>
-            //         {/* <Dropdown.Item
-            //           style={{ fontweight: "bold", color: "black" }}
-            //           onClick={() =>
-            //             Navigate(
-            //               `/customers/referral?id=${cell.row.id}&name=${cell.row.firstName} ${cell.row.lastName}`
-            //             )
-            //           }
-            //         >
-            //           View Referrals
-            //         </Dropdown.Item> */}
-            //       </Dropdown.Menu>
-            //     </Dropdown>
-            //   ),
-            // },
+                  <Dropdown.Menu>
+                    <Dropdown.Item
+                      style={{ fontweight: "bold", color: "black" }}
+                      onClick={() => {
+                        Navigate(`/schools/update?id=${cell.row.id}`);
+                      }}
+                    >
+                      Update
+                    </Dropdown.Item>
+                    {/* <Dropdown.Item
+                      style={{ fontweight: "bold", color: "black" }}
+                      onClick={() =>
+                        Navigate(
+                          `/customers/referral?id=${cell.row.id}&name=${cell.row.firstName} ${cell.row.lastName}`
+                        )
+                      }
+                    >
+                      View Referrals
+                    </Dropdown.Item> */}
+                  </Dropdown.Menu>
+                </Dropdown>
+              ),
+            },
           ],
           rows: items,
         }}

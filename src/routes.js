@@ -45,6 +45,7 @@ import Schools from "views/school";
 import SchoolAdd from "views/school/Add";
 import StudentView from "views/students/view";
 import StudentUpdate from "views/students/update";
+import SchoolUpdate from "views/school/update";
 var routes = [
   {
     path: "/sign-in",
@@ -122,6 +123,13 @@ var routes = [
     name: "Schools",
     icon: "location_city",
     component: SchoolAdd,
+    redirect: true,
+  },
+  {
+    path: "/schools/update",
+    name: "Update School",
+    icon: "location_city",
+    component: SchoolUpdate,
     redirect: true,
   },
   {
