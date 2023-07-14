@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Swal from "sweetalert2";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 import Backdrop from "@mui/material/Backdrop";
@@ -9,22 +8,165 @@ import { Card } from "@mui/material";
 import {
   Button,
   FormGroup,
-  Form,
   Input,
   Row,
   Col,
   CardBody,
   //   Card,
 } from "reactstrap";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { Box } from "@mui/material";
+import Typography from "@mui/material/Typography";
+import Form from "react-bootstrap/Form";
 
 export default function DepartmentAdd() {
   const [opened, setOpened] = useState(false);
-  //   const [items, setItems] = useState([]);
+  const [namex, setName] = useState("");
+  const [descrip, setDescrip] = useState("");
+  const [headOfDepart, setHeadOfDepart] = useState("");
+  const MySwal = withReactContent(Swal);
+  const { allGHeaders: miHeaders } = GHeaders();
+  const [faculty, setFaculty] = useState([]);
+  const [facultyx, setFacultyMap] = useState("");
   //   const { allPHeaders: myHeaders } = PHeaders();
   //   const { allGHeaders: miHeaders } = GHeaders();
   //   const queryString = window.location.search;
   //   const urlParams = new URLSearchParams(queryString);
   //   const idx = urlParams.get("id");
+
+  console.log(faculty);
+  // useEffect(() => {
+  //   setOpened(true);
+  //   const userData = JSON.parse(localStorage.getItem("user"));
+  //   console.log(userData);
+  //   const schId = userData.schoolID;
+  //   const headers = miHeaders;
+  //   fetch(`${process.env.REACT_APP_SCH_URL}/faculties/gets/${schId}`, {
+  //     headers,
+  //   })
+  //     .then(async (res) => {
+  //       // const aToken = res.headers.get("token-1");
+  //       // localStorage.setItem("rexxdex", aToken);
+  //       return res.json();
+  //     })
+  //     .then((result) => {
+  //       setOpened(false);
+  //       console.log(result);
+  //       if (result === []) {
+  //         setFaculty(result);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       setOpened(false);
+  //       console.log(error);
+  //       Swal.fire({
+  //         title: error.status,
+  //         icon: "error",
+  //         text: error.message,
+  //       });
+  //     });
+  // }, []);
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("user"));
+    console.log(userData);
+    const schId = userData.schoolID;
+    const headers = miHeaders;
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_SCH_URL}/faculties/gets/${schId}`, {
+      headers,
+    })
+      .then(async (res) => {
+        // const aToken = res.headers.get("token-1");
+        // localStorage.setItem("rexxdex", aToken);
+        // return res.json();
+        const result = await res.text();
+        // if (result === null || result === undefined || result === "") {
+        //   return {};
+        // }
+        return res.json();
+      })
+      .then((result) => {
+        console.log(result);
+        if (isMounted) {
+          console.log(result);
+          if (Object.keys(result).length !== 0) {
+            console.log("omo");
+            setFaculty(result);
+          }
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+  const handleClick = () => {
+    // sessionStorage.getItem("user");
+    const userData = JSON.parse(localStorage.getItem("user"));
+    console.log(userData);
+    // setOpened(true);
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    const raw = JSON.stringify({
+      name: namex,
+      description: descrip,
+      head: headOfDepart,
+      schoolID: userData.schoolID,
+      // collegeID: userData.schoolID,
+      facultyID: facultyx,
+    });
+    // console.log(raw);
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+    // setOpened(true);
+    // if (passwordx === confirmPassword) {
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/departments/add`,
+      requestOptions
+    )
+      .then(async (res) => {
+        // Navigate("/sign-up-admin");
+        // console.log(res.headers);;;;
+        // const aToken = res.headers.get("token-1");
+        // localStorage.setItem("rexxdex1", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        if (result.status === "SUCCESS") {
+          // const getId = result.data;
+          //   localStorage.setItem("admin", result.data);
+          // Navigate(
+          //   `/sign-up-admin?id=${idx}&facId=${facId}&deptId=${getId.id}`
+          // );
+          MySwal.fire({
+            title: result.status,
+            type: "success",
+            text: result.message,
+          }).then(() => {
+            window.location.reload();
+          });
+        } else {
+          MySwal.fire({
+            title: result.status,
+            type: "error",
+            text: result.message,
+          });
+        }
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+    // }
+  };
 
   return (
     <div className="content">
@@ -44,10 +186,11 @@ export default function DepartmentAdd() {
               <FormGroup>
                 <label>Name</label>
                 <Input
-                  onChange={() => {}}
+                  // onChange={() => {}}
                   // defaultValue={`${data11.firstName}`}
                   placeholder="First Name"
-                  //   value={firstName}
+                  value={namex}
+                  onChange={(e) => setName(e.target.value)}
                   //   disabled
                   type="text"
                 />
@@ -57,12 +200,12 @@ export default function DepartmentAdd() {
               <FormGroup>
                 <label>Description</label>
                 <Input
-                  onChange={() => {}}
+                  onChange={(e) => setDescrip(e.target.value)}
                   // defaultValue={`${data11.lastName}`}
                   placeholder="description"
                   //   onChange={() => console.log()}
                   type="textarea"
-                  // value={String(items[0]?.verificationComment)}
+                  value={descrip}
                   // disabled
                 />
               </FormGroup>
@@ -71,19 +214,43 @@ export default function DepartmentAdd() {
           <Row style={{ marginTop: 20 }}>
             <Col md="3" className="pl-md-1">
               <FormGroup>
-                <label>Head</label>
+                <label>Head of Department</label>
                 <Input
-                  onChange={() => {}}
+                  onChange={(e) => setHeadOfDepart(e.target.value)}
                   // defaultValue={`${data11.lastName}`}
                   placeholder="head"
                   //   onChange={() => console.log()}
                   type="text"
-                  //   value={items[0]?.walletBalance}
+                  value={headOfDepart}
                   // disabled
                 />
               </FormGroup>
             </Col>{" "}
-            <Col md="3" className="pl-md-1">
+            <Col>
+              <Typography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                mt={2}
+              >
+                Faculty
+              </Typography>
+              <Box textAlign="left">
+                <Form.Select
+                  onChange={(e) => setFacultyMap(e.target.value)}
+                  value={facultyx || ""}
+                  aria-label="Default select example"
+                >
+                  <option>--Select Faculty--</option>
+                  {/* {faculty.map((apis) => (
+                    <option key={apis.id} value={apis.id}>
+                      {apis.name}
+                    </option>
+                  ))} */}
+                </Form.Select>
+              </Box>
+            </Col>
+            {/* <Col md="3" className="pl-md-1">
               <FormGroup>
                 <label>School</label>
                 <Input
@@ -96,8 +263,8 @@ export default function DepartmentAdd() {
                   // disabled
                 />
               </FormGroup>
-            </Col>{" "}
-            <Col md="3" className="pl-md-1">
+            </Col>{" "} */}
+            {/* <Col md="3" className="pl-md-1">
               <FormGroup>
                 <label>Faculty</label>
                 <Input
@@ -110,8 +277,8 @@ export default function DepartmentAdd() {
                   // disabled
                 />
               </FormGroup>
-            </Col>
-            <Col md="3" className="pl-md-1">
+            </Col> */}
+            {/* <Col md="3" className="pl-md-1">
               <FormGroup>
                 <label>College</label>
                 <Input
@@ -124,7 +291,7 @@ export default function DepartmentAdd() {
                   // disabled
                 />
               </FormGroup>
-            </Col>
+            </Col> */}
           </Row>
           <Button
             variant="gradient"
@@ -135,7 +302,7 @@ export default function DepartmentAdd() {
               marginTop: "20px",
             }}
             color="success"
-            // onClick={() => handleGetStates()}
+            onClick={() => handleClick()}
           >
             Add Department
           </Button>

@@ -198,7 +198,8 @@ function SignUpAdmin() {
     const numberMatch = (password.match(/[0-9]/g) || []).length;
     const specialMatch = (password.match(/[#?!@$%^&*-]/g) || []).length;
 
-    const strength = letterMatch + numberMatch * 2 + specialMatch * 3;
+    const strength = letterMatch + numberMatch + specialMatch;
+    console.log(strength);
     // progressBar.current.style.width = `${strength * 3}%`;
     let color = "red";
     if (strength > 10) {

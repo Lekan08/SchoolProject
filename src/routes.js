@@ -25,17 +25,17 @@ import ViewProfile from "views/userProfile/ViewProfile";
 import SignInAdmin from "views/authentication/SignInAdmin";
 import SignInStudent from "views/authentication/SignInStudent";
 import DashboardStudent from "views/dashboard/DashboardStudent";
-import SignUpAdmin from "views/authentication/registration/staff";
+import SignUpAdmin from "views/authentication/SIgnUpAdmin";
+import InviteLecturer from "views/inviteLecturer/invite";
 import InviteLecturers from "views/inviteLecturer";
-import SchoolInformation from "views/authentication/registration/addSchool";
 import Faculty from "views/authentication/registration/faculty";
-import Departments from "views/authentication/registration/department";
-// import SignUpAdmin from "views/authentication/SIgnUpAdmin";
+import Department from "views/authentication/registration/department";
+import InviteMultiple from "views/inviteLecturer/Multiple";
 
 import Students from "views/students";
 import StudentAdd from "views/students/Add";
 import StudentMultiple from "views/students/Multiple";
-// import Departments from "views/departments";
+import Departments from "views/departments";
 import DepartmentAdd from "views/departments/Add";
 import DepartmentMultiple from "views/departments/Multiple";
 import Faculties from "views/faculties";
@@ -74,14 +74,14 @@ var routes = [
     component: Dashboard,
     admin: true,
   },
-  {
-    path: "/schoolInformation",
-    // name: "Admin Dashboard",
-    // icon: "dashboard",
-    component: SchoolInformation,
-    redirect: "true",
-    admin: true,
-  },
+  // {
+  //   path: "/schoolInformation",
+  //   // name: "Admin Dashboard",
+  //   // icon: "dashboard",
+  //   component: SchoolInformation,
+  //   redirect: "true",
+  //   admin: true,
+  // },
   {
     path: "/sign-up-admin",
     // name: "Admin Dashboard",
@@ -92,17 +92,33 @@ var routes = [
   },
   {
     path: "/faculty",
-    // name: "Admin Dashboard",
+    // name: "Faculty",
     // icon: "dashboard",
     component: Faculty,
     redirect: "true",
     admin: true,
   },
   {
+    path: "/inviteLecturer/invite",
+    // name: "Invite Lecturers",
+    // icon: "person_add",
+    component: InviteLecturer,
+    redirect: "true",
+    admin: true,
+  },
+  {
     path: "/inviteLecturer",
     name: "Invite Lecturers",
-    icon: "invite",
+    icon: "person_add",
     component: InviteLecturers,
+    // redirect: "true",
+    admin: true,
+  },
+  {
+    path: "/inviteLecturer/multiple",
+    name: "Invite Multiple Lecturers",
+    // icon: "person_add",
+    component: InviteMultiple,
     redirect: "true",
     admin: true,
   },
@@ -126,6 +142,14 @@ var routes = [
     icon: "school",
     component: StudentMultiple,
     redirect: true,
+  },
+  {
+    path: "/department",
+    // name: "Departments",
+    // icon: "class",
+    component: Department,
+    redirect: true,
+    admin: true,
   },
   {
     path: "/departments",

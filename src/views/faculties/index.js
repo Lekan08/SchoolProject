@@ -4,18 +4,21 @@ import { Button, Card } from "reactstrap";
 import DataTable from "examples/TableList";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
-import Swal from "sweetalert2";
+// import Swal from "sweetalert2";
 import AllCountriesAndStates from "countries-states-master/countries";
 import { Dropdown, Form } from "react-bootstrap";
 import { Settings } from "@mui/icons-material";
 import Navigate from "useNavigate";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import "../Css.css";
 
 export default function Faculties() {
   const { countriesAndStates: AlCountry } = AllCountriesAndStates();
   const [allStates, setAllStates] = useState([]);
+  const MySwal = withReactContent(Swal);
 
   const [residentialStatex, setResidentialState] = useState("");
   const [residentialCountryx, setResidentialCountry] = useState("");
@@ -57,29 +60,91 @@ export default function Faculties() {
     p: 4,
     textAlign: "center",
   };
-  //   useEffect(() => {
-  //     setOpened(true);
-  //     const headers = miHeaders;
-  //     fetch(`${process.env.REACT_APP_SCH_URL}/students/gets/{id}`, { headers })
-  //       .then(async (res) => {
-  //         const aToken = res.headers.get("token-1");
-  //         localStorage.setItem("rexxdex", aToken);
-  //         return res.json();
-  //       })
-  //       .then((result) => {
-  //         setOpened(false);
-  //         console.log(result);
-  //         setItems(result);
-  //       })
-  //       .catch((error) => {
-  //         setOpened(false);
-  //         Swal.fire({
-  //           title: error.status,
-  //           icon: "error",
-  //           text: error.message,
+  // useEffect(() => {
+  //   setOpened(true);
+  //   const headers = miHeaders;
+
+  //   const userData = JSON.parse(localStorage.getItem("user"));
+  //   console.log(userData);
+  //   fetch(
+  //     `${process.env.REACT_APP_SCH_URL}/faculties/gets/${userData.schoolID}`,
+  //     { headers }
+  //   )
+  //     .then(async (res) => {
+  //       // const aToken = res.headers.get("token-1");
+  //       // localStorage.setItem("rexxdex", aToken);
+  //       return res.json();
+  //       console.log(res);
+  //     })
+  //     .then((result) => {
+  //       setOpened(false);
+  //       console.log("result");
+  //       console.log(result);
+  //       // setItems(result);
+  //       if (result.status === "SUCCESS") {
+  //         //   localStorage.setItem("admin", result.data);
+  //         // Navigate("/departments");
+  //         MySwal.fire({
+  //           title: result.status,
+  //           type: "success",
+  //           text: result.message,
+  //         }).then(() => {
+  //           window.location.reload();
   //         });
+  //       } else {
+  //         MySwal.fire({
+  //           title: result.status,
+  //           type: "error",
+  //           text: result.message,
+  //         });
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       setOpened(false);
+  //       Swal.fire({
+  //         title: error.status,
+  //         icon: "error",
+  //         text: error.message,
   //       });
-  //   }, []);
+  //     });
+  // }, []);
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("user"));
+    console.log(userData);
+    const schId = userData.schoolID;
+    const headers = miHeaders;
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_SCH_URL}/faculties/gets/${schId}`, {
+      headers,
+    })
+      .then(async (res) => {
+        // const aToken = res.headers.get("token-1");
+        // localStorage.setItem("rexxdex", aToken);
+        // return res.json();
+      })
+      .then((result) => {
+        console.log(result);
+        // if (result.message === "Expired Access") {
+        //   navigate("/authentication/sign-in");
+        //   window.location.reload();
+        // }
+        // if (result.message === "Token Does Not Exist") {
+        //   navigate("/authentication/sign-in");
+        //   window.location.reload();
+        // }
+        // if (result.message === "Unauthorized Access") {
+        //   navigate("/authentication/forbiddenPage");
+        //   window.location.reload();
+        // }
+        if (isMounted) {
+          console.log(result);
+          // setItems(result);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
   return (
     <div className="content">
       <Paper elevation={8}>
@@ -186,7 +251,7 @@ export default function Faculties() {
             { Header: "description", accessor: "description" },
             { Header: "head", accessor: "head" },
             { Header: "school", accessor: "school" },
-            { Header: "college", accessor: "college" },
+            // { Header: "college", accessor: "college" },
             {
               Header: "options",
               accessor: "id",

@@ -57,32 +57,38 @@ export default function Departments() {
     p: 4,
     textAlign: "center",
   };
-  //   useEffect(() => {
-  //     setOpened(true);
-  //     const headers = miHeaders;
-  //     fetch(`${process.env.REACT_APP_SCH_URL}/students/gets/{id}`, { headers })
-  //       .then(async (res) => {
-  //         const aToken = res.headers.get("token-1");
-  //         localStorage.setItem("rexxdex", aToken);
-  //         return res.json();
-  //       })
-  //       .then((result) => {
-  //         setOpened(false);
-  //         console.log(result);
-  //         setItems(result);
-  //       })
-  //       .catch((error) => {
-  //         setOpened(false);
-  //         Swal.fire({
-  //           title: error.status,
-  //           icon: "error",
-  //           text: error.message,
-  //         });
-  //       });
-  //   }, []);
+  useEffect(() => {
+    setOpened(true);
+    const userData = JSON.parse(localStorage.getItem("user"));
+    console.log(userData);
+    const schId = userData.schoolID;
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCH_URL}/departments/gets/${schId}`, {
+      headers,
+    })
+      .then(async (res) => {
+        // const aToken = res.headers.get("token-1");
+        // localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setItems(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  }, []);
   return (
     <div className="content">
       <Paper elevation={8}>
+        s
         <Card>
           <Button
             tag="label"

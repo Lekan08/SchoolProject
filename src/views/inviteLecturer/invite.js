@@ -8,7 +8,6 @@ import { Card } from "@mui/material";
 import {
   Button,
   FormGroup,
-  Form,
   Input,
   Row,
   Col,
@@ -17,13 +16,18 @@ import {
 } from "reactstrap";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { Container, FloatingLabel } from "react-bootstrap";
+import Form from "react-bootstrap/Form";
 
-export default function FacultyAdd() {
+export default function InviteLecturer() {
   const [opened, setOpened] = useState(false);
-  const [namex, setName] = useState("");
-  const [descrip, setDescrip] = useState("");
-  const [headOfFaculty, setHeadOfFaculty] = useState("");
+  // const [namex, setName] = useState("");
+  // const [descrip, setDescrip] = useState("");
+  // const [headOfFaculty, setHeadOfFaculty] = useState("");
   const MySwal = withReactContent(Swal);
+  const [firstNamex, setFirstName] = useState("");
+  const [lastNamex, setLastName] = useState("");
+  const [emailx, setEmail] = useState("");
   //   const [items, setItems] = useState([]);
   //   const { allPHeaders: myHeaders } = PHeaders();
   //   const { allGHeaders: miHeaders } = GHeaders();
@@ -45,11 +49,11 @@ export default function FacultyAdd() {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     const raw = JSON.stringify({
-      name: namex,
-      description: descrip,
-      head: headOfFaculty,
+      firstName: firstNamex,
+      lastName: lastNamex,
+      email: emailx,
+      // roleID: "string",
       schoolID: userData.schoolID,
-      // collegeID: userData.schoolID,
     });
     // console.log(raw);
     const requestOptions = {
@@ -61,7 +65,7 @@ export default function FacultyAdd() {
     // setOpened(true);
     // if (passwordx === confirmPassword) {
     fetch(
-      `${process.env.REACT_APP_SCHPROJECT_URL}/faculties/add`,
+      `${process.env.REACT_APP_SCHPROJECT_URL}/staffLogin/invite`,
       requestOptions
     )
       .then(async (res) => {
@@ -108,81 +112,52 @@ export default function FacultyAdd() {
           />
           <br />
           <Row>
-            <Col className="pl-md-1" md="6">
-              <FormGroup>
-                <label>Name</label>
-                <Input
-                  onChange={(e) => setName(e.target.value)}
-                  // defaultValue={`${data11.firstName}`}
-                  placeholder="Name"
-                  //   value={firstName}
-                  //   disabled
-                  type="text"
-                />
-              </FormGroup>
+            <Col sm={6} style={{ marginBottom: "10px" }}>
+              <Form.Group>
+                <FloatingLabel controlId="firstnamLabel" label="First name">
+                  <Form.Control
+                    type="text"
+                    value={firstNamex}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    // placeholder="First name"
+                    required
+                  />
+                </FloatingLabel>
+                <Form.Control.Feedback type="invalid">
+                  Do not leave empty
+                </Form.Control.Feedback>
+              </Form.Group>
             </Col>
-            <Col md="4" className="pl-md-1">
-              <FormGroup>
-                <label>Head Of Faculty</label>
-                <Input
-                  // onChange={() => {}}
-                  // defaultValue={`${data11.lastName}`}
-                  placeholder="head"
-                  onChange={(e) => setHeadOfFaculty(e.target.value)}
+            <Col sm={6} style={{ marginBottom: "10px" }}>
+              <FloatingLabel controlId="lastnameLabel" label="Last name">
+                <Form.Control
                   type="text"
-                  value={headOfFaculty}
-                  // disabled
+                  value={lastNamex}
+                  onChange={(e) => setLastName(e.target.value)}
+                  // placeholder="Last name"
+                  required
                 />
-              </FormGroup>
-            </Col>{" "}
+              </FloatingLabel>
+            </Col>
           </Row>
-          <Row style={{ marginTop: 20 }} align={"center"}>
-            <Col
-              className="pl-md-1"
-              md="8"
-              // style={{ alignSelf: "center", flex: "center" }}
-            >
-              <FormGroup>
-                <label>Description</label>
-                <Input
-                  onChange={(e) => setDescrip(e.target.value)}
-                  // defaultValue={`${data11.lastName}`}
-                  placeholder="description"
-                  //   onChange={() => console.log()}
-                  type="textarea"
-                  value={descrip}
-                  // disabled
-                />
-              </FormGroup>
+          <Row>
+            <Col>
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <FloatingLabel controlId="emailLabel" label="Enter email">
+                  <Form.Control
+                    type="email"
+                    // placeholder="Enter email"
+                    value={emailx}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+                  />
+                </FloatingLabel>
+                <Form.Text className="text-muted">
+                  We'll (hopefully) never share your email with anyone else.
+                </Form.Text>
+              </Form.Group>
             </Col>
-            {/* <Col md="4" className="pl-md-1">
-              <FormGroup>
-                <label>School</label>
-                <Input
-                  onChange={() => {}}
-                  // defaultValue={`${data11.lastName}`}
-                  placeholder="school"
-                  //   onChange={() => console.log()}
-                  type="text"
-                  //   value={items[0]?.walletBalance}
-                  // disabled
-                />
-              </FormGroup>
-            </Col>{" "}
-            <Col md="4" className="pl-md-1">
-              <FormGroup>
-                <label>College</label>
-                <Input
-                  onChange={() => {}}
-                  // defaultValue={`${data11.lastName}`}
-                  placeholder="College"
-                  //   onChange={() => console.log()}
-                  type="text"
-                  //   value={items[0]?.walletBalance}
-                  // disabled
-                />
-              </FormGroup>
-            </Col> */}
           </Row>
           <Button
             variant="gradient"
@@ -195,7 +170,7 @@ export default function FacultyAdd() {
             color="success"
             onClick={() => handleClick()}
           >
-            Add Faculty
+            Invite
           </Button>
         </CardBody>
       </Card>

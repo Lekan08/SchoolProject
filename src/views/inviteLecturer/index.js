@@ -1,136 +1,362 @@
-import React, { useRef, useState } from "react";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import "./index.css";
-import { Container, FloatingLabel, Row, Col } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Box, Modal, Paper, Typography } from "@mui/material";
+import { Button, Card } from "reactstrap";
+import DataTable from "examples/TableList";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+// import Swal from "sweetalert2";
+import AllCountriesAndStates from "countries-states-master/countries";
+import { Dropdown, Form } from "react-bootstrap";
+import { Settings } from "@mui/icons-material";
+import Navigate from "useNavigate";
+import PHeaders from "postHeader";
+import GHeaders from "getHeader";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import "../Css.css";
 
-function InviteLecturers() {
-  const [validated, setValidated] = useState(false);
-  const [password, setPassword] = useState("");
-  const [confirmation, setConfirmation] = useState("");
-  const confirmationError = useRef(null);
+export default function InviteLecturers() {
+  const { countriesAndStates: AlCountry } = AllCountriesAndStates();
+  const [allStates, setAllStates] = useState([]);
+  const MySwal = withReactContent(Swal);
 
-  const handleSubmit = (event) => {
-    const form = event.currentTarget;
-
-    if (password !== confirmation) {
-      event.preventDefault();
-      event.stopPropagation();
-      confirmationError.current.style.display = null;
+  const [residentialStatex, setResidentialState] = useState("");
+  const [residentialCountryx, setResidentialCountry] = useState("");
+  const handleOnChangeRCCountry = (e) => {
+    if (e.target.value) {
+      const filteredItems = AlCountry.filter(
+        (item) => item.name === e.target.value
+      );
+      setAllStates(filteredItems[0].states);
+      setResidentialCountry(e.target.value);
     } else {
-      confirmationError.current.style.display = "none";
+      setResidentialCountry(e.target.value);
+      setAllStates([]);
     }
-
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
-    setValidated(true);
   };
 
-  const handlePasswordChange = (password) => {
-    setPassword(password);
-    const letterMatch = (password.match(/[a-z, A-Z]/g) || []).length;
-    const numberMatch = (password.match(/[0-9]/g) || []).length;
-    const specialMatch = (password.match(/[#?!@$%^&*-]/g) || []).length;
-
-    const strength = letterMatch + numberMatch * 2 + specialMatch * 3;
-    // progressBar.current.style.width = `${strength * 3}%`;
-    let color = "red";
-    if (strength > 10) {
-      color = "orange";
-    }
-    if (strength > 26) {
-      color = "green";
-    }
-    // progressBar.current.style.backgroundColor = color;
+  const handleOnChangeRCState = (e) => {
+    setResidentialState(e.target.value);
   };
+  const [open, setOpen] = React.useState(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
+  const [items, setItems] = useState([]);
+  const [idx, setIdx] = useState("");
+  const [tripID, setTripID] = useState("");
+  const [opened, setOpened] = useState(false);
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 600,
+    bgcolor: "background.paper",
+    border: "2px solid gray",
+    boxShadow: 24,
+    p: 4,
+    textAlign: "center",
+  };
+  // useEffect(() => {
+  //   setOpened(true);
+  //   const headers = miHeaders;
 
+  //   const userData = JSON.parse(localStorage.getItem("user"));
+  //   console.log(userData);
+  //   fetch(
+  //     `${process.env.REACT_APP_SCH_URL}/faculties/gets/${userData.schoolID}`,
+  //     { headers }
+  //   )
+  //     .then(async (res) => {
+  //       // const aToken = res.headers.get("token-1");
+  //       // localStorage.setItem("rexxdex", aToken);
+  //       return res.json();
+  //       console.log(res);
+  //     })
+  //     .then((result) => {
+  //       setOpened(false);
+  //       console.log("result");
+  //       console.log(result);
+  //       // setItems(result);
+  //       if (result.status === "SUCCESS") {
+  //         //   localStorage.setItem("admin", result.data);
+  //         // Navigate("/departments");
+  //         MySwal.fire({
+  //           title: result.status,
+  //           type: "success",
+  //           text: result.message,
+  //         }).then(() => {
+  //           window.location.reload();
+  //         });
+  //       } else {
+  //         MySwal.fire({
+  //           title: result.status,
+  //           type: "error",
+  //           text: result.message,
+  //         });
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       setOpened(false);
+  //       Swal.fire({
+  //         title: error.status,
+  //         icon: "error",
+  //         text: error.message,
+  //       });
+  //     });
+  // }, []);
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("user"));
+    console.log(userData);
+    const schId = userData.schoolID;
+    const headers = miHeaders;
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_SCH_URL}/faculties/gets/${schId}`, {
+      headers,
+    })
+      .then(async (res) => {
+        // const aToken = res.headers.get("token-1");
+        // localStorage.setItem("rexxdex", aToken);
+        // return res.json();
+      })
+      .then((result) => {
+        console.log(result);
+        // if (result.message === "Expired Access") {
+        //   navigate("/authentication/sign-in");
+        //   window.location.reload();
+        // }
+        // if (result.message === "Token Does Not Exist") {
+        //   navigate("/authentication/sign-in");
+        //   window.location.reload();
+        // }
+        // if (result.message === "Unauthorized Access") {
+        //   navigate("/authentication/forbiddenPage");
+        //   window.location.reload();
+        // }
+        if (isMounted) {
+          console.log(result);
+          // setItems(result);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
   return (
-    <div className="form-wrapper">
-      <Form noValidate validated={validated} onSubmit={handleSubmit}>
-        <h2 style={{ marginBottom: "15px", textAlign: "center" }}>
-          Sign up a new user
-        </h2>
-        <Container fluid>
-          <Row>
-            <Col sm={6} style={{ marginBottom: "10px" }}>
-              <Form.Group>
-                <FloatingLabel controlId="firstnamLabel" label="First name">
-                  <Form.Control type="text" placeholder="First name" required />
-                </FloatingLabel>
-                <Form.Control.Feedback type="invalid">
-                  Do not leave empty
-                </Form.Control.Feedback>
-              </Form.Group>
-            </Col>
-            <Col sm={6} style={{ marginBottom: "10px" }}>
-              <FloatingLabel controlId="lastnameLabel" label="Last name">
-                <Form.Control type="text" placeholder="Last name" required />
-              </FloatingLabel>
-            </Col>
-          </Row>
-
-          <Row>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-              <FloatingLabel controlId="emailLabel" label="Enter email">
-                <Form.Control
-                  type="email"
-                  placeholder="Enter email"
-                  required
-                  pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
-                />
-              </FloatingLabel>
-              <Form.Text className="text-muted">
-                We'll (hopefully) never share your email with anyone else.
-              </Form.Text>
-            </Form.Group>
-          </Row>
-
-          <Row>
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <FloatingLabel controlId="passwordLabel" label="Password">
-                <Form.Control
-                  type="password"
-                  placeholder="Password"
-                  required
-                  pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
-                  onChange={(e) => handlePasswordChange(e.target.value)}
-                />
-              </FloatingLabel>
-              <Form.Text className="text-muted">
-                Must be 8 characters long, contain a number, an uppercase letter
-                and a special character.
-              </Form.Text>
-            </Form.Group>
-          </Row>
-
-          <Row>
-            <Form.Group className="mb-3" controlId="formBasicConfirmation">
-              <FloatingLabel controlId="confirmationLabel" label="Confirmation">
-                <Form.Control
-                  type="password"
-                  placeholder="Confirmation"
-                  required
-                  onChange={(e) => setConfirmation(e.target.value)}
-                />
-              </FloatingLabel>
-              <p
-                style={{ color: "red", display: "none" }}
-                ref={confirmationError}
-              >
-                Password and confirmation are not the same
-              </p>
-            </Form.Group>
-          </Row>
-
-          <Button variant="primary" type="submit">
-            Register
+    <div className="content">
+      <Paper elevation={8}>
+        <Card>
+          <Button
+            tag="label"
+            className="data1"
+            color="success"
+            style={{
+              width: "40vw",
+              fontSize: "20px",
+              marginRight: "auto",
+              marginLeft: "auto",
+              // height: "50px",
+              marginTop: "20px",
+            }}
+          >
+            <Typography
+              style={{ color: "white", fontSize: "1.5rem" }}
+              variant="h5"
+              className="headz"
+            >
+              All Faculties
+            </Typography>
           </Button>
-        </Container>
-      </Form>
+          <div
+            className="row-res"
+            style={{
+              // height: "100vh",
+              margin: "4vw",
+              display: "grid",
+              gridTemplateColumns: "30vw 30vw",
+              gridColumnGap: "5vw",
+              marginRight: "auto",
+              marginLeft: "auto",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 100,
+              gridGap: "10vw",
+            }}
+          >
+            <Paper
+              elevation={8}
+              // className="signbox"
+              className="resizer2"
+              style={{
+                textAlign: "center",
+                zIndex: 100,
+                borderRadius: 500,
+              }}
+            >
+              <div
+                // lg="5"
+                className="col-res"
+                style={{
+                  marginRight: "auto",
+                  cursor: "pointer",
+                  lineHeight: "4rem",
+                  marginLeft: "auto",
+                }}
+                onClick={() => Navigate("/inviteLecturer/invite")}
+              >
+                Invite a Lecturer
+              </div>
+            </Paper>
+            <Paper
+              elevation={8}
+              // className="signbox"
+              className="resizer2"
+              style={{
+                zIndex: 100,
+                borderRadius: 500,
+                textAlign: "center",
+              }}
+            >
+              <div
+                className="col-res"
+                // lg="5"
+                style={{
+                  cursor: "pointer",
+                  marginRight: "auto",
+                  lineHeight: "4rem",
+                  marginLeft: "auto",
+                }}
+                onClick={() => Navigate("/inviteLecturer/multiple")}
+              >
+                Add multiple Lecturers (CSV)
+              </div>
+            </Paper>
+          </div>
+        </Card>
+      </Paper>
+      <br />
+      <DataTable
+        data={{
+          columns: [
+            {
+              Header: "Name",
+              accessor: "firstName",
+              renderCell: (params) => {
+                return `${params.row.firstName} ${params.row.lastName}`;
+              },
+            },
+            { Header: "description", accessor: "description" },
+            { Header: "head", accessor: "head" },
+            { Header: "school", accessor: "school" },
+            // { Header: "college", accessor: "college" },
+            {
+              Header: "options",
+              accessor: "id",
+              renderCell: (cell) => (
+                <Dropdown style={{ position: "absolute" }}>
+                  <Dropdown.Toggle
+                    style={{ width: "5rem", height: "30px", padding: 0 }}
+                    variant="info"
+                    size="lg"
+                  >
+                    <Settings
+                      sx={{
+                        textAlign: "center",
+                        fontSize: "18px",
+                      }}
+                    />
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu>
+                    <Dropdown.Item
+                      style={{ fontweight: "bold", color: "black" }}
+                      onClick={() => {
+                        Navigate(`/customers/view?id=${cell.row.id}`);
+                      }}
+                    >
+                      View
+                    </Dropdown.Item>
+                    {/* <Dropdown.Item
+                      style={{ fontweight: "bold", color: "black" }}
+                      onClick={() =>
+                        Navigate(
+                          `/customers/referral?id=${cell.row.id}&name=${cell.row.firstName} ${cell.row.lastName}`
+                        )
+                      }
+                    >
+                      View Referrals
+                    </Dropdown.Item> */}
+                  </Dropdown.Menu>
+                </Dropdown>
+              ),
+            },
+          ],
+          rows: items,
+        }}
+      />
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <div className="row" style={{ marginTop: "40px" }}>
+            <div className="col-sm-6">
+              <Form.Select
+                value={residentialCountryx || ""}
+                aria-label="Default select example"
+                onChange={handleOnChangeRCCountry}
+              >
+                <option value="">--Select Country--</option>
+                {AlCountry.map((apic) => (
+                  <option key={apic.code3} value={apic.name}>
+                    {apic.name}
+                  </option>
+                ))}
+              </Form.Select>
+            </div>
+            <div className="col-sm-6">
+              <Form.Select
+                value={residentialStatex || ""}
+                aria-label="Default select example"
+                onChange={handleOnChangeRCState}
+              >
+                <option>--Select State--</option>
+                {allStates.map((apis) => (
+                  <option key={apis.code} value={apis.name}>
+                    {apis.name}
+                  </option>
+                ))}
+              </Form.Select>
+            </div>
+          </div>
+          <Box mt={8}>
+            <Button
+              variant="gradient"
+              style={{
+                marginLeft: "auto",
+                marginRight: "auto",
+                display: "flex",
+              }}
+              color="info"
+              //   onClick={() => handleUpdate()}
+            >
+              Get Riders
+            </Button>
+          </Box>
+          <br />
+        </Box>
+      </Modal>
+      <Backdrop
+        sx={{ color: "white", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={opened}
+      >
+        <CircularProgress style={{ color: "white" }} />
+      </Backdrop>
     </div>
   );
 }
-export default InviteLecturers;

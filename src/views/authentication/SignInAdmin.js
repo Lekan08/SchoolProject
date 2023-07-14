@@ -95,7 +95,8 @@ function SignInAdmin() {
         console.log(result);
         if (result.status === "SUCCESS") {
           Navigate("/dashboard");
-          localStorage.setItem("user", result.data);
+          // localStorage.setItem("user", result.data);
+          localStorage.setItem("user", JSON.stringify(result.data));
         } else {
           MySwal.fire({
             title: result.status,
@@ -271,7 +272,7 @@ function SignInAdmin() {
                       <Typography
                         component={Link}
                         // to="/authentication/sign-up-staff"
-                        onClick={() => Navigate("/schoolInformation")}
+                        onClick={() => Navigate("/sign-up-admin")}
                         variant="button"
                         color="primary"
                         fontWeight="medium"
