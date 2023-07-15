@@ -83,9 +83,10 @@ export default function School() {
   const handleAdd = () => {
     // const data11 = JSON.parse(localStorage.getItem("user1"));
     // const id = data11.id;
+    const id = JSON.parse(localStorage.getItem("user1"));
 
     const raw = JSON.stringify({
-      id: id,
+      id: id.schoolID,
       name: name,
       email: email,
       head: head,
