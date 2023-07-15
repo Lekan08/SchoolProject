@@ -210,13 +210,14 @@ export default function Faculties() {
         });
       });
   }, []);
-  const handleUpdate = () => {
+  const handleUpdate = (val) => {
+    console.log(val);
     const userInfo = JSON.parse(localStorage.getItem("user"));
     console.log(userInfo);
     const schID = userInfo.schoolID;
 
     const raw = JSON.stringify({
-      id: value.id,
+      id: val,
       name: name,
       description: description,
       schoolID: schID,
@@ -277,13 +278,6 @@ export default function Faculties() {
           text: error.message,
         });
       });
-  };
-  const handleOnChange = (val) => {
-    console.log(val);
-    if (val !== "" || val !== undefined) {
-      setValue(val);
-    }
-    setOpen(true);
   };
   // const handleFaculty = (val) => {
   //   // const data11 = JSON.parse(localStorage.getItem("user1"));
@@ -435,48 +429,52 @@ export default function Faculties() {
           columns: [
             { Header: "Name", accessor: "name" },
             { Header: "description", accessor: "description" },
-            { Header: "head", accessor: "head" },
-            // {
-            //   Header: "options",
-            //   accessor: "id",
-            //   renderCell: (cell) => (
-            //     <Dropdown style={{ position: "absolute" }}>
-            //       <Dropdown.Toggle
-            //         style={{ width: "5rem", height: "30px", padding: 0 }}
-            //         variant="info"
-            //         size="lg"
-            //       >
-            //         <Settings
-            //           sx={{
-            //             textAlign: "center",
-            //             fontSize: "18px",
-            //           }}
-            //         />
-            //       </Dropdown.Toggle>
+            { Header: "Head Of Faculty", accessor: "head" },
+            {
+              Header: "options",
+              accessor: "id",
+              renderCell: (cell) => (
+                <Dropdown style={{ position: "absolute" }}>
+                  <Dropdown.Toggle
+                    style={{ width: "5rem", height: "30px", padding: 0 }}
+                    variant="info"
+                    size="lg"
+                  >
+                    <Settings
+                      sx={{
+                        textAlign: "center",
+                        fontSize: "18px",
+                      }}
+                    />
+                  </Dropdown.Toggle>
 
-            //       <Dropdown.Menu>
-            //         <Dropdown.Item
-            //           style={{ fontweight: "bold", color: "black" }}
-            //           onClick={() => {
-            //             Navigate(`/customers/view?id=${cell.row.id}`);
-            //           }}
-            //         >
-            //           View
-            //         </Dropdown.Item>
-            //         {/* <Dropdown.Item
-            //           style={{ fontweight: "bold", color: "black" }}
-            //           onClick={() =>
-            //             Navigate(
-            //               `/customers/referral?id=${cell.row.id}&name=${cell.row.firstName} ${cell.row.lastName}`
-            //             )
-            //           }
-            //         >
-            //           View Referrals
-            //         </Dropdown.Item> */}
-            //       </Dropdown.Menu>
-            //     </Dropdown>
-            //   ),
-            // },
+                  <Dropdown.Menu>
+                    <Dropdown.Item
+                      style={{ fontweight: "bold", color: "black" }}
+                      onClick={() => {
+                        Navigate(`/customers/view?id=${cell.row.id}`);
+                      }}
+                    >
+                      View
+                    </Dropdown.Item>
+                    {/* <Dropdown.Item
+                      style={{ fontweight: "bold", color: "black" }}
+                      onClick={() => handleOnChange(cell.row.id)}
+                    >
+                      Update
+                    </Dropdown.Item> */}
+                    <Dropdown.Item
+                      style={{ fontweight: "bold", color: "black" }}
+                      onClick={() =>
+                        Navigate(`/faculties/update?id=${cell.row.id}`)
+                      }
+                    >
+                      Update
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              ),
+            },
           ],
           rows: items,
         }}

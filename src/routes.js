@@ -41,6 +41,7 @@ import DepartmentMultiple from "views/departments/Multiple";
 import Faculties from "views/faculties";
 import FacultyAdd from "views/faculties/Add";
 import FacultyMultiple from "views/faculties/Multiple";
+import FacultyUpdate from "views/faculties/update";
 import Schools from "views/school";
 import SchoolAdd from "views/school/Add";
 import StudentView from "views/students/view";
@@ -231,6 +232,13 @@ var routes = [
     name: "Add multiple faculties",
     icon: "school",
     component: FacultyMultiple,
+    redirect: true,
+  },
+  {
+    path: "/faculties/update",
+    // name: "Add multiple faculties",
+    // icon: "school",
+    component: FacultyUpdate,
     redirect: true,
   },
   {
