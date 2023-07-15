@@ -72,7 +72,7 @@ function SignInAdmin() {
       password: passwordx,
       npassword: passwordx,
     });
-    console.log(raw);
+    // console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -92,15 +92,15 @@ function SignInAdmin() {
       })
       .then((result) => {
         setOpened(false);
-        console.log(result);
+        // console.log(result);
         if (result.status === "SUCCESS") {
           Navigate("/dashboard");
           // localStorage.setItem("user", result.data);
           localStorage.setItem("user", JSON.stringify(result.data));
         } else {
-          MySwal.fire({
+          Swal.fire({
             title: result.status,
-            type: "error",
+            icon: "error",
             text: result.message,
           });
         }
@@ -124,7 +124,7 @@ function SignInAdmin() {
             marginRight: "auto",
             marginLeft: "auto",
             paddingLeft: "2vw",
-            marginTop: "10vh",
+            marginTop: "5vh",
             width: "40vw",
           }}
         >
@@ -207,22 +207,6 @@ function SignInAdmin() {
                       />
                     </div>
                     <div style={{ padding: 10, lineHeight: "7vh" }}>
-                      {/* <TextField
-                        id="outlined-required"
-                        type={passwordShown ? "text" : "password"}
-                        label="Password"
-                        value={passwordx}
-                        onChange={(e) => setPassword(e.target.value)}
-                        sx={{
-                          input: {
-                            // color: "white",
-                            width: "15rem",
-                            fontSize: "0.8em",
-                            height: "1vh",
-                          },
-                        }}
-                      /> */}
-                      {/* <br /> */}
                       <FormControl
                         sx={{ m: 1, width: "17rem" }}
                         variant="outlined"
@@ -231,12 +215,9 @@ function SignInAdmin() {
                           password
                         </InputLabel>
                         <OutlinedInput
-                          id="outlined-required"
                           type={passwordShown ? "text" : "password"}
                           // label="Password"
-                          value={passwordx}
                           onChange={(e) => setPassword(e.target.value)}
-                          s
                           // value={confirmPassword}
                           // onChange={(e) => setConfirmPassword(e.target.value)}
                           // id="outlined-adornment-password"
@@ -307,6 +288,22 @@ function SignInAdmin() {
                         size="small"
                       >
                         FORGOT PASSWORD?
+                      </Typography>
+                    </Box>
+                    <br />
+                    <Box mb={1} mt={-1} textAlign="center">
+                      Don't have an account? &nbsp;
+                      <Typography
+                        component={Link}
+                        // to="/authentication/sign-up-staff"
+                        onClick={() => Navigate("/schoolInformation")}
+                        variant="button"
+                        color="primary"
+                        fontWeight="medium"
+                        id="forgotpassword"
+                        size="small"
+                      >
+                        Sign Up
                       </Typography>
                     </Box>
                   </div>

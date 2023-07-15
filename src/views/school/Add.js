@@ -2,70 +2,63 @@ import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
+import AllCountriesAndStates from "countries-states-master/countries";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
-import { AccountCircleSharp, School } from "@mui/icons-material";
-import { Card } from "@mui/material";
+import { AccountCircleSharp, LocationCity, School } from "@mui/icons-material";
 import { Form } from "react-bootstrap";
-import {
-  Button,
-  FormGroup,
-  Input,
-  Row,
-  Col,
-  CardBody,
-  //   Card,
-} from "reactstrap";
+import { Card } from "@mui/material";
+import { Button, FormGroup, Input, Row, Col, CardBody } from "reactstrap";
 import Navigate from "useNavigate";
 
-export default function FacultyAdd() {
+export default function SchoolAdd() {
   const [opened, setOpened] = useState(false);
-  const [items, setItems] = useState([]);
-  const [school, setSchool] = useState("");
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  const [email, setEmail] = useState("");
   const [head, setHead] = useState("");
+  const [city, setCity] = useState("");
+  const [street, setStreet] = useState("");
+  const { countriesAndStates: AlCountry } = AllCountriesAndStates();
+  const [allStates, setAllStates] = useState([]);
+  const [residentialStatex, setResidentialState] = useState("");
+  const [residentialCountryx, setResidentialCountry] = useState("");
+
+  const handleOnChangeRCCountry = (e) => {
+    console.log(type);
+    if (e.target.value) {
+      const filteredItems = AlCountry.filter(
+        (item) => item.name === e.target.value
+      );
+      setAllStates(filteredItems[0].states);
+      setResidentialCountry(e.target.value);
+    } else {
+      setResidentialCountry(e.target.value);
+      setAllStates([]);
+    }
+  };
+
+  const handleOnChangeRCState = (e) => {
+    setResidentialState(e.target.value);
+  };
+  const [type, setType] = useState("");
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
   //   const queryString = window.location.search;
   //   const urlParams = new URLSearchParams(queryString);
   //   const idx = urlParams.get("id");
-  useEffect(() => {
-    setOpened(true);
-    const headers = miHeaders;
-    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/schools/getAll`, { headers })
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        setOpened(false);
-        console.log(result);
-        setItems(result);
-      })
-      .catch((error) => {
-        setOpened(false);
-        Swal.fire({
-          title: error.status,
-          icon: "error",
-          text: error.message,
-        });
-      });
-  }, []);
-  const userInfo = JSON.parse(localStorage.getItem("user"));
-  console.log(userInfo);
   const handleAdd = () => {
-    const userInfo = JSON.parse(localStorage.getItem("user"));
-    console.log(userInfo);
-    const schID = userInfo.schoolID;
+    // const data11 = JSON.parse(localStorage.getItem("user1"));
+    // const id = data11.id;
 
     const raw = JSON.stringify({
       name: name,
-      description: description,
-      schoolID: schID,
+      email: email,
       head: head,
-      // college:
+      city: city,
+      street: street,
+      state: residentialStatex,
+      country: residentialCountryx,
+      schoolType: Number(type),
     });
     console.log(raw);
     const requestOptions = {
@@ -75,10 +68,7 @@ export default function FacultyAdd() {
       redirect: "follow",
     };
     setOpened(true);
-    fetch(
-      `${process.env.REACT_APP_SCHPROJECT_URL}/faculties/add`,
-      requestOptions
-    )
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/schools/add`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -104,7 +94,7 @@ export default function FacultyAdd() {
             title: result.status,
             icon: "success",
             text: result.message,
-          }).then(() => Navigate("/faculties"));
+          });
         } else {
           Swal.fire({
             title: result.status,
@@ -127,7 +117,7 @@ export default function FacultyAdd() {
     <div className="content">
       <Card mx={2}>
         <CardBody>
-          <School
+          <LocationCity
             sx={{
               fontSize: 230,
               marginLeft: "auto",
@@ -141,9 +131,7 @@ export default function FacultyAdd() {
               <FormGroup>
                 <label>Name</label>
                 <Input
-                  onChange={(e) => {
-                    setName(e.target.value);
-                  }}
+                  onChange={(e) => setName(e.target.value)}
                   // defaultValue={`${data11.firstName}`}
                   placeholder="First Name"
                   //   value={firstName}
@@ -154,70 +142,111 @@ export default function FacultyAdd() {
             </Col>
             <Col className="pl-md-1" md="6">
               <FormGroup>
-                <label>Description</label>
+                <label htmlFor="exampleInputEmail1">Email address</label>
                 <Input
-                  onChange={(e) => {
-                    setDescription(e.target.value);
-                  }}
-                  // defaultValue={`${data11.lastName}`}
-                  placeholder="description"
-                  //   onChange={() => console.log()}
-                  type="textarea"
-                  // value={String(items[0]?.verificationComment)}
-                  // disabled
+                  onChange={(e) => setEmail(e.target.value)}
+                  // value=""
+                  placeholder="School mail goes here"
+                  type="email"
                 />
               </FormGroup>
             </Col>
           </Row>
           <Row style={{ marginTop: 20 }}>
-            <Col md="4" className="pl-md-1">
+            <Col md="6" className="pl-md-1">
               <FormGroup>
-                <label>Head Of Faculty</label>
+                <label>Head</label>
                 <Input
-                  onChange={(e) => {
-                    setHead(e.target.value);
-                  }}
                   // defaultValue={`${data11.lastName}`}
-                  placeholder="Head Of Faculty"
+                  placeholder="head"
                   //   onChange={() => console.log()}
                   type="text"
+                  onChange={(e) => setHead(e.target.value)}
                   //   value={items[0]?.walletBalance}
                   // disabled
                 />
               </FormGroup>
             </Col>{" "}
-            {/* <Col md="4" className="pl-md-1">
+            <Col md="6" className="pl-md-1">
               <FormGroup>
-                <label>School</label>
+                <label>School Type</label>
                 <Form.Select
                   style={{ marginBottom: "20px" }}
-                  value={school || ""}
+                  value={type || ""}
                   aria-label="Default select example"
-                  onChange={(e) => setSchool(e.target.value)}
+                  onChange={(e) => setType(e.target.value)}
                 >
-                  <option value="">--Select School--</option>
-                  {items.map((apic) => (
-                    <option key={apic.id} value={apic.id}>
+                  <option value="">--Select Type--</option>
+                  <option value="0">University</option>
+                  <option value="1">Polytechnic</option>
+                  <option value="2">College Of Education</option>
+                </Form.Select>
+              </FormGroup>
+            </Col>{" "}
+          </Row>
+          <Row>
+            <Col className="pl-md-1" md="4">
+              <FormGroup>
+                <label>City</label>
+                <Input
+                  // defaultValue={`${data11.city}`}
+                  onChange={(e) => setCity(e.target.value)}
+                  placeholder="City"
+                  type="text"
+                />
+              </FormGroup>
+            </Col>
+            <Col className="pl-md-3" md="4">
+              <FormGroup>
+                <label>Country</label>
+                <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  value={residentialCountryx || ""}
+                  aria-label="Default select example"
+                  onChange={handleOnChangeRCCountry}
+                >
+                  <option value="">--Select Country--</option>
+                  {AlCountry.map((apic) => (
+                    <option key={apic.code3} value={apic.name}>
                       {apic.name}
                     </option>
                   ))}
                 </Form.Select>
               </FormGroup>
-            </Col>{" "} */}
-            {/* <Col md="4" className="pl-md-1">
+            </Col>
+            <Col className="pl-md-3" md="4">
               <FormGroup>
-                <label>College</label>
+                <label>State</label>
+                <Form.Select
+                  value={residentialStatex || ""}
+                  aria-label="Default select example"
+                  onChange={handleOnChangeRCState}
+                >
+                  <option>--Select State--</option>
+                  {allStates.map((apis) => (
+                    <option key={apis.code} value={apis.name}>
+                      {apis.name}
+                    </option>
+                  ))}
+                </Form.Select>
+              </FormGroup>
+            </Col>
+          </Row>
+          <Row>
+            <Col className="pl-md-1" md="12">
+              <FormGroup>
+                <label>Street</label>
                 <Input
-                  onChange={() => {}}
+                  onChange={(e) => setStreet(e.target.value)}
                   // defaultValue={`${data11.lastName}`}
-                  placeholder="College"
+                  placeholder="street"
                   //   onChange={() => console.log()}
                   type="text"
-                  //   value={items[0]?.walletBalance}
+                  // value={String(items[0]?.verificationComment)}
                   // disabled
                 />
               </FormGroup>
-            </Col> */}
+            </Col>
           </Row>
           <Button
             variant="gradient"
@@ -230,7 +259,7 @@ export default function FacultyAdd() {
             color="success"
             onClick={() => handleAdd()}
           >
-            Add Faculty
+            Add School
           </Button>
         </CardBody>
       </Card>

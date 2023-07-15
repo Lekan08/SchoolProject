@@ -13,7 +13,7 @@ import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 import "../Css.css";
 
-export default function Students() {
+export default function Schools() {
   const { countriesAndStates: AlCountry } = AllCountriesAndStates();
   const [allStates, setAllStates] = useState([]);
 
@@ -57,29 +57,29 @@ export default function Students() {
     p: 4,
     textAlign: "center",
   };
-  //   useEffect(() => {
-  //     setOpened(true);
-  //     const headers = miHeaders;
-  //     fetch(`${process.env.REACT_APP_SCH_URL}/students/gets/{id}`, { headers })
-  //       .then(async (res) => {
-  //         const aToken = res.headers.get("token-1");
-  //         localStorage.setItem("rexxdex", aToken);
-  //         return res.json();
-  //       })
-  //       .then((result) => {
-  //         setOpened(false);
-  //         console.log(result);
-  //         setItems(result);
-  //       })
-  //       .catch((error) => {
-  //         setOpened(false);
-  //         Swal.fire({
-  //           title: error.status,
-  //           icon: "error",
-  //           text: error.message,
-  //         });
-  //       });
-  //   }, []);
+  useEffect(() => {
+    setOpened(true);
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/schools/getAll`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setItems(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  }, []);
   return (
     <div className="content">
       <Paper elevation={8}>
@@ -102,7 +102,7 @@ export default function Students() {
               variant="h5"
               className="headz"
             >
-              All Students
+              All Schools
             </Typography>
           </Button>
           <div
@@ -111,7 +111,7 @@ export default function Students() {
               // height: "100vh",
               margin: "4vw",
               display: "grid",
-              gridTemplateColumns: "30vw 30vw",
+              gridTemplateColumns: "30vw",
               gridColumnGap: "5vw",
               marginRight: "auto",
               marginLeft: "auto",
@@ -140,33 +140,9 @@ export default function Students() {
                   lineHeight: "4rem",
                   marginLeft: "auto",
                 }}
-                onClick={() => Navigate("/students/add")}
+                onClick={() => Navigate("/schools/add")}
               >
-                Add a student
-              </div>
-            </Paper>
-            <Paper
-              elevation={8}
-              // className="signbox"
-              className="resizer2"
-              style={{
-                zIndex: 100,
-                borderRadius: 500,
-                textAlign: "center",
-              }}
-            >
-              <div
-                className="col-res"
-                // lg="5"
-                style={{
-                  cursor: "pointer",
-                  marginRight: "auto",
-                  lineHeight: "4rem",
-                  marginLeft: "auto",
-                }}
-                onClick={() => Navigate("/students/multiple")}
-              >
-                Add multiple students (CSV)
+                Add School
               </div>
             </Paper>
           </div>
@@ -176,33 +152,18 @@ export default function Students() {
       <DataTable
         data={{
           columns: [
-            {
-              Header: "Name",
-              accessor: "firstName",
-              renderCell: (params) => {
-                return `${params.row.firstName} ${params.row.lastName}`;
-              },
-            },
-            { Header: "Matric number", accessor: "matricNumber" },
-            { Header: "department", accessor: "department" },
-            { Header: "faculty", accessor: "faculty" },
-            { Header: "school", accessor: "school" },
-            { Header: "sex", accessor: "sex" },
+            { Header: "Name", accessor: "name" },
+            { Header: "head", accessor: "head" },
             { Header: "city", accessor: "city" },
             { Header: "state", accessor: "state" },
             { Header: "country", accessor: "country" },
-            { Header: "phone number", accessor: "phoneNumber" },
-            { Header: "email", accessor: "email" },
             {
-              Header: "Date Of Birth",
-              width: 200,
-              accessor: "dateOfBirth",
+              Header: "type",
+              accessor: "schoolType",
               renderCell: (params) => {
-                return `${new Date(
-                  params.row.dateOfBirth
-                ).toLocaleTimeString()}, ${new Date(
-                  params.row.dateOfBirth
-                ).toLocaleDateString()}`;
+                if (params.row.schoolType === 1) return "Polytechnic";
+                if (params.row.schoolType === 2) return "College";
+                return "University";
               },
             },
             {
@@ -227,19 +188,21 @@ export default function Students() {
                     <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}
                       onClick={() => {
-                        Navigate(`/students/view?id=${cell.row.id}`);
+                        Navigate(`/schools/update?id=${cell.row.id}`);
                       }}
-                    >
-                      View
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      style={{ fontweight: "bold", color: "black" }}
-                      onClick={() =>
-                        Navigate(`/students/update?id=${cell.row.id}`)
-                      }
                     >
                       Update
                     </Dropdown.Item>
+                    {/* <Dropdown.Item
+                      style={{ fontweight: "bold", color: "black" }}
+                      onClick={() =>
+                        Navigate(
+                          `/customers/referral?id=${cell.row.id}&name=${cell.row.firstName} ${cell.row.lastName}`
+                        )
+                      }
+                    >
+                      View Referrals
+                    </Dropdown.Item> */}
                   </Dropdown.Menu>
                 </Dropdown>
               ),
@@ -248,6 +211,60 @@ export default function Students() {
           rows: items,
         }}
       />
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <div className="row" style={{ marginTop: "40px" }}>
+            <div className="col-sm-6">
+              <Form.Select
+                value={residentialCountryx || ""}
+                aria-label="Default select example"
+                onChange={handleOnChangeRCCountry}
+              >
+                <option value="">--Select Country--</option>
+                {AlCountry.map((apic) => (
+                  <option key={apic.code3} value={apic.name}>
+                    {apic.name}
+                  </option>
+                ))}
+              </Form.Select>
+            </div>
+            <div className="col-sm-6">
+              <Form.Select
+                value={residentialStatex || ""}
+                aria-label="Default select example"
+                onChange={handleOnChangeRCState}
+              >
+                <option>--Select State--</option>
+                {allStates.map((apis) => (
+                  <option key={apis.code} value={apis.name}>
+                    {apis.name}
+                  </option>
+                ))}
+              </Form.Select>
+            </div>
+          </div>
+          <Box mt={8}>
+            <Button
+              variant="gradient"
+              style={{
+                marginLeft: "auto",
+                marginRight: "auto",
+                display: "flex",
+              }}
+              color="info"
+              //   onClick={() => handleUpdate()}
+            >
+              Get Riders
+            </Button>
+          </Box>
+          <br />
+        </Box>
+      </Modal>
       <Backdrop
         sx={{ color: "white", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={opened}

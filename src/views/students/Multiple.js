@@ -156,11 +156,11 @@ export default function StudentMultiple() {
               variant="h5"
               className="headz"
             >
-              Add Students Through CSV
+              Add Students Using CSV
             </Typography>
           </Button>
           <br />
-          <Typography mt={2}>
+          {/* <Typography mt={2}>
             <u>Before Proceeding Please Read carefully:</u>
           </Typography>
           <Box p={3} mt={1}>
@@ -224,7 +224,7 @@ export default function StudentMultiple() {
                 Close
               </Button>
             </Box>
-          </Modal>
+          </Modal> */}
         </CardBody>
       </Card>
       <Backdrop

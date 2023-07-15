@@ -27,15 +27,15 @@ export default function DepartmentAdd() {
   const [headOfDepart, setHeadOfDepart] = useState("");
   const MySwal = withReactContent(Swal);
   const { allGHeaders: miHeaders } = GHeaders();
-  const [faculty, setFaculty] = useState([]);
-  const [facultyx, setFacultyMap] = useState("");
+  const [faculties, setFaculties] = useState([]);
+  const [facultyx, setFaculty] = useState("");
   //   const { allPHeaders: myHeaders } = PHeaders();
   //   const { allGHeaders: miHeaders } = GHeaders();
   //   const queryString = window.location.search;
   //   const urlParams = new URLSearchParams(queryString);
   //   const idx = urlParams.get("id");
 
-  console.log(faculty);
+  console.log(faculties);
   // useEffect(() => {
   //   setOpened(true);
   //   const userData = JSON.parse(localStorage.getItem("user"));
@@ -168,6 +168,62 @@ export default function DepartmentAdd() {
     // }
   };
 
+  const handleFaculty = (val) => {
+    // const data11 = JSON.parse(localStorage.getItem("user1"));
+    // const id = data11.id;
+    setOpened(true);
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/faculties/gets/${val}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        // setItems(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+  useEffect(() => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/faculties/gets/${schID}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setFaculties(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  }, []);
+
   return (
     <div className="content">
       <Card mx={2}>
@@ -226,29 +282,30 @@ export default function DepartmentAdd() {
                 />
               </FormGroup>
             </Col>{" "}
-            <Col>
-              <Typography
-                variant="button"
-                fontWeight="regular"
-                color="text"
-                mt={2}
-              >
-                Faculty
-              </Typography>
-              <Box textAlign="left">
+            <Col
+              md="4"
+              className="pl-md-1"
+              style={{
+                justifyContent: "center",
+                marginLeft: "auto",
+                marginRight: "auto",
+              }}
+            >
+              <FormGroup>
                 <Form.Select
-                  onChange={(e) => setFacultyMap(e.target.value)}
+                  style={{ marginBottom: "20px" }}
                   value={facultyx || ""}
                   aria-label="Default select example"
+                  onChange={(e) => setFaculty(e.target.value)}
                 >
-                  <option>--Select Faculty--</option>
-                  {/* {faculty.map((apis) => (
-                    <option key={apis.id} value={apis.id}>
-                      {apis.name}
+                  <option value="">--Select Faculty--</option>
+                  {faculties.map((apic) => (
+                    <option key={apic.id} value={apic.id}>
+                      {apic.name}
                     </option>
-                  ))} */}
+                  ))}
                 </Form.Select>
-              </Box>
+              </FormGroup>
             </Col>
             {/* <Col md="3" className="pl-md-1">
               <FormGroup>

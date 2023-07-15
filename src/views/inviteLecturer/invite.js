@@ -52,7 +52,7 @@ export default function InviteLecturer() {
       firstName: firstNamex,
       lastName: lastNamex,
       email: emailx,
-      // roleID: "string",
+      roleID: "0",
       schoolID: userData.schoolID,
     });
     // console.log(raw);

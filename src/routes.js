@@ -41,6 +41,11 @@ import DepartmentMultiple from "views/departments/Multiple";
 import Faculties from "views/faculties";
 import FacultyAdd from "views/faculties/Add";
 import FacultyMultiple from "views/faculties/Multiple";
+import Schools from "views/school";
+import SchoolAdd from "views/school/Add";
+import StudentView from "views/students/view";
+import StudentUpdate from "views/students/update";
+import SchoolUpdate from "views/school/update";
 var routes = [
   {
     path: "/sign-in",
@@ -123,6 +128,27 @@ var routes = [
     admin: true,
   },
   {
+    path: "/schools",
+    name: "School Profile",
+    icon: "location_city",
+    component: Schools,
+    admin: true,
+  },
+  {
+    path: "/schools/add",
+    name: "Schools",
+    icon: "location_city",
+    component: SchoolAdd,
+    redirect: true,
+  },
+  {
+    path: "/schools/update",
+    name: "Update School",
+    icon: "location_city",
+    component: SchoolUpdate,
+    redirect: true,
+  },
+  {
     path: "/students",
     name: "Students",
     icon: "school",
@@ -134,6 +160,20 @@ var routes = [
     name: "Add student",
     icon: "school",
     component: StudentAdd,
+    redirect: true,
+  },
+  {
+    path: "/students/view",
+    name: "View student",
+    icon: "school",
+    component: StudentView,
+    redirect: true,
+  },
+  {
+    path: "/students/update",
+    name: "Update student",
+    icon: "school",
+    component: StudentUpdate,
     redirect: true,
   },
   {

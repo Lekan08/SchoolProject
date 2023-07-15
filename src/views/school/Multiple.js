@@ -25,7 +25,7 @@ import {
 import example from "./example.jpg";
 import DataTable from "examples/TableList";
 
-export default function DepartmentMultiple() {
+export default function FacultyMultiple() {
   const style = {
     position: "absolute",
     top: "50%",
@@ -72,8 +72,8 @@ export default function DepartmentMultiple() {
       complete(results) {
         const obj = results.data.map((r) => ({
           name: r.name,
-          description: r.description,
-          head: r.head,
+          state: r.state.charAt(0).toUpperCase() + r.state.slice(1),
+          country: r.country.charAt(0).toUpperCase() + r.country.slice(1),
           descrip: r.description,
         }));
         setFile(obj);
@@ -156,7 +156,7 @@ export default function DepartmentMultiple() {
               variant="h5"
               className="headz"
             >
-              Add Departments Through CSV
+              Add Students Through CSV
             </Typography>
           </Button>
           <br />
