@@ -54,13 +54,14 @@ export default function FacultyAdd() {
       });
   }, []);
   const handleAdd = () => {
-    // const data11 = JSON.parse(localStorage.getItem("user1"));
-    // const id = data11.id;
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
 
     const raw = JSON.stringify({
       name: name,
       description: description,
-      schoolID: school,
+      schoolID: schID,
       head: head,
       // college:
     });
@@ -169,13 +170,13 @@ export default function FacultyAdd() {
           <Row style={{ marginTop: 20 }}>
             <Col md="4" className="pl-md-1">
               <FormGroup>
-                <label>Head</label>
+                <label>Head Of Faculty</label>
                 <Input
                   onChange={(e) => {
                     setHead(e.target.value);
                   }}
                   // defaultValue={`${data11.lastName}`}
-                  placeholder="head"
+                  placeholder="Head Of Faculty"
                   //   onChange={() => console.log()}
                   type="text"
                   //   value={items[0]?.walletBalance}
@@ -183,7 +184,7 @@ export default function FacultyAdd() {
                 />
               </FormGroup>
             </Col>{" "}
-            <Col md="4" className="pl-md-1">
+            {/* <Col md="4" className="pl-md-1">
               <FormGroup>
                 <label>School</label>
                 <Form.Select
@@ -200,8 +201,8 @@ export default function FacultyAdd() {
                   ))}
                 </Form.Select>
               </FormGroup>
-            </Col>{" "}
-            <Col md="4" className="pl-md-1">
+            </Col>{" "} */}
+            {/* <Col md="4" className="pl-md-1">
               <FormGroup>
                 <label>College</label>
                 <Input
@@ -214,7 +215,7 @@ export default function FacultyAdd() {
                   // disabled
                 />
               </FormGroup>
-            </Col>
+            </Col> */}
           </Row>
           <Button
             variant="gradient"

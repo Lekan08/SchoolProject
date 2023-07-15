@@ -95,8 +95,8 @@ function SignInAdmin() {
         console.log(result);
         if (result.status === "SUCCESS") {
           Navigate("/dashboard");
-          localStorage.setItem("user", result.data);
-          localStorage.setItem("user1", JSON.stringify(result.data));
+          // localStorage.setItem("user", result.data);
+          localStorage.setItem("user", JSON.stringify(result.data));
         } else {
           Swal.fire({
             title: result.status,
@@ -207,7 +207,6 @@ function SignInAdmin() {
                       />
                     </div>
                     <div style={{ padding: 10, lineHeight: "7vh" }}>
-          
                       <FormControl
                         sx={{ m: 1, width: "17rem" }}
                         variant="outlined"
@@ -249,6 +248,21 @@ function SignInAdmin() {
                         />
                       </FormControl>
                     </div>
+                    <Box mb={1} mt={-1} textAlign="center">
+                      Don't have an account? &nbsp;
+                      <Typography
+                        component={Link}
+                        // to="/authentication/sign-up-staff"
+                        onClick={() => Navigate("/sign-up-admin")}
+                        variant="button"
+                        color="primary"
+                        fontWeight="medium"
+                        id="forgotpassword"
+                        size="small"
+                      >
+                        Sign Up
+                      </Typography>
+                    </Box>
                     <button
                       type="submit"
                       className="btn btn-custom btn-xs"

@@ -34,8 +34,8 @@ import Invitation from "views/invitation";
 import CompleteResetPassword from "views/authentication/complete-resetPassword";
 import SignInAdmin from "views/authentication/SignInAdmin";
 import SignInStudent from "./views/authentication/SignInStudent";
-import SignUpAdmin from "views/authentication/registration/staff";
-import SchoolInformation from "views/authentication/registration/addSchool";
+import SignUpAdmin from "views/authentication/SIgnUpAdmin";
+// import SchoolInformation from "views/authentication/registration/addSchool";
 import Faculty from "views/authentication/registration/faculty";
 import Department from "views/authentication/registration/department";
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -49,9 +49,9 @@ root.render(
           <Route path="/sign-in-admin" element={<SignInAdmin />} />
           <Route path="/sign-in-student" element={<SignInStudent />} />
           <Route path="/sign-up-admin" element={<SignUpAdmin />} />
-          <Route path="/schoolInformation" element={<SchoolInformation />} />
+          {/* <Route path="/schoolInformation" element={<SchoolInformation />} /> */}
           <Route path="/faculty" element={<Faculty />} />
-          <Route path="/departments" element={<Department />} />
+          <Route path="/department" element={<Department />} />
 
           {/* <Route path="/reset-password" element={<ResetPassword />} /> */}
           {/* <Route path="/authentication/complete-reset-Password" element={<CompleteResetPassword />} /> */}

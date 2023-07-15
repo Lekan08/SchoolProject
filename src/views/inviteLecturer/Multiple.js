@@ -2,7 +2,7 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-shadow */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Papa from "papaparse";
 import { Button } from "reactstrap";
 import { Typography, Box, Modal } from "@mui/material";
@@ -15,7 +15,6 @@ import { AccountCircleSharp, School } from "@mui/icons-material";
 import { Card } from "@mui/material";
 import {
   FormGroup,
-  Form,
   Input,
   Row,
   Col,
@@ -24,8 +23,10 @@ import {
 } from "reactstrap";
 import example from "./example.jpg";
 import DataTable from "examples/TableList";
+import Form from "react-bootstrap/Form";
+import GHeaders from "getHeader";
 
-export default function DepartmentMultiple() {
+export default function InviteMultiple() {
   const style = {
     position: "absolute",
     top: "50%",
@@ -63,6 +64,7 @@ export default function DepartmentMultiple() {
   const { allPHeaders: myHeaders } = PHeaders();
   const navigate = useNavigate();
   const [file, setFile] = useState([]);
+  const { allGHeaders: miHeaders } = GHeaders();
 
   const [opened, setOpened] = useState(false);
   const changeHandler = (event) => {
@@ -72,14 +74,47 @@ export default function DepartmentMultiple() {
       complete(results) {
         const obj = results.data.map((r) => ({
           name: r.name,
-          description: r.description,
-          head: r.head,
+          state: r.state.charAt(0).toUpperCase() + r.state.slice(1),
+          country: r.country.charAt(0).toUpperCase() + r.country.slice(1),
           descrip: r.description,
         }));
         setFile(obj);
       },
     });
   };
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("user"));
+    console.log(userData);
+    const schId = userData.schoolID;
+    const headers = miHeaders;
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_SCH_URL}/faculties/gets/${schId}`, {
+      headers,
+    })
+      .then(async (res) => {
+        // const aToken = res.headers.get("token-1");
+        // localStorage.setItem("rexxdex", aToken);
+        // return res.json();
+        const result = await res.text();
+        // if (result === null || result === undefined || result === "") {
+        //   return {};
+        // }
+        return res.json();
+      })
+      .then((result) => {
+        console.log(result);
+        if (isMounted) {
+          console.log(result);
+          if (Object.keys(result).length !== 0) {
+            console.log("omo");
+            // setFaculty(result);
+          }
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
   const handleUpload = () => {
     setOpened(true);
     handleClose();
@@ -156,10 +191,36 @@ export default function DepartmentMultiple() {
               variant="h5"
               className="headz"
             >
-              Add Departments Through CSV
+              Invite Multiple Lecturer Through CSV
             </Typography>
           </Button>
           <br />
+          <Row>
+            <Col>
+              <Typography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                mt={2}
+              >
+                Faculty
+              </Typography>
+              <Box textAlign="left">
+                <Form.Select
+                  onChange={(e) => "setFacultyMap"(e.target.value)}
+                  value={"facultyx" || ""}
+                  aria-label="Default select example"
+                >
+                  <option>--Select Faculty--</option>
+                  {/* {faculty.map((apis) => (
+                    <option key={apis.id} value={apis.id}>
+                      {apis.name}
+                    </option>
+                  ))} */}
+                </Form.Select>
+              </Box>
+            </Col>
+          </Row>
           <Typography mt={2}>
             <u>Before Proceeding Please Read carefully:</u>
           </Typography>
@@ -212,9 +273,9 @@ export default function DepartmentMultiple() {
               <DataTable
                 data={{
                   columns: [
-                    { Header: "Name", accessor: "name" },
-                    { Header: "State", accessor: "state" },
-                    { Header: "Country", accessor: "country" },
+                    { Header: "First Name", accessor: "firstName" },
+                    { Header: "Last Name", accessor: "lastName" },
+                    { Header: "Email", accessor: "email" },
                     { Header: "Description", accessor: "descrip" },
                   ],
                   rows: file.map((r, index) => ({ ...r, id: index })),
