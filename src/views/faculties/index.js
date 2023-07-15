@@ -231,47 +231,47 @@ export default function Faculties() {
             { Header: "Name", accessor: "name" },
             { Header: "description", accessor: "description" },
             { Header: "head", accessor: "head" },
-            {
-              Header: "options",
-              accessor: "id",
-              renderCell: (cell) => (
-                <Dropdown style={{ position: "absolute" }}>
-                  <Dropdown.Toggle
-                    style={{ width: "5rem", height: "30px", padding: 0 }}
-                    variant="info"
-                    size="lg"
-                  >
-                    <Settings
-                      sx={{
-                        textAlign: "center",
-                        fontSize: "18px",
-                      }}
-                    />
-                  </Dropdown.Toggle>
+            // {
+            //   Header: "options",
+            //   accessor: "id",
+            //   renderCell: (cell) => (
+            //     <Dropdown style={{ position: "absolute" }}>
+            //       <Dropdown.Toggle
+            //         style={{ width: "5rem", height: "30px", padding: 0 }}
+            //         variant="info"
+            //         size="lg"
+            //       >
+            //         <Settings
+            //           sx={{
+            //             textAlign: "center",
+            //             fontSize: "18px",
+            //           }}
+            //         />
+            //       </Dropdown.Toggle>
 
-                  <Dropdown.Menu>
-                    <Dropdown.Item
-                      style={{ fontweight: "bold", color: "black" }}
-                      onClick={() => {
-                        Navigate(`/customers/view?id=${cell.row.id}`);
-                      }}
-                    >
-                      View
-                    </Dropdown.Item>
-                    {/* <Dropdown.Item
-                      style={{ fontweight: "bold", color: "black" }}
-                      onClick={() =>
-                        Navigate(
-                          `/customers/referral?id=${cell.row.id}&name=${cell.row.firstName} ${cell.row.lastName}`
-                        )
-                      }
-                    >
-                      View Referrals
-                    </Dropdown.Item> */}
-                  </Dropdown.Menu>
-                </Dropdown>
-              ),
-            },
+            //       <Dropdown.Menu>
+            //         <Dropdown.Item
+            //           style={{ fontweight: "bold", color: "black" }}
+            //           onClick={() => {
+            //             Navigate(`/customers/view?id=${cell.row.id}`);
+            //           }}
+            //         >
+            //           View
+            //         </Dropdown.Item>
+            //         {/* <Dropdown.Item
+            //           style={{ fontweight: "bold", color: "black" }}
+            //           onClick={() =>
+            //             Navigate(
+            //               `/customers/referral?id=${cell.row.id}&name=${cell.row.firstName} ${cell.row.lastName}`
+            //             )
+            //           }
+            //         >
+            //           View Referrals
+            //         </Dropdown.Item> */}
+            //       </Dropdown.Menu>
+            //     </Dropdown>
+            //   ),
+            // },
           ],
           rows: items,
         }}
