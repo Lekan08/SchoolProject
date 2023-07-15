@@ -119,7 +119,7 @@ function SignIn() {
     backdropFilter: "blur(40px)",
   }));
   return (
-    <>
+    <div>
       <img
         src={Students}
         alt="img"
@@ -135,6 +135,7 @@ function SignIn() {
       <div className="bubble2">
         {/* <Col md="12"> */}
         <Widget
+        className="calamity"
           style={{
             marginTop: "3rem",
             justifyContent: "center",
@@ -214,8 +215,9 @@ function SignIn() {
             </div>
           </Paper>
         </div>
+        <div style={{height: "20px"}} />
       </div>
-    </>
+    </div>
   );
 }
 
