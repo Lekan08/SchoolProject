@@ -53,8 +53,6 @@ export default function FacultyAdd() {
         });
       });
   }, []);
-  const userInfo = JSON.parse(localStorage.getItem("user"));
-  console.log(userInfo);
   const handleAdd = () => {
     const userInfo = JSON.parse(localStorage.getItem("user"));
     console.log(userInfo);

@@ -1,25 +1,31 @@
 import React, { useState, useEffect } from "react";
-import { Box, Modal, Paper, Typography } from "@mui/material";
-import { Button, Card } from "reactstrap";
-import DataTable from "examples/TableList";
-import Backdrop from "@mui/material/Backdrop";
-import CircularProgress from "@mui/material/CircularProgress";
 import Swal from "sweetalert2";
-import AllCountriesAndStates from "countries-states-master/countries";
-import { Dropdown, Form } from "react-bootstrap";
-import { Settings } from "@mui/icons-material";
-import Navigate from "useNavigate";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
-import "../Css.css";
+import AllCountriesAndStates from "countries-states-master/countries";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+import { AccountCircleSharp, LocationCity } from "@mui/icons-material";
+import { Form } from "react-bootstrap";
+import { Card } from "@mui/material";
+import { Button, FormGroup, Input, Row, Col, CardBody } from "reactstrap";
+import Navigate from "useNavigate";
 
-export default function Schools() {
+export default function School() {
+  const [opened, setOpened] = useState(false);
+  const [name, setName] = useState("");
+  const [id, setId] = useState("");
+  const [email, setEmail] = useState("");
+  const [head, setHead] = useState("");
+  const [city, setCity] = useState("");
+  const [street, setStreet] = useState("");
   const { countriesAndStates: AlCountry } = AllCountriesAndStates();
   const [allStates, setAllStates] = useState([]);
-
   const [residentialStatex, setResidentialState] = useState("");
   const [residentialCountryx, setResidentialCountry] = useState("");
+
   const handleOnChangeRCCountry = (e) => {
+    console.log(type);
     if (e.target.value) {
       const filteredItems = AlCountry.filter(
         (item) => item.name === e.target.value
@@ -35,32 +41,16 @@ export default function Schools() {
   const handleOnChangeRCState = (e) => {
     setResidentialState(e.target.value);
   };
-  const [open, setOpen] = React.useState(false);
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const [type, setType] = useState("");
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
-  const [items, setItems] = useState([]);
-  const [idx, setIdx] = useState("");
-  const [tripID, setTripID] = useState("");
-  const [opened, setOpened] = useState(false);
-  const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 600,
-    bgcolor: "background.paper",
-    border: "2px solid gray",
-    boxShadow: 24,
-    p: 4,
-    textAlign: "center",
-  };
   useEffect(() => {
     setOpened(true);
+    const idx = JSON.parse(localStorage.getItem("user1"));
     const headers = miHeaders;
-    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/schools/getAll`, { headers })
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/schools/getByIds/${idx.schoolID}`, {
+      headers,
+    })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -68,8 +58,18 @@ export default function Schools() {
       })
       .then((result) => {
         setOpened(false);
-        console.log(result);
-        setItems(result);
+        setName(result[0].name);
+        setEmail(result[0].email);
+        setHead(result[0].head);
+        setCity(result[0].city);
+        setId(result[0].id);
+        setStreet(result[0].street);
+        // setResidentialCountry(result[0].country);
+        const c = { target: { value: result[0].country } };
+        handleOnChangeRCCountry(c);
+        setType(String(result[0].schoolType));
+        // console.log(result);
+        setResidentialState(result[0].state);
       })
       .catch((error) => {
         setOpened(false);
@@ -80,191 +80,232 @@ export default function Schools() {
         });
       });
   }, []);
+  const handleAdd = () => {
+    // const data11 = JSON.parse(localStorage.getItem("user1"));
+    // const id = data11.id;
+    const id = JSON.parse(localStorage.getItem("user1"));
+
+    const raw = JSON.stringify({
+      id: id.schoolID,
+      name: name,
+      email: email,
+      head: head,
+      city: city,
+      street: street,
+      state: residentialStatex,
+      country: residentialCountryx,
+      schoolType: Number(type),
+    });
+    console.log(raw);
+    const requestOptions = {
+      method: "PUT",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+    setOpened(true);
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/schools/update`,
+      requestOptions
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        if (result.message === "Expired Access") {
+          Navigate("/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          Navigate("/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          Navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        console.log(result);
+        if (result.status === "SUCCESS") {
+          Swal.fire({
+            title: result.status,
+            icon: "success",
+            text: result.message,
+          });
+        } else {
+          Swal.fire({
+            title: result.status,
+            icon: "error",
+            text: result.message,
+          });
+        }
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+
   return (
     <div className="content">
-      <Paper elevation={8}>
-        <Card>
-          <Button
-            tag="label"
-            className="data1"
-            color="success"
-            style={{
-              width: "40vw",
-              fontSize: "20px",
-              marginRight: "auto",
+      <Card mx={2}>
+        <CardBody>
+          <LocationCity
+            sx={{
+              fontSize: 230,
               marginLeft: "auto",
-              // height: "50px",
+              marginRight: "auto",
+              display: "flex",
+            }}
+          />
+          <br />
+          <Row>
+            <Col className="pl-md-1" md="6">
+              <FormGroup>
+                <label>Name</label>
+                <Input
+                  onChange={(e) => setName(e.target.value)}
+                  // defaultValue={`${data11.firstName}`}
+                  placeholder="First Name"
+                  value={name}
+                  //   disabled
+                  type="text"
+                />
+              </FormGroup>
+            </Col>
+            <Col className="pl-md-1" md="6">
+              <FormGroup>
+                <label htmlFor="exampleInputEmail1">Email address</label>
+                <Input
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={email}
+                  // value=""
+                  placeholder="School mail goes here"
+                  type="email"
+                />
+              </FormGroup>
+            </Col>
+          </Row>
+          <Row style={{ marginTop: 20 }}>
+            <Col md="6" className="pl-md-1">
+              <FormGroup>
+                <label>Head</label>
+                <Input
+                  // defaultValue={`${data11.lastName}`}
+                  placeholder="head"
+                  value={head}
+                  //   onChange={() => console.log()}
+                  type="text"
+                  onChange={(e) => setHead(e.target.value)}
+                  //   value={items[0]?.walletBalance}
+                  // disabled
+                />
+              </FormGroup>
+            </Col>{" "}
+            <Col md="6" className="pl-md-1">
+              <FormGroup>
+                <label>School Type</label>
+                <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  value={type || ""}
+                  aria-label="Default select example"
+                  onChange={(e) => setType(e.target.value)}
+                >
+                  <option value="">--Select Type--</option>
+                  <option value="0">University</option>
+                  <option value="1">Polytechnic</option>
+                  <option value="2">College Of Education</option>
+                </Form.Select>
+              </FormGroup>
+            </Col>{" "}
+          </Row>
+          <Row>
+            <Col className="pl-md-1" md="4">
+              <FormGroup>
+                <label>City</label>
+                <Input
+                  // defaultValue={`${data11.city}`}
+                  onChange={(e) => setCity(e.target.value)}
+                  value={city}
+                  placeholder="City"
+                  type="text"
+                />
+              </FormGroup>
+            </Col>
+            <Col className="pl-md-3" md="4">
+              <FormGroup>
+                <label>Country</label>
+                <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  value={residentialCountryx || ""}
+                  aria-label="Default select example"
+                  onChange={handleOnChangeRCCountry}
+                >
+                  <option value="">--Select Country--</option>
+                  {AlCountry.map((apic) => (
+                    <option key={apic.code3} value={apic.name}>
+                      {apic.name}
+                    </option>
+                  ))}
+                </Form.Select>
+              </FormGroup>
+            </Col>
+            <Col className="pl-md-3" md="4">
+              <FormGroup>
+                <label>State</label>
+                <Form.Select
+                  value={residentialStatex || ""}
+                  aria-label="Default select example"
+                  onChange={handleOnChangeRCState}
+                >
+                  <option>--Select State--</option>
+                  {allStates.map((apis) => (
+                    <option key={apis.code} value={apis.name}>
+                      {apis.name}
+                    </option>
+                  ))}
+                </Form.Select>
+              </FormGroup>
+            </Col>
+          </Row>
+          <Row>
+            <Col className="pl-md-1" md="12">
+              <FormGroup>
+                <label>Street</label>
+                <Input
+                  onChange={(e) => setStreet(e.target.value)}
+                  // defaultValue={`${data11.lastName}`}
+                  value={street}
+                  placeholder="street"
+                  //   onChange={() => console.log()}
+                  type="text"
+                  // value={String(items[0]?.verificationComment)}
+                  // disabled
+                />
+              </FormGroup>
+            </Col>
+          </Row>
+          <Button
+            variant="gradient"
+            style={{
+              marginLeft: "auto",
+              marginRight: "auto",
+              display: "flex",
               marginTop: "20px",
             }}
+            color="success"
+            onClick={() => handleAdd()}
           >
-            <Typography
-              style={{ color: "white", fontSize: "1.5rem" }}
-              variant="h5"
-              className="headz"
-            >
-              All Schools
-            </Typography>
+            Update School Profile
           </Button>
-          <div
-            className="row-res"
-            style={{
-              // height: "100vh",
-              margin: "4vw",
-              display: "grid",
-              gridTemplateColumns: "30vw",
-              gridColumnGap: "5vw",
-              marginRight: "auto",
-              marginLeft: "auto",
-              alignItems: "center",
-              justifyContent: "center",
-              zIndex: 100,
-              gridGap: "10vw",
-            }}
-          >
-            <Paper
-              elevation={8}
-              // className="signbox"
-              className="resizer2"
-              style={{
-                textAlign: "center",
-                zIndex: 100,
-                borderRadius: 500,
-              }}
-            >
-              <div
-                // lg="5"
-                className="col-res"
-                style={{
-                  marginRight: "auto",
-                  cursor: "pointer",
-                  lineHeight: "4rem",
-                  marginLeft: "auto",
-                }}
-                onClick={() => Navigate("/schools/add")}
-              >
-                Add School
-              </div>
-            </Paper>
-          </div>
-        </Card>
-      </Paper>
-      <br />
-      <DataTable
-        data={{
-          columns: [
-            { Header: "Name", accessor: "name" },
-            { Header: "head", accessor: "head" },
-            { Header: "city", accessor: "city" },
-            { Header: "state", accessor: "state" },
-            { Header: "country", accessor: "country" },
-            {
-              Header: "type",
-              accessor: "schoolType",
-              renderCell: (params) => {
-                if (params.row.schoolType === 1) return "Polytechnic";
-                if (params.row.schoolType === 2) return "College";
-                return "University";
-              },
-            },
-            {
-              Header: "options",
-              accessor: "id",
-              renderCell: (cell) => (
-                <Dropdown style={{ position: "absolute" }}>
-                  <Dropdown.Toggle
-                    style={{ width: "5rem", height: "30px", padding: 0 }}
-                    variant="info"
-                    size="lg"
-                  >
-                    <Settings
-                      sx={{
-                        textAlign: "center",
-                        fontSize: "18px",
-                      }}
-                    />
-                  </Dropdown.Toggle>
-
-                  <Dropdown.Menu>
-                    <Dropdown.Item
-                      style={{ fontweight: "bold", color: "black" }}
-                      onClick={() => {
-                        Navigate(`/schools/update?id=${cell.row.id}`);
-                      }}
-                    >
-                      Update
-                    </Dropdown.Item>
-                    {/* <Dropdown.Item
-                      style={{ fontweight: "bold", color: "black" }}
-                      onClick={() =>
-                        Navigate(
-                          `/customers/referral?id=${cell.row.id}&name=${cell.row.firstName} ${cell.row.lastName}`
-                        )
-                      }
-                    >
-                      View Referrals
-                    </Dropdown.Item> */}
-                  </Dropdown.Menu>
-                </Dropdown>
-              ),
-            },
-          ],
-          rows: items,
-        }}
-      />
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <div className="row" style={{ marginTop: "40px" }}>
-            <div className="col-sm-6">
-              <Form.Select
-                value={residentialCountryx || ""}
-                aria-label="Default select example"
-                onChange={handleOnChangeRCCountry}
-              >
-                <option value="">--Select Country--</option>
-                {AlCountry.map((apic) => (
-                  <option key={apic.code3} value={apic.name}>
-                    {apic.name}
-                  </option>
-                ))}
-              </Form.Select>
-            </div>
-            <div className="col-sm-6">
-              <Form.Select
-                value={residentialStatex || ""}
-                aria-label="Default select example"
-                onChange={handleOnChangeRCState}
-              >
-                <option>--Select State--</option>
-                {allStates.map((apis) => (
-                  <option key={apis.code} value={apis.name}>
-                    {apis.name}
-                  </option>
-                ))}
-              </Form.Select>
-            </div>
-          </div>
-          <Box mt={8}>
-            <Button
-              variant="gradient"
-              style={{
-                marginLeft: "auto",
-                marginRight: "auto",
-                display: "flex",
-              }}
-              color="info"
-              //   onClick={() => handleUpdate()}
-            >
-              Get Riders
-            </Button>
-          </Box>
-          <br />
-        </Box>
-      </Modal>
+        </CardBody>
+      </Card>
       <Backdrop
         sx={{ color: "white", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={opened}

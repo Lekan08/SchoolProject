@@ -92,7 +92,7 @@ function SignInAdmin() {
       })
       .then((result) => {
         setOpened(false);
-        // console.log(result);
+        console.log(result);
         if (result.status === "SUCCESS") {
           Navigate("/dashboard");
           // localStorage.setItem("user", result.data);
