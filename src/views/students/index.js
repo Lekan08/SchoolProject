@@ -16,7 +16,6 @@ import "../Css.css";
 export default function Students() {
   const { countriesAndStates: AlCountry } = AllCountriesAndStates();
   const [allStates, setAllStates] = useState([]);
-
   const [residentialStatex, setResidentialState] = useState("");
   const [residentialCountryx, setResidentialCountry] = useState("");
   const handleOnChangeRCCountry = (e) => {
@@ -80,6 +79,7 @@ export default function Students() {
   //         });
   //       });
   //   }, []);
+
   return (
     <div className="content">
       <Paper elevation={8}>

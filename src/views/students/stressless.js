@@ -37,7 +37,7 @@ export default function StudentAdd() {
   useEffect(() => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
-    console.log(userInfo);
+    // console.log(userInfo);
     const schID = userInfo.schoolID;
     const headers = miHeaders;
     fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/faculties/gets/${schID}`, {
@@ -64,11 +64,9 @@ export default function StudentAdd() {
   }, []);
   const handleDepartment = (w) => {
     setOpened(true);
-    const userInfo = JSON.parse(localStorage.getItem("user"));
-    console.log(userInfo);
     const headers = miHeaders;
     fetch(
-      `${process.env.REACT_APP_SCHPROJECT_URL}/departments/getByFacultyID/${w}`,
+      `${process.env.REACT_APP_SCHPROJECT_URL}/departments/getByFacultyID/${JSON.parse(w).id}`,
       {
         headers,
       }
@@ -115,7 +113,7 @@ export default function StudentAdd() {
       redirect: "follow",
     };
     fetch(
-      `${process.env.REACT_APP_SCHPROJECT_URL}/staffs/xxadd`,
+      `${process.env.REACT_APP_SCHPROJECT_URL}/student/add`,
       requestOptions2
     )
       .then(async (res) => {
@@ -306,12 +304,12 @@ export default function StudentAdd() {
                   onChange={(e) => {
                     handleDepartment(e.target.value);
                     setFaculty(e.target.value);
-                    console.log(e.target.key);
+                    console.log(e.target.value);
                   }}
                 >
                   <option value="">--Select Faculty--</option>
                   {faculties.map((apic) => (
-                    <option key={apic.id} value={apic.id}>
+                    <option key={apic.id} value={JSON.stringify(apic)}>
                       {apic.name}
                     </option>
                   ))}
@@ -330,7 +328,7 @@ export default function StudentAdd() {
                 >
                   <option value="">--Select Department--</option>
                   {departments.map((apic) => (
-                    <option key={apic.id} value={apic.id}>
+                    <option key={apic.id} value={JSON.stringify(apic)}>
                       {apic.name}
                     </option>
                   ))}
@@ -388,7 +386,8 @@ export default function StudentAdd() {
                   // disabled
                 />
                 <label style={{ color: "red", marginTop: 10 }}>
-                  Password to the student's profile will be the first name / matric number : 
+                  Password to the student's profile will be the first name /
+                  matric number : {fname}/{matric}
                 </label>
               </FormGroup>
             </Col>

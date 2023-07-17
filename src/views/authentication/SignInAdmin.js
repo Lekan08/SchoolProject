@@ -248,21 +248,6 @@ function SignInAdmin() {
                         />
                       </FormControl>
                     </div>
-                    <Box mb={1} mt={-1} textAlign="center">
-                      Don't have an account? &nbsp;
-                      <Typography
-                        component={Link}
-                        // to="/authentication/sign-up-staff"
-                        onClick={() => Navigate("/sign-up-admin")}
-                        variant="button"
-                        color="primary"
-                        fontWeight="medium"
-                        id="forgotpassword"
-                        size="small"
-                      >
-                        Sign Up
-                      </Typography>
-                    </Box>
                     <button
                       type="submit"
                       className="btn btn-custom btn-xs"

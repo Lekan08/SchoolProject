@@ -116,7 +116,6 @@ export default function Departments() {
   return (
     <div className="content">
       <Paper elevation={8}>
-        s
         <Card>
           <Button
             tag="label"
@@ -212,14 +211,10 @@ export default function Departments() {
           columns: [
             {
               Header: "Name",
-              accessor: "firstName",
-              renderCell: (params) => {
-                return `${params.row.firstName} ${params.row.lastName}`;
-              },
+              accessor: "name",
             },
             { Header: "description", accessor: "description" },
             { Header: "head", accessor: "head" },
-            { Header: "school", accessor: "school" },
             { Header: "faculty", accessor: "faculty" },
             { Header: "college", accessor: "college" },
             {
