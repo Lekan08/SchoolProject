@@ -27,6 +27,7 @@ export default function StudentAdd() {
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
   const [lname, setLname] = useState("");
+  const [type, setType] = useState("");
   const [matric, setMatric] = useState("");
   const [sex, setSex] = useState("");
   const [email, setEmail] = useState("");
@@ -93,6 +94,7 @@ export default function StudentAdd() {
       });
   };
   const handleAdd = () => {
+    console.log(`${fname}/${matric}`);
     const userInfo = JSON.parse(localStorage.getItem("user"));
     const raw2 = JSON.stringify({
       firstName: fname,
@@ -100,12 +102,12 @@ export default function StudentAdd() {
       email: email,
       phoneNumber: phonex,
       sex: sex,
-      dateOfBirth: dob.getTime(),
+      dateOfBirth: new Date(dob).getTime(),
       schoolID: userInfo.schoolID,
       depID: department,
       facultyID: faculty,
-      // roleID: "0",
-      lecturer: true,
+      matricNumber: matric,
+      studentType: Number(type),
     });
     console.log(raw2);
     const requestOptions2 = {
@@ -115,7 +117,7 @@ export default function StudentAdd() {
       redirect: "follow",
     };
     fetch(
-      `${process.env.REACT_APP_SCHPROJECT_URL}/staffs/xxadd`,
+      `${process.env.REACT_APP_SCHPROJECT_URL}/students/add`,
       requestOptions2
     )
       .then(async (res) => {
@@ -134,10 +136,10 @@ export default function StudentAdd() {
           // localStorage.setItem("admin4", result.data);
           // Navigate("/dashboard");
           const raw = JSON.stringify({
-            // username: emailx,
-            // password: passwordx,
+            username: matric,
+            password: `${fname}/${matric}`,
           });
-          // console.log(raw);
+          console.log(raw);
           const requestOptions = {
             method: "POST",
             headers: myHeaders,
@@ -146,7 +148,7 @@ export default function StudentAdd() {
           };
           // setOpened(true);
           fetch(
-            `${process.env.REACT_APP_SCHPROJECT_URL}/staffLogin/addLogin`,
+            `${process.env.REACT_APP_SCHPROJECT_URL}/studentLogin/addLogin`,
             requestOptions
           )
             .then(async (res) => {
@@ -260,6 +262,21 @@ export default function StudentAdd() {
                   <option value="">--Select Sex--</option>
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
+                </Form.Select>
+              </FormGroup>
+            </Col>
+            <Col md="5" className="pl-md-1">
+              <FormGroup>
+                <label>Student Type</label>
+                <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  value={type || ""}
+                  aria-label="Default select example"
+                  onChange={(e) => setType(e.target.value)}
+                >
+                  <option value="">--Select Type--</option>
+                  <option value="0">Major</option>
+                  <option value="1">Minor</option>
                 </Form.Select>
               </FormGroup>
             </Col>
@@ -388,7 +405,8 @@ export default function StudentAdd() {
                   // disabled
                 />
                 <label style={{ color: "red", marginTop: 10 }}>
-                  Password to the student's profile will be the first name / matric number : 
+                  Password to the student's profile will be the first name /
+                  matric number : {fname}/{matric}
                 </label>
               </FormGroup>
             </Col>

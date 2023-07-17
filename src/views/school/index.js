@@ -132,7 +132,7 @@ export default function School() {
           Swal.fire({
             title: result.status,
             icon: "success",
-            text: result.message,
+            text: "UPDATED SCHOOL PROFILE SUCCESSFULLY",
           });
         } else {
           Swal.fire({
