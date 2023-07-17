@@ -38,6 +38,7 @@ import SignUpAdmin from "views/authentication/SIgnUpAdmin";
 // import SchoolInformation from "views/authentication/registration/addSchool";
 import Faculty from "views/authentication/registration/faculty";
 import Department from "views/authentication/registration/department";
+import InvitedStaff from "views/authentication/invitedStaff";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
@@ -52,6 +53,7 @@ root.render(
           {/* <Route path="/schoolInformation" element={<SchoolInformation />} /> */}
           <Route path="/faculty" element={<Faculty />} />
           <Route path="/department" element={<Department />} />
+          <Route path="/invitedStaff" element={<InvitedStaff />} />
 
           {/* <Route path="/reset-password" element={<ResetPassword />} /> */}
           {/* <Route path="/authentication/complete-reset-Password" element={<CompleteResetPassword />} /> */}

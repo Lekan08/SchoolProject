@@ -65,18 +65,69 @@ export default function FacultyMultiple() {
   const [file, setFile] = useState([]);
 
   const [opened, setOpened] = useState(false);
+  // const changeHandler = (event) => {
+  //   Papa.parse(event.target.files[0], {
+  //     header: true,
+  //     skipEmptyLines: true,
+  //     complete(results) {
+  //       const obj = results.data.map((r) => ({
+  //         name: r.name,
+  //         state: r.state.charAt(0).toUpperCase() + r.state.slice(1),
+  //         country: r.country.charAt(0).toUpperCase() + r.country.slice(1),
+  //         descrip: r.description,
+  //       }));
+  //       setFile(obj);
+  //     },
+  //   });
+  // };
   const changeHandler = (event) => {
     Papa.parse(event.target.files[0], {
       header: true,
       skipEmptyLines: true,
       complete(results) {
-        const obj = results.data.map((r) => ({
-          name: r.name,
-          state: r.state.charAt(0).toUpperCase() + r.state.slice(1),
-          country: r.country.charAt(0).toUpperCase() + r.country.slice(1),
-          descrip: r.description,
-        }));
-        setFile(obj);
+        const userData = JSON.parse(localStorage.getItem("user"));
+        const schoolID = userData.id;
+        // const facultyID = facultyx;
+        const obj = results.data;
+        const objx = obj.map(
+          ({
+            name,
+            descrip,
+            head,
+            // eslint-disable-next-line arrow-body-style
+          }) => {
+            return {
+              name,
+              descrip,
+              head,
+            };
+          }
+        );
+
+        objx.forEach((element) => {
+          // element.facultyID = facultyID;
+          element.schoolID = schoolID;
+        });
+        const objc = objx.map(
+          ({
+            // facultyID,
+            schoolID,
+            name,
+            descrip,
+            head,
+            // eslint-disable-next-line arrow-body-style
+          }) => {
+            return {
+              name,
+              descrip,
+              head,
+              // facultyID,
+              schoolID,
+            };
+          }
+        );
+        const why = JSON.stringify(objc);
+        setFile(why);
       },
     });
   };
@@ -160,7 +211,7 @@ export default function FacultyMultiple() {
             </Typography>
           </Button>
           <br />
-          {/* <Typography mt={2}>
+          <Typography mt={2}>
             <u>Before Proceeding Please Read carefully:</u>
           </Typography>
           <Box p={3} mt={1}>
@@ -196,13 +247,13 @@ export default function FacultyMultiple() {
               />
             </Typography>
           </Box>
-          <Button onClick={handleOpen2} variant="success">
+          {/* <Button onClick={handleOpen2} variant="success">
             Preview
-          </Button>
+          </Button> */}
           <Button onClick={handleUpload} color="success">
             Upload
           </Button>
-          <Modal
+          {/* <Modal
             open={open2}
             onClose={handleClose2}
             aria-labelledby="modal-modal-title"
