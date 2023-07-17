@@ -38,9 +38,11 @@ import StudentMultiple from "views/students/Multiple";
 import Departments from "views/departments";
 import DepartmentAdd from "views/departments/Add";
 import DepartmentMultiple from "views/departments/Multiple";
+import DepartmentUpdate from "views/departments/update";
 import Faculties from "views/faculties";
 import FacultyAdd from "views/faculties/Add";
 import FacultyMultiple from "views/faculties/Multiple";
+import FacultyUpdate from "views/faculties/update";
 import Schools from "views/school";
 import SchoolAdd from "views/school/Add";
 import StudentView from "views/students/view";
@@ -213,6 +215,13 @@ var routes = [
     redirect: true,
   },
   {
+    path: "/departments/update",
+    // name: "Add multiple departments",
+    // icon: "school",
+    component: DepartmentUpdate,
+    redirect: true,
+  },
+  {
     path: "/faculties",
     name: "faculties",
     icon: "corporate_fare",
@@ -231,6 +240,13 @@ var routes = [
     name: "Add multiple faculties",
     icon: "school",
     component: FacultyMultiple,
+    redirect: true,
+  },
+  {
+    path: "/faculties/update",
+    // name: "Add multiple faculties",
+    // icon: "school",
+    component: FacultyUpdate,
     redirect: true,
   },
   {

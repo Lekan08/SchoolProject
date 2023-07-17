@@ -212,11 +212,15 @@ export default function Departments() {
             {
               Header: "Name",
               accessor: "name",
+              // renderCell: (params) => {
+              //   return `${params.row.firstName} ${params.row.lastName}`;
+              // },
             },
             { Header: "description", accessor: "description" },
-            { Header: "head", accessor: "head" },
-            { Header: "faculty", accessor: "faculty" },
-            { Header: "college", accessor: "college" },
+            { Header: "Head Of Department", accessor: "head" },
+            // { Header: "school", accessor: "school" },
+            // { Header: "faculty", accessor: "faculty" },
+            // { Header: "college", accessor: "college" },
             {
               Header: "options",
               accessor: "id",
@@ -244,16 +248,14 @@ export default function Departments() {
                     >
                       View
                     </Dropdown.Item>
-                    {/* <Dropdown.Item
+                    <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}
                       onClick={() =>
-                        Navigate(
-                          `/customers/referral?id=${cell.row.id}&name=${cell.row.firstName} ${cell.row.lastName}`
-                        )
+                        Navigate(`/departments/update?id=${cell.row.id}`)
                       }
                     >
-                      View Referrals
-                    </Dropdown.Item> */}
+                      Update
+                    </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
               ),
