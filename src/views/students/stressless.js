@@ -27,7 +27,6 @@ export default function StudentAdd() {
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
   const [lname, setLname] = useState("");
-  const [type, setType] = useState("");
   const [matric, setMatric] = useState("");
   const [sex, setSex] = useState("");
   const [email, setEmail] = useState("");
@@ -38,7 +37,7 @@ export default function StudentAdd() {
   useEffect(() => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
-    console.log(userInfo);
+    // console.log(userInfo);
     const schID = userInfo.schoolID;
     const headers = miHeaders;
     fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/faculties/gets/${schID}`, {
@@ -65,11 +64,9 @@ export default function StudentAdd() {
   }, []);
   const handleDepartment = (w) => {
     setOpened(true);
-    const userInfo = JSON.parse(localStorage.getItem("user"));
-    console.log(userInfo);
     const headers = miHeaders;
     fetch(
-      `${process.env.REACT_APP_SCHPROJECT_URL}/departments/getByFacultyID/${w}`,
+      `${process.env.REACT_APP_SCHPROJECT_URL}/departments/getByFacultyID/${JSON.parse(w).id}`,
       {
         headers,
       }
@@ -94,7 +91,6 @@ export default function StudentAdd() {
       });
   };
   const handleAdd = () => {
-    console.log(`${fname}/${matric}`);
     const userInfo = JSON.parse(localStorage.getItem("user"));
     const raw2 = JSON.stringify({
       firstName: fname,
@@ -102,12 +98,12 @@ export default function StudentAdd() {
       email: email,
       phoneNumber: phonex,
       sex: sex,
-      dateOfBirth: new Date(dob).getTime(),
+      dateOfBirth: dob.getTime(),
       schoolID: userInfo.schoolID,
       depID: department,
       facultyID: faculty,
-      matricNumber: matric,
-      studentType: Number(type),
+      // roleID: "0",
+      lecturer: true,
     });
     console.log(raw2);
     const requestOptions2 = {
@@ -117,7 +113,7 @@ export default function StudentAdd() {
       redirect: "follow",
     };
     fetch(
-      `${process.env.REACT_APP_SCHPROJECT_URL}/students/add`,
+      `${process.env.REACT_APP_SCHPROJECT_URL}/student/add`,
       requestOptions2
     )
       .then(async (res) => {
@@ -136,10 +132,10 @@ export default function StudentAdd() {
           // localStorage.setItem("admin4", result.data);
           // Navigate("/dashboard");
           const raw = JSON.stringify({
-            username: matric,
-            password: `${fname}/${matric}`,
+            // username: emailx,
+            // password: passwordx,
           });
-          console.log(raw);
+          // console.log(raw);
           const requestOptions = {
             method: "POST",
             headers: myHeaders,
@@ -148,7 +144,7 @@ export default function StudentAdd() {
           };
           // setOpened(true);
           fetch(
-            `${process.env.REACT_APP_SCHPROJECT_URL}/studentLogin/addLogin`,
+            `${process.env.REACT_APP_SCHPROJECT_URL}/staffLogin/addLogin`,
             requestOptions
           )
             .then(async (res) => {
@@ -265,21 +261,6 @@ export default function StudentAdd() {
                 </Form.Select>
               </FormGroup>
             </Col>
-            <Col md="5" className="pl-md-1">
-              <FormGroup>
-                <label>Student Type</label>
-                <Form.Select
-                  style={{ marginBottom: "20px" }}
-                  value={type || ""}
-                  aria-label="Default select example"
-                  onChange={(e) => setType(e.target.value)}
-                >
-                  <option value="">--Select Type--</option>
-                  <option value="0">Major</option>
-                  <option value="1">Minor</option>
-                </Form.Select>
-              </FormGroup>
-            </Col>
           </Row>
           <Row style={{ marginTop: 20 }}>
             <Col md="6" className="pl-md-1">
@@ -323,12 +304,12 @@ export default function StudentAdd() {
                   onChange={(e) => {
                     handleDepartment(e.target.value);
                     setFaculty(e.target.value);
-                    console.log(e.target.key);
+                    console.log(e.target.value);
                   }}
                 >
                   <option value="">--Select Faculty--</option>
                   {faculties.map((apic) => (
-                    <option key={apic.id} value={apic.id}>
+                    <option key={apic.id} value={JSON.stringify(apic)}>
                       {apic.name}
                     </option>
                   ))}
@@ -347,7 +328,7 @@ export default function StudentAdd() {
                 >
                   <option value="">--Select Department--</option>
                   {departments.map((apic) => (
-                    <option key={apic.id} value={apic.id}>
+                    <option key={apic.id} value={JSON.stringify(apic)}>
                       {apic.name}
                     </option>
                   ))}

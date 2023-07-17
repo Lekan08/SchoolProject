@@ -176,7 +176,6 @@ export default function Departments() {
   return (
     <div className="content">
       <Paper elevation={8}>
-        s
         <Card>
           <Button
             tag="label"
