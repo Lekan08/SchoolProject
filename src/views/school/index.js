@@ -47,7 +47,7 @@ export default function School() {
   useEffect(() => {
     setOpened(true);
     const idx = JSON.parse(localStorage.getItem("user"));
-    console.log(idx);
+    // console.log(idx);
     const headers = miHeaders;
     fetch(
       `${process.env.REACT_APP_SCHPROJECT_URL}/schools/getByIds/${idx.schoolID}`,
@@ -62,7 +62,7 @@ export default function School() {
       })
       .then((result) => {
         setOpened(false);
-        console.log(result);
+        // console.log(result);
         setName(result[0].name);
         setEmail(result[0].email);
         setHead(result[0].head);
