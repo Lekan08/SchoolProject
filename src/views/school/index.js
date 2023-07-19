@@ -46,11 +46,15 @@ export default function School() {
   const { allGHeaders: miHeaders } = GHeaders();
   useEffect(() => {
     setOpened(true);
-    const idx = JSON.parse(localStorage.getItem("user1"));
+    const idx = JSON.parse(localStorage.getItem("user"));
+    console.log(idx);
     const headers = miHeaders;
-    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/schools/getByIds/${idx.schoolID}`, {
-      headers,
-    })
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/schools/getByIds/${idx.schoolID}`,
+      {
+        headers,
+      }
+    )
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -58,6 +62,7 @@ export default function School() {
       })
       .then((result) => {
         setOpened(false);
+        console.log(result);
         setName(result[0].name);
         setEmail(result[0].email);
         setHead(result[0].head);
