@@ -113,6 +113,66 @@ export default function Departments() {
         });
       });
   }, []);
+  const handleDelete = (val) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const requestOptions = {
+          method: "DELETE",
+          headers: miHeaders,
+        };
+
+        fetch(
+          `${process.env.REACT_APP_SCHPROJECT_URL}/departments/delete/${val}`,
+          requestOptions
+        )
+          .then(async (res) => {
+            const aToken = res.headers.get("token-1");
+            localStorage.setItem("rexxdex", aToken);
+            const resultres = await res.text();
+            if (
+              resultres === null ||
+              resultres === undefined ||
+              resultres === ""
+            ) {
+              return {};
+            }
+            return JSON.parse(resultres);
+          })
+          .then((result) => {
+            if (result.status === "SUCCESS") {
+              Swal.fire({
+                title: result.status,
+                type: "success",
+                text: result.message,
+              }).then(() => {
+                window.location.reload();
+              });
+            } else {
+              Swal.fire({
+                title: result.status,
+                type: "error",
+                text: result.message,
+              });
+            }
+          })
+          .catch((error) => {
+            Swal.fire({
+              title: error.status,
+              type: "error",
+              text: error.message,
+            });
+          });
+      }
+    });
+  };
   return (
     <div className="content">
       <Paper elevation={8}>
@@ -216,7 +276,7 @@ export default function Departments() {
               //   return `${params.row.firstName} ${params.row.lastName}`;
               // },
             },
-            { Header: "description", accessor: "description" },
+            { Header: "description", accessor: "desc" },
             { Header: "Head Of Department", accessor: "head" },
             // { Header: "school", accessor: "school" },
             // { Header: "faculty", accessor: "faculty" },
@@ -242,11 +302,9 @@ export default function Departments() {
                   <Dropdown.Menu>
                     <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}
-                      onClick={() => {
-                        Navigate(`/customers/view?id=${cell.row.id}`);
-                      }}
+                      onClick={() => handleDelete(cell.row.id)}
                     >
-                      View
+                      Delete
                     </Dropdown.Item>
                     <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}

@@ -53,6 +53,8 @@ export default function FacultyAdd() {
         });
       });
   }, []);
+  const userInfo = JSON.parse(localStorage.getItem("user"));
+  console.log(userInfo);
   const handleAdd = () => {
     const userInfo = JSON.parse(localStorage.getItem("user"));
     console.log(userInfo);
@@ -84,18 +86,18 @@ export default function FacultyAdd() {
       })
       .then((result) => {
         setOpened(false);
-        if (result.message === "Expired Access") {
-          Navigate("/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Token Does Not Exist") {
-          Navigate("/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Unauthorized Access") {
-          Navigate("/authentication/forbiddenPage");
-          window.location.reload();
-        }
+        // if (result.message === "Expired Access") {
+        //   Navigate("/sign-in");
+        //   window.location.reload();
+        // }
+        // if (result.message === "Token Does Not Exist") {
+        //   Navigate("/sign-in");
+        //   window.location.reload();
+        // }
+        // if (result.message === "Unauthorized Access") {
+        //   Navigate("/authentication/forbiddenPage");
+        //   window.location.reload();
+        // }
         console.log(result);
         if (result.status === "SUCCESS") {
           Swal.fire({

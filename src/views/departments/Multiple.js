@@ -2,12 +2,13 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-shadow */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Papa from "papaparse";
 import { Button } from "reactstrap";
 import { Typography, Box, Modal } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import PHeaders from "postHeader";
+import GHeaders from "getHeader";
 import Swal from "sweetalert2";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -15,7 +16,6 @@ import { AccountCircleSharp, School } from "@mui/icons-material";
 import { Card } from "@mui/material";
 import {
   FormGroup,
-  Form,
   Input,
   Row,
   Col,
@@ -24,6 +24,7 @@ import {
 } from "reactstrap";
 import example from "./example.jpg";
 import DataTable from "examples/TableList";
+import Form from "react-bootstrap/Form";
 
 export default function DepartmentMultiple() {
   const style = {
@@ -61,22 +62,79 @@ export default function DepartmentMultiple() {
     setOpen2(false);
   };
   const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
   const navigate = useNavigate();
   const [file, setFile] = useState([]);
+  const [faculties, setFaculties] = useState([]);
+  const [facultyx, setFaculty] = useState("");
 
   const [opened, setOpened] = useState(false);
+  // const changeHandler = (event) => {
+  //   Papa.parse(event.target.files[0], {
+  //     header: true,
+  //     skipEmptyLines: true,
+  //     complete(results) {
+  //       const obj = results.data.map((r) => ({
+  //         name: r.name,
+  //         description: r.description,
+  //         head: r.head,
+  //         descrip: r.description,
+  //       }));
+  //       setFile(obj);
+  //     },
+  //   });
+  // };
+
   const changeHandler = (event) => {
     Papa.parse(event.target.files[0], {
       header: true,
       skipEmptyLines: true,
       complete(results) {
-        const obj = results.data.map((r) => ({
-          name: r.name,
-          description: r.description,
-          head: r.head,
-          descrip: r.description,
-        }));
-        setFile(obj);
+        const userData = JSON.parse(localStorage.getItem("user"));
+        const schoolID = userData.id;
+        const facultyID = facultyx;
+        const obj = results.data;
+        const objx = obj.map(
+          ({
+            name,
+            descrip,
+            head,
+            // eslint-disable-next-line arrow-body-style
+          }) => {
+            return {
+              name,
+              descrip,
+              head,
+            };
+          }
+        );
+        console.log(obj);
+        console.log(objx);
+
+        objx.forEach((element) => {
+          element.facultyID = facultyID;
+          element.schoolID = schoolID;
+        });
+        const objc = objx.map(
+          ({
+            facultyID,
+            schoolID,
+            name,
+            descrip,
+            head,
+            // eslint-disable-next-line arrow-body-style
+          }) => {
+            return {
+              name,
+              descrip,
+              head,
+              facultyID,
+              schoolID,
+            };
+          }
+        );
+        const why = JSON.stringify(objc);
+        setFile(why);
       },
     });
   };
@@ -86,28 +144,31 @@ export default function DepartmentMultiple() {
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
-      body: JSON.stringify(file),
+      body: file,
       redirect: "follow",
     };
-    fetch(`${process.env.REACT_APP_MAZA_URL}/locations/add`, requestOptions)
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/departments/addMultiple`,
+      requestOptions
+    )
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
         return res.json();
       })
       .then((result) => {
-        if (result.message === "Expired Access") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Token Does Not Exist") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Unauthorized Access") {
-          navigate("/authentication/forbiddenPage");
-          window.location.reload();
-        }
+        // if (result.message === "Expired Access") {
+        //   navigate("/authentication/sign-in");
+        //   window.location.reload();
+        // }
+        // if (result.message === "Token Does Not Exist") {
+        //   navigate("/authentication/sign-in");
+        //   window.location.reload();
+        // }
+        // if (result.message === "Unauthorized Access") {
+        //   navigate("/authentication/forbiddenPage");
+        //   window.location.reload();
+        // }
         setOpened(false);
         if (result.status === "SUCCESS") {
           Swal.fire({
@@ -134,6 +195,35 @@ export default function DepartmentMultiple() {
         });
       });
   };
+
+  useEffect(() => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/faculties/gets/${schID}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setFaculties(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  }, []);
   return (
     <div className="content">
       <Card mx={2}>
@@ -160,6 +250,37 @@ export default function DepartmentMultiple() {
             </Typography>
           </Button>
           <br />
+          {/* <Box >
+            <div className="row">
+              <div className="col-sm-6"> */}
+          {/* <Container> */}
+          <Typography
+            variant="button"
+            fontWeight="regular"
+            fontSize="80%"
+            textAlign="center"
+            color="text"
+          >
+            Select Faculty
+          </Typography>
+          <br />
+          <Form.Select
+            style={{ marginBottom: "20px" }}
+            value={facultyx || ""}
+            aria-label="Default select example"
+            onChange={(e) => setFaculty(e.target.value)}
+          >
+            <option value="">--Select Faculty--</option>
+            {faculties.map((apic) => (
+              <option key={apic.id} value={apic.id}>
+                {apic.name}
+              </option>
+            ))}
+          </Form.Select>
+          {/* </Container> */}
+          {/* </div>
+            </div>
+          </Box> */}
           <Typography mt={2}>
             <u>Before Proceeding Please Read carefully:</u>
           </Typography>
@@ -172,7 +293,7 @@ export default function DepartmentMultiple() {
               color="text"
             >
               In your excelsheet csv file, the first line or row must be exactly
-              the same as the words in the image below in row 1 A - D and having
+              the same as the words in the image below in row 1 A - C and having
               no spaces in them. Your details in each row should be
               corresponding to the information in the first row (header).
             </Typography>
@@ -196,13 +317,13 @@ export default function DepartmentMultiple() {
               />
             </Typography>
           </Box>
-          <Button onClick={handleOpen2} variant="success">
+          {/* <Button onClick={handleOpen2} variant="success">
             Preview
-          </Button>
+          </Button> */}
           <Button onClick={handleUpload} color="success">
             Upload
           </Button>
-          <Modal
+          {/* <Modal
             open={open2}
             onClose={handleClose2}
             aria-labelledby="modal-modal-title"
@@ -224,7 +345,7 @@ export default function DepartmentMultiple() {
                 Close
               </Button>
             </Box>
-          </Modal>
+          </Modal> */}
         </CardBody>
       </Card>
       <Backdrop

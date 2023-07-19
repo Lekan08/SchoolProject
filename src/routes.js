@@ -31,6 +31,7 @@ import InviteLecturers from "views/inviteLecturer";
 import Faculty from "views/authentication/registration/faculty";
 import Department from "views/authentication/registration/department";
 import InviteMultiple from "views/inviteLecturer/Multiple";
+import InvitedStaff from "views/authentication/invitedStaff";
 
 import Students from "views/students";
 import StudentAdd from "views/students/Add";
@@ -66,6 +67,12 @@ var routes = [
     name: "Sign In As A Student",
     redirect: "true",
     component: SignInStudent,
+  },
+  {
+    path: "/invitedStaff",
+    // name: "Sign In As A Student",
+    redirect: "true",
+    component: InvitedStaff,
   },
   // {
   //   path: "/registration",
