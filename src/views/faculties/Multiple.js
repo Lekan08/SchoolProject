@@ -85,24 +85,30 @@ export default function FacultyMultiple() {
       header: true,
       skipEmptyLines: true,
       complete(results) {
-        const userData = JSON.parse(localStorage.getItem("user"));
-        const schoolID = userData.id;
+        // const userData = JSON.parse(localStorage.getItem("user"));
+
+        const userInfo = JSON.parse(localStorage.getItem("user"));
+        const schoolID = userInfo.id;
+        console.log(userInfo);
+        // console.log(schoolID);
         // const facultyID = facultyx;
         const obj = results.data;
         const objx = obj.map(
           ({
             name,
-            descrip,
+            description,
             head,
             // eslint-disable-next-line arrow-body-style
           }) => {
             return {
               name,
-              descrip,
+              description,
               head,
             };
           }
         );
+        console.log(obj);
+        console.log(objx);
 
         objx.forEach((element) => {
           // element.facultyID = facultyID;
@@ -113,52 +119,59 @@ export default function FacultyMultiple() {
             // facultyID,
             schoolID,
             name,
-            descrip,
+            description,
             head,
             // eslint-disable-next-line arrow-body-style
           }) => {
             return {
               name,
-              descrip,
+              description,
               head,
               // facultyID,
               schoolID,
             };
           }
         );
+        console.log(objc);
         const why = JSON.stringify(objc);
         setFile(why);
       },
     });
   };
+
+  const userInfo = JSON.parse(localStorage.getItem("user"));
+  console.log(userInfo);
   const handleUpload = () => {
     setOpened(true);
     handleClose();
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
-      body: JSON.stringify(file),
+      body: file,
       redirect: "follow",
     };
-    fetch(`${process.env.REACT_APP_MAZA_URL}/locations/add`, requestOptions)
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/faculties/addMultiple`,
+      requestOptions
+    )
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
         return res.json();
       })
       .then((result) => {
-        if (result.message === "Expired Access") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Token Does Not Exist") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Unauthorized Access") {
-          navigate("/authentication/forbiddenPage");
-          window.location.reload();
-        }
+        // if (result.message === "Expired Access") {
+        //   navigate("/authentication/sign-in");
+        //   window.location.reload();
+        // }
+        // if (result.message === "Token Does Not Exist") {
+        //   navigate("/authentication/sign-in");
+        //   window.location.reload();
+        // }
+        // if (result.message === "Unauthorized Access") {
+        //   navigate("/authentication/forbiddenPage");
+        //   window.location.reload();
+        // }
         setOpened(false);
         if (result.status === "SUCCESS") {
           Swal.fire({
@@ -223,7 +236,7 @@ export default function FacultyMultiple() {
               color="text"
             >
               In your excelsheet csv file, the first line or row must be exactly
-              the same as the words in the image below in row 1 A - D and having
+              the same as the words in the image below in row 1 A - C and having
               no spaces in them. Your details in each row should be
               corresponding to the information in the first row (header).
             </Typography>

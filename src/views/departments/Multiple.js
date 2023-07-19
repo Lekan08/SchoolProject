@@ -108,6 +108,8 @@ export default function DepartmentMultiple() {
             };
           }
         );
+        console.log(obj);
+        console.log(objx);
 
         objx.forEach((element) => {
           element.facultyID = facultyID;
@@ -142,28 +144,31 @@ export default function DepartmentMultiple() {
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
-      body: JSON.stringify(file),
+      body: file,
       redirect: "follow",
     };
-    fetch(`${process.env.REACT_APP_MAZA_URL}/locations/add`, requestOptions)
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/departments/addMultiple`,
+      requestOptions
+    )
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
         return res.json();
       })
       .then((result) => {
-        if (result.message === "Expired Access") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Token Does Not Exist") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Unauthorized Access") {
-          navigate("/authentication/forbiddenPage");
-          window.location.reload();
-        }
+        // if (result.message === "Expired Access") {
+        //   navigate("/authentication/sign-in");
+        //   window.location.reload();
+        // }
+        // if (result.message === "Token Does Not Exist") {
+        //   navigate("/authentication/sign-in");
+        //   window.location.reload();
+        // }
+        // if (result.message === "Unauthorized Access") {
+        //   navigate("/authentication/forbiddenPage");
+        //   window.location.reload();
+        // }
         setOpened(false);
         if (result.status === "SUCCESS") {
           Swal.fire({
@@ -288,7 +293,7 @@ export default function DepartmentMultiple() {
               color="text"
             >
               In your excelsheet csv file, the first line or row must be exactly
-              the same as the words in the image below in row 1 A - D and having
+              the same as the words in the image below in row 1 A - C and having
               no spaces in them. Your details in each row should be
               corresponding to the information in the first row (header).
             </Typography>

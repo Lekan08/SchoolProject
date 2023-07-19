@@ -276,7 +276,7 @@ export default function Departments() {
               //   return `${params.row.firstName} ${params.row.lastName}`;
               // },
             },
-            { Header: "description", accessor: "description" },
+            { Header: "description", accessor: "desc" },
             { Header: "Head Of Department", accessor: "head" },
             // { Header: "school", accessor: "school" },
             // { Header: "faculty", accessor: "faculty" },

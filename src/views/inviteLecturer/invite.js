@@ -78,7 +78,7 @@ export default function InviteLecturer() {
         if (result.status === "SUCCESS") {
           //   localStorage.setItem("admin", result.data);
           // Navigate("/departments");
-          MySwal.fire({
+          Swal.fire({
             title: result.status,
             type: "success",
             text: result.message,

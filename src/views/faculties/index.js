@@ -182,6 +182,8 @@ export default function Faculties() {
         });
       });
   }, []);
+  const userInfo = JSON.parse(localStorage.getItem("user"));
+  console.log(userInfo);
   useEffect(() => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
@@ -278,6 +280,66 @@ export default function Faculties() {
           text: error.message,
         });
       });
+  };
+  const handleDelete = (val) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const requestOptions = {
+          method: "DELETE",
+          headers: miHeaders,
+        };
+
+        fetch(
+          `${process.env.REACT_APP_SCHPROJECT_URL}/otherInflowTypes/delete/${val}`,
+          requestOptions
+        )
+          .then(async (res) => {
+            const aToken = res.headers.get("token-1");
+            localStorage.setItem("rexxdex", aToken);
+            const resultres = await res.text();
+            if (
+              resultres === null ||
+              resultres === undefined ||
+              resultres === ""
+            ) {
+              return {};
+            }
+            return JSON.parse(resultres);
+          })
+          .then((result) => {
+            if (result.status === "SUCCESS") {
+              Swal.fire({
+                title: result.status,
+                type: "success",
+                text: result.message,
+              }).then(() => {
+                window.location.reload();
+              });
+            } else {
+              Swal.fire({
+                title: result.status,
+                type: "error",
+                text: result.message,
+              });
+            }
+          })
+          .catch((error) => {
+            Swal.fire({
+              title: error.status,
+              type: "error",
+              text: error.message,
+            });
+          });
+      }
+    });
   };
   // const handleFaculty = (val) => {
   //   // const data11 = JSON.parse(localStorage.getItem("user1"));
@@ -428,7 +490,7 @@ export default function Faculties() {
         data={{
           columns: [
             { Header: "Name", accessor: "name" },
-            { Header: "description", accessor: "description" },
+            { Header: "description", accessor: "desc" },
             { Header: "Head Of Faculty", accessor: "head" },
             {
               Header: "options",
@@ -451,9 +513,7 @@ export default function Faculties() {
                   <Dropdown.Menu>
                     <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}
-                      onClick={() => {
-                        Navigate(`/customers/view?id=${cell.row.id}`);
-                      }}
+                      onClick={() => handleDelete(cell.row.id)}
                     >
                       View
                     </Dropdown.Item>
