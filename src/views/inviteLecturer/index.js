@@ -114,13 +114,13 @@ export default function InviteLecturers() {
     const schId = userData.schoolID;
     const headers = miHeaders;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_SCH_URL}/faculties/gets/${schId}`, {
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/staffs/gets/${schId}`, {
       headers,
     })
       .then(async (res) => {
         // const aToken = res.headers.get("token-1");
         // localStorage.setItem("rexxdex", aToken);
-        // return res.json();
+        return res.json();
       })
       .then((result) => {
         console.log(result);
@@ -138,13 +138,74 @@ export default function InviteLecturers() {
         // }
         if (isMounted) {
           console.log(result);
-          // setItems(result);
+          setItems(result);
         }
       });
     return () => {
       isMounted = false;
     };
   }, []);
+
+  const handleDelete = (val) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const requestOptions = {
+          method: "DELETE",
+          headers: miHeaders,
+        };
+
+        fetch(
+          `${process.env.REACT_APP_SCHPROJECT_URL}-/staffs/delete/${val}`,
+          requestOptions
+        )
+          .then(async (res) => {
+            const aToken = res.headers.get("token-1");
+            localStorage.setItem("rexxdex", aToken);
+            const resultres = await res.text();
+            if (
+              resultres === null ||
+              resultres === undefined ||
+              resultres === ""
+            ) {
+              return {};
+            }
+            return JSON.parse(resultres);
+          })
+          .then((result) => {
+            if (result.status === "SUCCESS") {
+              Swal.fire({
+                title: result.status,
+                type: "success",
+                text: result.message,
+              }).then(() => {
+                window.location.reload();
+              });
+            } else {
+              Swal.fire({
+                title: result.status,
+                type: "error",
+                text: result.message,
+              });
+            }
+          })
+          .catch((error) => {
+            Swal.fire({
+              title: error.status,
+              type: "error",
+              text: error.message,
+            });
+          });
+      }
+    });
+  };
   return (
     <div className="content">
       <Paper elevation={8}>
@@ -167,7 +228,7 @@ export default function InviteLecturers() {
               variant="h5"
               className="headz"
             >
-              All Faculties
+              All Lecturers
             </Typography>
           </Button>
           <div
@@ -242,15 +303,19 @@ export default function InviteLecturers() {
         data={{
           columns: [
             {
-              Header: "Name",
+              Header: "First Name",
               accessor: "firstName",
-              renderCell: (params) => {
-                return `${params.row.firstName} ${params.row.lastName}`;
-              },
+              // renderCell: (params) => {
+              //   return `${params.row.firstName} ${params.row.lastName}`;
+              // },
             },
-            { Header: "description", accessor: "description" },
-            { Header: "head", accessor: "head" },
-            { Header: "school", accessor: "school" },
+            {
+              Header: "Last Name",
+              accessor: "lastName",
+            },
+            { Header: "Email", accessor: "email" },
+            // { Header: "head", accessor: "head" },
+            // { Header: "school", accessor: "school" },
             // { Header: "college", accessor: "college" },
             {
               Header: "options",
@@ -273,11 +338,12 @@ export default function InviteLecturers() {
                   <Dropdown.Menu>
                     <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}
-                      onClick={() => {
-                        Navigate(`/customers/view?id=${cell.row.id}`);
-                      }}
+                      // onClick={() => {
+                      //   Navigate(`/customers/view?id=${cell.row.id}`);
+                      // }}
+                      onClick={() => handleDelete(cell.row.id)}
                     >
-                      View
+                      Delete
                     </Dropdown.Item>
                     {/* <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}

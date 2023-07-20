@@ -282,6 +282,7 @@ export default function Faculties() {
       });
   };
   const handleDelete = (val) => {
+    console.log(val);
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -298,7 +299,7 @@ export default function Faculties() {
         };
 
         fetch(
-          `${process.env.REACT_APP_SCHPROJECT_URL}/otherInflowTypes/delete/${val}`,
+          `${process.env.REACT_APP_SCHPROJECT_URL}/faculties/delete/${val}`,
           requestOptions
         )
           .then(async (res) => {
@@ -515,7 +516,7 @@ export default function Faculties() {
                       style={{ fontweight: "bold", color: "black" }}
                       onClick={() => handleDelete(cell.row.id)}
                     >
-                      View
+                      Delete
                     </Dropdown.Item>
                     {/* <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}
