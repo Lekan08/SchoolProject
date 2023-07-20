@@ -97,6 +97,8 @@ function SignInAdmin() {
           Navigate("/dashboard");
           // localStorage.setItem("user", result.data);
           localStorage.setItem("user", JSON.stringify(result.data));
+          localStorage.setItem("user1", JSON.stringify(result.data));
+
         } else {
           Swal.fire({
             title: result.status,
