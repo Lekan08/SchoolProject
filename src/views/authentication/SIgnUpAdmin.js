@@ -238,10 +238,10 @@ function SignUpAdmin() {
               .then((resultx) => {
                 console.log(resultx);
                 setOpened(false);
-                if (result.status === "SUCCESS") {
+                if (resultx.status === "SUCCESS") {
                   // localStorage.setItem("admin4", result.data);
                   // Navigate("/dashboard");
-                  const raw = JSON.stringify({
+                  const raw4 = JSON.stringify({
                     username: emailx,
                     password: passwordx,
                   });
@@ -249,7 +249,7 @@ function SignUpAdmin() {
                   const requestOptions = {
                     method: "POST",
                     headers: myHeaders,
-                    body: raw,
+                    body: raw4,
                     redirect: "follow",
                   };
                   // setOpened(true);
@@ -345,8 +345,15 @@ function SignUpAdmin() {
       confirmationError.current.style.display = null;
     } else {
       confirmationError.current.style.display = "none";
-      handleClick();
-      console.log("barry_jhay");
+      const passwordValidate = new RegExp(
+        "^(?=.*[a-z!@#$%^&*.,])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})"
+      );
+      if (passwordx.match(passwordValidate)) {
+        console.log("werey9");
+        handleClick();
+      } else {
+        console.log("barry_jhay");
+      }
     }
 
     if (form.checkValidity() === false) {

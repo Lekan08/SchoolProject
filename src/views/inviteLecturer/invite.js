@@ -52,10 +52,10 @@ export default function InviteLecturer() {
       firstName: firstNamex,
       lastName: lastNamex,
       email: emailx,
-      roleID: "0",
+      // roleID: "0",
       schoolID: userData.schoolID,
     });
-    // console.log(raw);
+    console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
