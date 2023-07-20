@@ -189,9 +189,8 @@ export default function Students() {
               },
             },
             { Header: "Matric number", accessor: "matricNumber" },
-            { Header: "department", accessor: "department" },
-            { Header: "faculty", accessor: "faculty" },
-            { Header: "school", accessor: "school" },
+            { Header: "department", accessor: "departmentName" },
+            { Header: "faculty", accessor: "facultyName" },
             { Header: "sex", accessor: "sex" },
             { Header: "city", accessor: "city" },
             { Header: "state", accessor: "state" },
@@ -204,9 +203,7 @@ export default function Students() {
               accessor: "dateOfBirth",
               renderCell: (params) => {
                 return `${new Date(
-                  params.row.dateOfBirth
-                ).toLocaleTimeString()}, ${new Date(
-                  params.row.dateOfBirth
+                  Number(params.row.dateOfBirth)
                 ).toLocaleDateString()}`;
               },
             },

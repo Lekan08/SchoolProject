@@ -22,7 +22,7 @@ import Navigate from "useNavigate";
 export default function StudentAdd() {
   const [opened, setOpened] = useState(false);
   const [phonex, setPhonex] = useState(0);
-  const [dob, setDob] = useState("");
+  const [dob, setDob] = useState("2000-01-01");
   const [fname, setFname] = useState("");
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
@@ -95,6 +95,7 @@ export default function StudentAdd() {
   };
   const handleAdd = () => {
     console.log(`${fname}/${matric}`);
+    setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
     const raw2 = JSON.stringify({
       firstName: fname,
@@ -132,7 +133,7 @@ export default function StudentAdd() {
       .then((resultx) => {
         console.log(resultx);
         setOpened(false);
-        if (resultx.status === "SUCCESS") {
+        if (resultx.status !== "SUCCESS") {
           // localStorage.setItem("admin4", result.data);
           // Navigate("/dashboard");
           const raw = JSON.stringify({
@@ -377,10 +378,10 @@ export default function StudentAdd() {
                 <label>Date Of Birth</label>
                 <br />
                 <TextField
-                  id="datetime-local"
+                  // id="datetime-local"
                   // label="*"
                   color="secondary"
-                  type="datetime-local"
+                  type="date"
                   InputLabelProps={{
                     shrink: true,
                     width: "20px",
