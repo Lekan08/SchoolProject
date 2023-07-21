@@ -18,7 +18,7 @@
 import React, { useState, useEffect } from "react";
 
 // reactstrap components
-import logo from "assets/img/react-logo.png";
+import logo from "assets/img/default-avatar.png";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
