@@ -88,7 +88,7 @@ export default function FacultyMultiple() {
         // const userData = JSON.parse(localStorage.getItem("user"));
 
         const userInfo = JSON.parse(localStorage.getItem("user"));
-        const schoolID = userInfo.id;
+        const schoolID = userInfo.schoolID;
         console.log(userInfo);
         // console.log(schoolID);
         // const facultyID = facultyx;

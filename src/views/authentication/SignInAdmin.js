@@ -283,7 +283,7 @@ function SignInAdmin() {
                       <Typography
                         component={Link}
                         // to="/authentication/sign-up-staff"
-                        onClick={() => Navigate("/schoolInformation")}
+                        onClick={() => Navigate("/sign-up-admin")}
                         variant="button"
                         color="primary"
                         fontWeight="medium"
