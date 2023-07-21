@@ -13,10 +13,9 @@ import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 import "../Css.css";
 
-export default function Departments() {
+export default function Courses() {
   const { countriesAndStates: AlCountry } = AllCountriesAndStates();
   const [allStates, setAllStates] = useState([]);
-
   const [residentialStatex, setResidentialState] = useState("");
   const [residentialCountryx, setResidentialCountry] = useState("");
   const handleOnChangeRCCountry = (e) => {
@@ -57,41 +56,13 @@ export default function Departments() {
     p: 4,
     textAlign: "center",
   };
-  // useEffect(() => {
-  //   setOpened(true);
-  //   const userData = JSON.parse(localStorage.getItem("user"));
-  //   console.log(userData);
-  //   const schId = userData.schoolID;
-  //   const headers = miHeaders;
-  //   fetch(`${process.env.REACT_APP_SCH_URL}/departments/gets/${schId}`, {
-  //     headers,
-  //   })
-  //     .then(async (res) => {
-  //       // const aToken = res.headers.get("token-1");
-  //       // localStorage.setItem("rexxdex", aToken);
-  //       return res.json();
-  //     })
-  //     .then((result) => {
-  //       setOpened(false);
-  //       console.log(result);
-  //       setItems(result);
-  //     })
-  //     .catch((error) => {
-  //       setOpened(false);
-  //       Swal.fire({
-  //         title: error.status,
-  //         icon: "error",
-  //         text: error.message,
-  //       });
-  //     });
-  // }, []);
   useEffect(() => {
     setOpened(true);
+
     const userInfo = JSON.parse(localStorage.getItem("user"));
-    console.log(userInfo);
     const schID = userInfo.schoolID;
     const headers = miHeaders;
-    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/departments/gets/${schID}`, {
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/courses/gets/${schID}`, {
       headers,
     })
       .then(async (res) => {
@@ -113,66 +84,7 @@ export default function Departments() {
         });
       });
   }, []);
-  const handleDelete = (val) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const requestOptions = {
-          method: "DELETE",
-          headers: miHeaders,
-        };
 
-        fetch(
-          `${process.env.REACT_APP_SCHPROJECT_URL}/departments/delete/${val}`,
-          requestOptions
-        )
-          .then(async (res) => {
-            const aToken = res.headers.get("token-1");
-            localStorage.setItem("rexxdex", aToken);
-            const resultres = await res.text();
-            if (
-              resultres === null ||
-              resultres === undefined ||
-              resultres === ""
-            ) {
-              return {};
-            }
-            return JSON.parse(resultres);
-          })
-          .then((result) => {
-            if (result.status === "SUCCESS") {
-              Swal.fire({
-                title: result.status,
-                type: "success",
-                text: result.message,
-              }).then(() => {
-                window.location.reload();
-              });
-            } else {
-              Swal.fire({
-                title: result.status,
-                type: "error",
-                text: result.message,
-              });
-            }
-          })
-          .catch((error) => {
-            Swal.fire({
-              title: error.status,
-              type: "error",
-              text: error.message,
-            });
-          });
-      }
-    });
-  };
   return (
     <div className="content">
       <Paper elevation={8}>
@@ -195,7 +107,7 @@ export default function Departments() {
               variant="h5"
               className="headz"
             >
-              All Departments
+              All Courses
             </Typography>
           </Button>
           <div
@@ -233,9 +145,9 @@ export default function Departments() {
                   lineHeight: "4rem",
                   marginLeft: "auto",
                 }}
-                onClick={() => Navigate("/departments/add")}
+                onClick={() => Navigate("/courses/add")}
               >
-                Add a department
+                Add a course
               </div>
             </Paper>
             <Paper
@@ -257,9 +169,9 @@ export default function Departments() {
                   lineHeight: "4rem",
                   marginLeft: "auto",
                 }}
-                onClick={() => Navigate("/departments/multiple")}
+                onClick={() => Navigate("/courses/multiple")}
               >
-                Add multiple departments (CSV)
+                Add multiple courses (CSV)
               </div>
             </Paper>
           </div>
@@ -272,15 +184,11 @@ export default function Departments() {
             {
               Header: "Name",
               accessor: "name",
-              // renderCell: (params) => {
-              //   return `${params.row.firstName} ${params.row.lastName}`;
-              // },
             },
-            { Header: "description", accessor: "desc", width: 250 },
+            { Header: "description", accessor: "description", width: 250 },
             { Header: "Head Of Department", accessor: "head" },
-            // { Header: "school", accessor: "school" },
+            { Header: "department", accessor: "departmentName" },
             { Header: "faculty", accessor: "facultyName" },
-            // { Header: "college", accessor: "college" },
             {
               Header: "options",
               accessor: "id",
@@ -302,14 +210,16 @@ export default function Departments() {
                   <Dropdown.Menu>
                     <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}
-                      onClick={() => handleDelete(cell.row.id)}
+                      onClick={() => {
+                        Navigate(`/courses/view?id=${cell.row.id}`);
+                      }}
                     >
-                      Delete
+                      View
                     </Dropdown.Item>
                     <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}
                       onClick={() =>
-                        Navigate(`/departments/update?id=${cell.row.id}`)
+                        Navigate(`/courses/update?id=${cell.row.id}`)
                       }
                     >
                       Update
@@ -322,60 +232,6 @@ export default function Departments() {
           rows: items,
         }}
       />
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <div className="row" style={{ marginTop: "40px" }}>
-            <div className="col-sm-6">
-              <Form.Select
-                value={residentialCountryx || ""}
-                aria-label="Default select example"
-                onChange={handleOnChangeRCCountry}
-              >
-                <option value="">--Select Country--</option>
-                {AlCountry.map((apic) => (
-                  <option key={apic.code3} value={apic.name}>
-                    {apic.name}
-                  </option>
-                ))}
-              </Form.Select>
-            </div>
-            <div className="col-sm-6">
-              <Form.Select
-                value={residentialStatex || ""}
-                aria-label="Default select example"
-                onChange={handleOnChangeRCState}
-              >
-                <option>--Select State--</option>
-                {allStates.map((apis) => (
-                  <option key={apis.code} value={apis.name}>
-                    {apis.name}
-                  </option>
-                ))}
-              </Form.Select>
-            </div>
-          </div>
-          <Box mt={8}>
-            <Button
-              variant="gradient"
-              style={{
-                marginLeft: "auto",
-                marginRight: "auto",
-                display: "flex",
-              }}
-              color="info"
-              //   onClick={() => handleUpdate()}
-            >
-              Get Riders
-            </Button>
-          </Box>
-          <br />
-        </Box>
-      </Modal>
       <Backdrop
         sx={{ color: "white", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={opened}

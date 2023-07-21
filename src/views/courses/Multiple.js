@@ -26,7 +26,7 @@ import example from "./example.jpg";
 import DataTable from "examples/TableList";
 import Form from "react-bootstrap/Form";
 
-export default function DepartmentMultiple() {
+export default function CourseMultiple() {
   const style = {
     position: "absolute",
     top: "50%",
@@ -85,25 +85,28 @@ export default function DepartmentMultiple() {
   //   });
   // };
 
+  const userData = JSON.parse(localStorage.getItem("user"));
+  console.log(userData);
   const changeHandler = (event) => {
     Papa.parse(event.target.files[0], {
       header: true,
       skipEmptyLines: true,
       complete(results) {
         const userData = JSON.parse(localStorage.getItem("user"));
-        const schoolID = userData.id;
+        console.log(userData);
+        const schoolID = userData.schoolID;
         const facultyID = facultyx;
         const obj = results.data;
         const objx = obj.map(
           ({
             name,
-            descrip,
+            description,
             head,
             // eslint-disable-next-line arrow-body-style
           }) => {
             return {
               name,
-              descrip,
+              description,
               head,
             };
           }
@@ -120,13 +123,13 @@ export default function DepartmentMultiple() {
             facultyID,
             schoolID,
             name,
-            descrip,
+            description,
             head,
             // eslint-disable-next-line arrow-body-style
           }) => {
             return {
               name,
-              descrip,
+              description,
               head,
               facultyID,
               schoolID,
@@ -134,6 +137,7 @@ export default function DepartmentMultiple() {
           }
         );
         const why = JSON.stringify(objc);
+        console.log(why);
         setFile(why);
       },
     });
@@ -157,6 +161,7 @@ export default function DepartmentMultiple() {
         return res.json();
       })
       .then((result) => {
+        console.log(result);
         // if (result.message === "Expired Access") {
         //   navigate("/authentication/sign-in");
         //   window.location.reload();
@@ -246,7 +251,7 @@ export default function DepartmentMultiple() {
               variant="h5"
               className="headz"
             >
-              Add Departments Through CSV
+              Add Courses Through CSV
             </Typography>
           </Button>
           <br />

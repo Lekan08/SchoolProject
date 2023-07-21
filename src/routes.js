@@ -49,6 +49,10 @@ import SchoolAdd from "views/school/Add";
 import StudentView from "views/students/view";
 import StudentUpdate from "views/students/update";
 import SchoolUpdate from "views/school/update";
+import Courses from "views/courses";
+import CourseAdd from "views/courses/Add";
+import CourseMultiple from "views/courses/Multiple";
+import CourseUpdate from "views/courses/update";
 var routes = [
   {
     path: "/sign-in",
@@ -190,6 +194,34 @@ var routes = [
     name: "Add multiple students",
     icon: "school",
     component: StudentMultiple,
+    redirect: true,
+  },
+  {
+    path: "/courses",
+    name: "course creation",
+    icon: "menu_book",
+    component: Courses,
+    admin: true,
+  },
+  {
+    path: "/courses/add",
+    name: "Add course",
+    icon: "school",
+    component: CourseAdd,
+    redirect: true,
+  },
+  {
+    path: "/courses/multiple",
+    name: "Add multiple courses",
+    icon: "school",
+    component: CourseMultiple,
+    redirect: true,
+  },
+  {
+    path: "/courses/update",
+    // name: "Add multiple departments",
+    // icon: "school",
+    component: CourseUpdate,
     redirect: true,
   },
   {
