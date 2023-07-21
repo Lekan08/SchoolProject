@@ -84,7 +84,54 @@ export default function Courses() {
         });
       });
   }, []);
-
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed === true) {
+        const requestOptions = {
+          method: "DELETE",
+          headers: miHeaders,
+        };
+        fetch(
+          `${process.env.REACT_APP_SCHPROJECT_URL}/courses/delete/${id}`,
+          requestOptions
+        )
+          .then((res) => res.json())
+          .then((resx) => {
+            if (resx.message === "Expired Access") {
+              Navigate("/sign-in");
+            }
+            if (resx.message === "Token Does Not Exist") {
+              Navigate("/sign-in");
+            }
+            if (resx.message === "Unauthorized Access") {
+              Navigate("/sign-in");
+            }
+            Swal.fire({
+              title: resx.status,
+              icon: "success",
+              text: resx.message,
+            }).then(() => {
+              window.location.reload();
+            });
+          })
+          .catch((error) => {
+            Swal.fire({
+              title: error.status,
+              icon: "error",
+              text: error.message,
+            });
+          });
+      }
+    });
+  };
   return (
     <div className="content">
       <Paper elevation={8}>
@@ -223,6 +270,12 @@ export default function Courses() {
                       }
                     >
                       Update
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      style={{ fontweight: "bold", color: "black" }}
+                      onClick={() => handleDelete(cell.row.id)}
+                    >
+                      Delete
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
