@@ -136,7 +136,7 @@ export default function StudentAdd() {
       .then((resultx) => {
         console.log(resultx);
         setOpened(false);
-        if (resultx.status !== "SUCCESS") {
+        if (resultx.status === "SUCCESS") {
           // localStorage.setItem("admin4", result.data);
           // Navigate("/dashboard");
           const raw = JSON.stringify({
@@ -171,7 +171,7 @@ export default function StudentAdd() {
                   text: result.message,
                 }).then(() => {
                   localStorage.setItem("user", JSON.stringify(result.data));
-                  Navigate("/dashboard");
+                  Navigate("/students");
                 });
               } else {
                 Swal.fire({
