@@ -196,7 +196,7 @@ function SignInStudent() {
                     <div style={{ padding: 5, lineHeight: "7vh" }}>
                       <TextField
                         id="outlined-required"
-                        label="email"
+                        label="matric number"
                         onChange={(e) => setUsername(e.target.value)}
                         sx={{
                           input: {
