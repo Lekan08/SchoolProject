@@ -193,7 +193,7 @@ function SignInAdmin() {
                     >
                       Sign in, welcome.
                     </p>
-                    <div style={{ padding: 10, lineHeight: "7vh" }}>
+                    <div style={{ padding: 5, lineHeight: "7vh" }}>
                       <TextField
                         id="outlined-required"
                         label="email"
@@ -208,7 +208,7 @@ function SignInAdmin() {
                         }}
                       />
                     </div>
-                    <div style={{ padding: 10, lineHeight: "7vh" }}>
+                    <div style={{ padding: 5, lineHeight: "7vh" }}>
                       <FormControl
                         sx={{ m: 1, width: "17rem" }}
                         variant="outlined"
@@ -256,7 +256,7 @@ function SignInAdmin() {
                       style={{
                         fontSize: "80%",
                         marginBottom: "5%",
-                        marginTop: "4%",
+                        // marginTop: "4%",
                       }}
                       onClick={handleClick}
                       loading={showLoader}

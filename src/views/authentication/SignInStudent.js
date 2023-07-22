@@ -34,6 +34,7 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import InputAdornment from "@mui/material/InputAdornment";
 import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
 import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import "../userProfile/Css.css";
 import "../Css.css";
 import { useNavigate } from "react-router-dom";
@@ -44,83 +45,76 @@ function SignInStudent() {
     if (window.location.pathname === "/sign-in") Navigate("/");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const [username, setUsername] = useState("");
+  const [usernamex, setUsername] = useState("");
   const [opened, setOpened] = useState(false);
-  const [password, setPassword] = useState("");
+  const [passwordx, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [passwordShown, setPasswordShown] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showLoader, setShowLoader] = useState(false);
+  const MySwal = withReactContent(Swal);
+
+  const togglePassword = () => {
+    // When the handler is invoked
+    // inverse the boolean state of passwordShown
+    setPasswordShown(!passwordShown);
+  };
+
   const handleClick = () => {
-    sessionStorage.setItem("admin", false);
-    localStorage.setItem("user1", JSON.stringify({firstName: "A Student"}));
-    Navigate("/dashboard-student");
+    sessionStorage.setItem("admin", true);
+    setShowLoader(true);
+    // Navigate("/dashboard");
+    setOpened(true);
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    const raw = JSON.stringify({
+      username: usernamex,
+      password: passwordx,
+      npassword: passwordx,
+    });
+    // console.log(raw);
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
     // setOpened(true);
-    // const myHeaders = new Headers();
-    // myHeaders.append("Content-Type", "application/json");
-    // const raw = JSON.stringify({
-    //   username: username,
-    //   password: password,
-    //   userType: 3,
-    // });
-    // // console.log(raw);
-    // const requestOptions = {
-    //   method: "POST",
-    //   headers: myHeaders,
-    //   body: raw,
-    //   redirect: "follow",
-    // };
-    // setOpened(true);
-    // fetch(`${process.env.REACT_APP_MAZA_URL}/login/`, requestOptions)
-    //   .then(async (res) => {
-    //     // console.log(res.headers);;;;
-    //     const aToken = res.headers.get("token-1");
-    //     localStorage.setItem("rexxdex1", aToken);
-    //     return res.json();
-    //   })
-    //   .then((result) => {
-    //     if (result.status === "SUCCESS") {
-    //       // console.log(result);
-    //       const raw2 = JSON.stringify({
-    //         email: username,
-    //       });
-    //       const requestOptions2 = {
-    //         method: "POST",
-    //         headers: myHeaders,
-    //         body: raw2,
-    //         redirect: "follow",
-    //       };
-    //       fetch(
-    //         `${process.env.REACT_APP_MAZA_URL}/users/getByEmail`,
-    //         requestOptions2
-    //       )
-    //         .then(async (res) => {
-    //           const aToken = res.headers.get("token-1");
-    //           localStorage.setItem("rexxdex", aToken);
-    //           return res.json();
-    //         })
-    //         .then((result) => {
-    //           // console.log(result);
-    //           localStorage.setItem("user1", JSON.stringify(result));
-    //           setOpened(false);
-    //           Navigate("/dashboard");
-    //           // setResultd(result);
-    //         });
-    //     } else {
-    //       // alert(result.message);
-    //       setOpened(false);
-    //       Swal.fire({
-    //         title: result.status,
-    //         icon: "error",
-    //         text: result.message,
-    //       });
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     setOpened(false);
-    //     Swal.fire({
-    //       title: error.status,
-    //       icon: "error",
-    //       text: error.message,
-    //     });
-    //   });
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/staffLogin/doLogin`,
+      requestOptions
+    )
+      .then(async (res) => {
+        // console.log(res.headers);;;;
+        // const aToken = res.headers.get("token-1");
+        // localStorage.setItem("rexxdex1", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        if (result.status === "SUCCESS") {
+          Navigate("/dashboard");
+          // localStorage.setItem("user", result.data);
+          localStorage.setItem("user", JSON.stringify(result.data));
+          localStorage.setItem("user1", JSON.stringify(result.data));
+
+        } else {
+          Swal.fire({
+            title: result.status,
+            icon: "error",
+            text: result.message,
+          });
+        }
+      })
+      .catch((error) => {
+        setOpened(false);
+        MySwal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
   };
 
   return (
@@ -132,7 +126,7 @@ function SignInStudent() {
             marginRight: "auto",
             marginLeft: "auto",
             paddingLeft: "2vw",
-            marginTop: "10vh",
+            marginTop: "5vh",
             width: "40vw",
           }}
         >
@@ -199,10 +193,10 @@ function SignInStudent() {
                     >
                       Sign in, welcome.
                     </p>
-                    <div style={{ padding: 10, lineHeight: "7vh" }}>
+                    <div style={{ padding: 5, lineHeight: "7vh" }}>
                       <TextField
                         id="outlined-required"
-                        label="matric number"
+                        label="email"
                         onChange={(e) => setUsername(e.target.value)}
                         sx={{
                           input: {
@@ -213,7 +207,8 @@ function SignInStudent() {
                           },
                         }}
                       />
-                      <br />
+                    </div>
+                    <div style={{ padding: 5, lineHeight: "7vh" }}>
                       <FormControl
                         sx={{ m: 1, width: "17rem" }}
                         variant="outlined"
@@ -222,9 +217,13 @@ function SignInStudent() {
                           password
                         </InputLabel>
                         <OutlinedInput
+                          type={passwordShown ? "text" : "password"}
+                          // label="Password"
                           onChange={(e) => setPassword(e.target.value)}
-                          id="outlined-adornment-password"
-                          type={showPassword ? "text" : "password"}
+                          // value={confirmPassword}
+                          // onChange={(e) => setConfirmPassword(e.target.value)}
+                          // id="outlined-adornment-password"
+                          // type={passwordShown ? "text" : "password"}
                           sx={{
                             input: {
                               // color: "white",
@@ -236,7 +235,7 @@ function SignInStudent() {
                             <InputAdornment position="end">
                               <IconButton
                                 aria-label="toggle password visibility"
-                                onClick={() => setShowPassword(!showPassword)}
+                                onClick={() => togglePassword()}
                                 edge="end"
                               >
                                 {showPassword ? (
@@ -257,9 +256,10 @@ function SignInStudent() {
                       style={{
                         fontSize: "80%",
                         marginBottom: "5%",
-                        marginTop: "4%",
+                        // marginTop: "4%",
                       }}
                       onClick={handleClick}
+                      loading={showLoader}
                     >
                       LOGIN
                     </button>
@@ -277,6 +277,22 @@ function SignInStudent() {
                         FORGOT PASSWORD?
                       </Typography>
                     </Box>
+                    <br />
+                    <Box mb={1} mt={-1} textAlign="center">
+                      Don't have an account? &nbsp;
+                      <Typography
+                        component={Link}
+                        // to="/authentication/sign-up-staff"
+                        onClick={() => Navigate("/sign-up-admin")}
+                        variant="button"
+                        color="primary"
+                        fontWeight="medium"
+                        id="forgotpassword"
+                        size="small"
+                      >
+                        Sign Up
+                      </Typography>
+                    </Box>
                   </div>
                 </Col>
               </Row>
@@ -288,7 +304,7 @@ function SignInStudent() {
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={opened}
         >
-          <CircularProgress sx={{ color: "white" }} />
+          <CircularProgress sx={{ color: "info" }} />
         </Backdrop>
       </div>
     </>
