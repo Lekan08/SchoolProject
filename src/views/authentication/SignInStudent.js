@@ -61,7 +61,7 @@ function SignInStudent() {
   };
 
   const handleClick = () => {
-    sessionStorage.setItem("admin", true);
+    sessionStorage.setItem("admin", false);
     setShowLoader(true);
     // Navigate("/dashboard");
     setOpened(true);
@@ -81,7 +81,7 @@ function SignInStudent() {
     };
     // setOpened(true);
     fetch(
-      `${process.env.REACT_APP_SCHPROJECT_URL}/staffLogin/doLogin`,
+      `${process.env.REACT_APP_SCHPROJECT_URL}/studentLogin/doLogin`,
       requestOptions
     )
       .then(async (res) => {
@@ -94,7 +94,7 @@ function SignInStudent() {
         setOpened(false);
         console.log(result);
         if (result.status === "SUCCESS") {
-          Navigate("/dashboard");
+          Navigate("/dashboard-student");
           // localStorage.setItem("user", result.data);
           localStorage.setItem("user", JSON.stringify(result.data));
           localStorage.setItem("user1", JSON.stringify(result.data));
