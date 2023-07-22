@@ -22,15 +22,12 @@ import Navigate from "useNavigate";
 
 export default function CourseUpdate() {
   const [opened, setOpened] = useState(false);
-  const [selected, setSelected] = useState(null);
+  const [dara, setDara] = useState([]);
   const [dob, setDob] = useState([]);
   const [fname, setFname] = useState("");
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
   const [lname, setLname] = useState("");
-  const [type, setType] = useState("");
-  const [matric, setMatric] = useState("");
-  const [sex, setSex] = useState("");
   const [email, setEmail] = useState("");
   const [faculties, setFaculties] = useState([]);
   const [departments, setDepartments] = useState([]);
@@ -39,7 +36,7 @@ export default function CourseUpdate() {
   useEffect(() => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
-    console.log(userInfo);
+    // console.log(userInfo);
     const schID = userInfo.schoolID;
     const headers = miHeaders;
     fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/faculties/gets/${schID}`, {
@@ -96,10 +93,10 @@ export default function CourseUpdate() {
           label: result[0].facultyName,
         });
         setDepartment({
-          value: result[0].departmentID,
+          value: result[0].depID,
           label: result[0].departmentName,
         });
-        // setItems(result);
+        setDara(result[0]);
       })
       .catch((error) => {
         setOpened(false);
@@ -150,18 +147,24 @@ export default function CourseUpdate() {
       description: lname,
       head: email,
       schoolID: userInfo.schoolID,
-      depID: department,
-      facultyID: faculty,
+      depID: department.value,
+      facultyID: faculty.value,
+      facultyName: dara.facultyName,
+      collegeID: dara.collegeID,
+      collegeName: dara.collegeName,
+      deleteFlag: dara.deleteFlag,
+      schoolName: dara.schoolName,
+      id: dara.id,
     });
     console.log(raw2);
     const requestOptions2 = {
-      method: "POST",
+      method: "PUT",
       headers: myHeaders,
       body: raw2,
       redirect: "follow",
     };
     fetch(
-      `${process.env.REACT_APP_SCHPROJECT_URL}/courses/add`,
+      `${process.env.REACT_APP_SCHPROJECT_URL}/courses/update`,
       requestOptions2
     )
       .then(async (res) => {
@@ -224,7 +227,7 @@ export default function CourseUpdate() {
                   }}
                   // defaultValue={`${data11.firstName}`}
                   placeholder="Name"
-                    value={fname}
+                  value={fname}
                   //   disabled
                   type="text"
                 />
@@ -241,7 +244,7 @@ export default function CourseUpdate() {
                   placeholder="Description"
                   // onChange={() => console.log()}
                   type="textarea"
-                    value={lname}
+                  value={lname}
                   // disabled
                 />
               </FormGroup>
@@ -311,24 +314,6 @@ export default function CourseUpdate() {
               <FormGroup>
                 <label>College (optional) </label>
                 <Select />
-              </FormGroup>
-            </Col>
-          </Row>
-          <Row style={{ marginTop: 20 }}>
-            <Col md="6" className="pl-md-1">
-              <FormGroup>
-                <label>Course Lecturer</label>
-                <Input
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                  }}
-                  // defaultValue={`${data11.lastName}`}
-                  placeholder="Head"
-                  //   onChange={() => console.log()}
-                  type="text"
-                    value={email}
-                  // disabled
-                />
               </FormGroup>
             </Col>
           </Row>

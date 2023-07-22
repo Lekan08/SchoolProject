@@ -233,7 +233,6 @@ export default function Courses() {
               accessor: "name",
             },
             { Header: "description", accessor: "description", width: 250 },
-            { Header: "Head Of Department", accessor: "head" },
             { Header: "department", accessor: "departmentName" },
             { Header: "faculty", accessor: "facultyName" },
             {

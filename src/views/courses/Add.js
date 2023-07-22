@@ -39,7 +39,7 @@ export default function CourseAdd() {
   useEffect(() => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
-    console.log(userInfo);
+    // console.log(userInfo);
     const schID = userInfo.schoolID;
     const headers = miHeaders;
     fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/faculties/gets/${schID}`, {
@@ -265,24 +265,6 @@ export default function CourseAdd() {
               <FormGroup>
                 <label>College (optional) </label>
                 <Select />
-              </FormGroup>
-            </Col>
-          </Row>
-          <Row style={{ marginTop: 20 }}>
-            <Col md="6" className="pl-md-1">
-              <FormGroup>
-                <label>Course Lecturer</label>
-                <Input
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                  }}
-                  // defaultValue={`${data11.lastName}`}
-                  placeholder="Head"
-                  //   onChange={() => console.log()}
-                  type="text"
-                  //   value={items[0]?.email}
-                  // disabled
-                />
               </FormGroup>
             </Col>
           </Row>
