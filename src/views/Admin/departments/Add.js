@@ -358,7 +358,7 @@ export default function DepartmentAdd() {
               display: "flex",
               marginTop: "20px",
             }}
-            color="success"
+            color="info"
             onClick={() => handleClick()}
           >
             Add Department

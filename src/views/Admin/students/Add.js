@@ -428,7 +428,7 @@ export default function StudentAdd() {
               display: "flex",
               marginTop: "20px",
             }}
-            color="success"
+            color="info"
             onClick={() => handleAdd()}
           >
             Add Student

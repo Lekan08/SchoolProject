@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Box, Modal, Paper, Typography } from "@mui/material";
-import { Button, Card, FormGroup, Col, Input, Row } from "reactstrap";
+import { Button, Card } from "reactstrap";
 import DataTable from "examples/TableList";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -14,22 +14,12 @@ import GHeaders from "getHeader";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import "../Css.css";
-// import {
-//   Button,
-//   FormGroup,
-//   Input,
-//   Row,
-//   Col,
-//   CardBody,
-//   //   Card,
-// } from "reactstrap";
 
-export default function Faculties() {
+export default function InviteLecturers() {
   const { countriesAndStates: AlCountry } = AllCountriesAndStates();
   const [allStates, setAllStates] = useState([]);
   const MySwal = withReactContent(Swal);
 
-  const [schools, setSchools] = useState([]);
   const [residentialStatex, setResidentialState] = useState("");
   const [residentialCountryx, setResidentialCountry] = useState("");
   const handleOnChangeRCCountry = (e) => {
@@ -57,11 +47,7 @@ export default function Faculties() {
   const [items, setItems] = useState([]);
   const [idx, setIdx] = useState("");
   const [tripID, setTripID] = useState("");
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [head, setHead] = useState("");
   const [opened, setOpened] = useState(false);
-  const [value, setValue] = "";
   const style = {
     position: "absolute",
     top: "50%",
@@ -128,13 +114,13 @@ export default function Faculties() {
     const schId = userData.schoolID;
     const headers = miHeaders;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_SCH_URL}/faculties/gets/${schId}`, {
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/staffs/gets/${schId}`, {
       headers,
     })
       .then(async (res) => {
         // const aToken = res.headers.get("token-1");
         // localStorage.setItem("rexxdex", aToken);
-        // return res.json();
+        return res.json();
       })
       .then((result) => {
         console.log(result);
@@ -152,137 +138,15 @@ export default function Faculties() {
         // }
         if (isMounted) {
           console.log(result);
-          // setItems(result);
+          setItems(result);
         }
       });
     return () => {
       isMounted = false;
     };
   }, []);
-  useEffect(() => {
-    setOpened(true);
-    const headers = miHeaders;
-    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/schools/getAll`, { headers })
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        setOpened(false);
-        console.log(result);
-        setSchools(result);
-      })
-      .catch((error) => {
-        setOpened(false);
-        Swal.fire({
-          title: error.status,
-          icon: "error",
-          text: error.message,
-        });
-      });
-  }, []);
-  const userInfo = JSON.parse(localStorage.getItem("user"));
-  console.log(userInfo);
-  useEffect(() => {
-    setOpened(true);
-    const userInfo = JSON.parse(localStorage.getItem("user"));
-    console.log(userInfo);
-    const schID = userInfo.schoolID;
-    const headers = miHeaders;
-    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/faculties/gets/${schID}`, {
-      headers,
-    })
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        setOpened(false);
-        console.log(result);
-        setItems(result);
-      })
-      .catch((error) => {
-        setOpened(false);
-        Swal.fire({
-          title: error.status,
-          icon: "error",
-          text: error.message,
-        });
-      });
-  }, []);
-  const handleUpdate = (val) => {
-    console.log(val);
-    const userInfo = JSON.parse(localStorage.getItem("user"));
-    console.log(userInfo);
-    const schID = userInfo.schoolID;
 
-    const raw = JSON.stringify({
-      id: val,
-      name: name,
-      description: description,
-      schoolID: schID,
-      head: head,
-      // college:
-    });
-    console.log(raw);
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-    setOpened(true);
-    fetch(
-      `${process.env.REACT_APP_SCHPROJECT_URL}/faculties/updateFaculty`,
-      requestOptions
-    )
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        setOpened(false);
-        if (result.message === "Expired Access") {
-          Navigate("/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Token Does Not Exist") {
-          Navigate("/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Unauthorized Access") {
-          Navigate("/authentication/forbiddenPage");
-          window.location.reload();
-        }
-        console.log(result);
-        if (result.status === "SUCCESS") {
-          Swal.fire({
-            title: result.status,
-            icon: "success",
-            text: result.message,
-          }).then(() => Navigate("/faculties"));
-        } else {
-          Swal.fire({
-            title: result.status,
-            icon: "error",
-            text: result.message,
-          });
-        }
-      })
-      .catch((error) => {
-        setOpened(false);
-        Swal.fire({
-          title: error.status,
-          icon: "error",
-          text: error.message,
-        });
-      });
-  };
   const handleDelete = (val) => {
-    console.log(val);
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -299,7 +163,7 @@ export default function Faculties() {
         };
 
         fetch(
-          `${process.env.REACT_APP_SCHPROJECT_URL}/faculties/delete/${val}`,
+          `${process.env.REACT_APP_SCHPROJECT_URL}-/staffs/delete/${val}`,
           requestOptions
         )
           .then(async (res) => {
@@ -342,33 +206,6 @@ export default function Faculties() {
       }
     });
   };
-  // const handleFaculty = (val) => {
-  //   // const data11 = JSON.parse(localStorage.getItem("user1"));
-  //   // const id = data11.id;
-  //   setOpened(true);
-  //   const headers = miHeaders;
-  //   fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/faculties/gets/${val}`, {
-  //     headers,
-  //   })
-  //     .then(async (res) => {
-  //       const aToken = res.headers.get("token-1");
-  //       localStorage.setItem("rexxdex", aToken);
-  //       return res.json();
-  //     })
-  //     .then((result) => {
-  //       setOpened(false);
-  //       console.log(result);
-  //       setItems(result);
-  //     })
-  //     .catch((error) => {
-  //       setOpened(false);
-  //       Swal.fire({
-  //         title: error.status,
-  //         icon: "error",
-  //         text: error.message,
-  //       });
-  //     });
-  // };
   return (
     <div className="content">
       <Paper elevation={8}>
@@ -376,7 +213,7 @@ export default function Faculties() {
           <Button
             tag="label"
             className="data1"
-            color="success"
+            color="secondary"
             style={{
               width: "40vw",
               fontSize: "20px",
@@ -391,7 +228,7 @@ export default function Faculties() {
               variant="h5"
               className="headz"
             >
-              All Faculties
+              All Lecturers
             </Typography>
           </Button>
           <div
@@ -429,9 +266,9 @@ export default function Faculties() {
                   lineHeight: "4rem",
                   marginLeft: "auto",
                 }}
-                onClick={() => Navigate("/faculties/add")}
+                onClick={() => Navigate("/inviteLecturer/invite")}
               >
-                Add a faculty
+                Invite a Lecturer
               </div>
             </Paper>
             <Paper
@@ -453,46 +290,33 @@ export default function Faculties() {
                   lineHeight: "4rem",
                   marginLeft: "auto",
                 }}
-                onClick={() => Navigate("/faculties/multiple")}
+                onClick={() => Navigate("/inviteLecturer/multiple")}
               >
-                Add multiple faculties (CSV)
+                Add multiple Lecturers (CSV)
               </div>
             </Paper>
           </div>
         </Card>
       </Paper>
       <br />
-      {/* <Col
-        md="4"
-        className="pl-md-1"
-        style={{
-          justifyContent: "center",
-          marginLeft: "auto",
-          marginRight: "auto",
-        }}
-      >
-        <FormGroup>
-          <Form.Select
-            style={{ marginBottom: "20px" }}
-            // value={idx || ""}
-            aria-label="Default select example"
-            onChange={(e) => handleFaculty(e.target.value)}
-          >
-            <option value="">--Select School--</option>
-            {schools.map((apic) => (
-              <option key={apic.id} value={apic.id}>
-                {apic.name}
-              </option>
-            ))}
-          </Form.Select>
-        </FormGroup>
-      </Col> */}
       <DataTable
         data={{
           columns: [
-            { Header: "Name", accessor: "name" },
-            { Header: "description", accessor: "desc" },
-            { Header: "Head Of Faculty", accessor: "head" },
+            {
+              Header: "First Name",
+              accessor: "firstName",
+              // renderCell: (params) => {
+              //   return `${params.row.firstName} ${params.row.lastName}`;
+              // },
+            },
+            {
+              Header: "Last Name",
+              accessor: "lastName",
+            },
+            { Header: "Email", accessor: "email", width: 300 },
+            // { Header: "head", accessor: "head" },
+            // { Header: "school", accessor: "school" },
+            // { Header: "college", accessor: "college" },
             {
               Header: "options",
               accessor: "id",
@@ -514,24 +338,23 @@ export default function Faculties() {
                   <Dropdown.Menu>
                     <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}
+                      // onClick={() => {
+                      //   Navigate(`/customers/view?id=${cell.row.id}`);
+                      // }}
                       onClick={() => handleDelete(cell.row.id)}
                     >
                       Delete
                     </Dropdown.Item>
                     {/* <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}
-                      onClick={() => handleOnChange(cell.row.id)}
-                    >
-                      Update
-                    </Dropdown.Item> */}
-                    <Dropdown.Item
-                      style={{ fontweight: "bold", color: "black" }}
                       onClick={() =>
-                        Navigate(`/faculties/update?id=${cell.row.id}`)
+                        Navigate(
+                          `/customers/referral?id=${cell.row.id}&name=${cell.row.firstName} ${cell.row.lastName}`
+                        )
                       }
                     >
-                      Update
-                    </Dropdown.Item>
+                      View Referrals
+                    </Dropdown.Item> */}
                   </Dropdown.Menu>
                 </Dropdown>
               ),
@@ -547,58 +370,7 @@ export default function Faculties() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Row>
-            <Col className="pl-md-1" md="6">
-              <FormGroup>
-                <label>Name</label>
-                <Input
-                  onChange={(e) => {
-                    setName(e.target.value);
-                  }}
-                  // defaultValue={`${data11.firstName}`}
-                  placeholder="First Name"
-                  //   value={firstName}
-                  //   disabled
-                  type="text"
-                />
-              </FormGroup>
-            </Col>
-            <Col className="pl-md-1" md="6">
-              <FormGroup>
-                <label>Description</label>
-                <Input
-                  onChange={(e) => {
-                    setDescription(e.target.value);
-                  }}
-                  // defaultValue={`${data11.lastName}`}
-                  placeholder="description"
-                  //   onChange={() => console.log()}
-                  type="textarea"
-                  // value={String(items[0]?.verificationComment)}
-                  // disabled
-                />
-              </FormGroup>
-            </Col>
-          </Row>
-          <Row style={{ marginTop: 20 }}>
-            <Col md="4" className="pl-md-1">
-              <FormGroup>
-                <label>Head Of Faculty</label>
-                <Input
-                  onChange={(e) => {
-                    setHead(e.target.value);
-                  }}
-                  // defaultValue={`${data11.lastName}`}
-                  placeholder="Head Of Faculty"
-                  //   onChange={() => console.log()}
-                  type="text"
-                  //   value={items[0]?.walletBalance}
-                  // disabled
-                />
-              </FormGroup>
-            </Col>{" "}
-          </Row>
-          {/* <div className="row" style={{ marginTop: "40px" }}>
+          <div className="row" style={{ marginTop: "40px" }}>
             <div className="col-sm-6">
               <Form.Select
                 value={residentialCountryx || ""}
@@ -627,7 +399,7 @@ export default function Faculties() {
                 ))}
               </Form.Select>
             </div>
-          </div> */}
+          </div>
           <Box mt={8}>
             <Button
               variant="gradient"
@@ -637,9 +409,9 @@ export default function Faculties() {
                 display: "flex",
               }}
               color="info"
-              onClick={() => handleUpdate()}
+              //   onClick={() => handleUpdate()}
             >
-              Update
+              Get Riders
             </Button>
           </Box>
           <br />

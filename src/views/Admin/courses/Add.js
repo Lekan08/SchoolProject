@@ -276,7 +276,7 @@ export default function CourseAdd() {
               display: "flex",
               marginTop: "20px",
             }}
-            color="success"
+            color="info"
             onClick={() => handleAdd()}
           >
             Add Course

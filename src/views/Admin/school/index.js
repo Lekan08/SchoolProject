@@ -304,7 +304,7 @@ export default function School() {
               display: "flex",
               marginTop: "20px",
             }}
-            color="success"
+            color="info"
             onClick={() => handleAdd()}
           >
             Update School Profile

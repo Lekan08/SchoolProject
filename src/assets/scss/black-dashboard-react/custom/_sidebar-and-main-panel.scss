@@ -346,7 +346,7 @@
     @include linear-gradient($info-states, $info);
   }
   &[data="green"]{
-    @include linear-gradient($success-states, $success);
+    @include linear-gradient(#424242, #424242);
   }
 
   .user{

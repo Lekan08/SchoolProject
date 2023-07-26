@@ -2,12 +2,13 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-shadow */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Papa from "papaparse";
 import { Button } from "reactstrap";
 import { Typography, Box, Modal } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import PHeaders from "postHeader";
+import GHeaders from "getHeader";
 import Swal from "sweetalert2";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -15,7 +16,6 @@ import { AccountCircleSharp, School } from "@mui/icons-material";
 import { Card } from "@mui/material";
 import {
   FormGroup,
-  Form,
   Input,
   Row,
   Col,
@@ -24,8 +24,9 @@ import {
 } from "reactstrap";
 import example from "./example.jpg";
 import DataTable from "examples/TableList";
+import Form from "react-bootstrap/Form";
 
-export default function FacultyMultiple() {
+export default function DepartmentMultiple() {
   const style = {
     position: "absolute",
     top: "50%",
@@ -61,8 +62,11 @@ export default function FacultyMultiple() {
     setOpen2(false);
   };
   const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
   const navigate = useNavigate();
   const [file, setFile] = useState([]);
+  const [faculties, setFaculties] = useState([]);
+  const [facultyx, setFaculty] = useState("");
 
   const [opened, setOpened] = useState(false);
   // const changeHandler = (event) => {
@@ -72,26 +76,26 @@ export default function FacultyMultiple() {
   //     complete(results) {
   //       const obj = results.data.map((r) => ({
   //         name: r.name,
-  //         state: r.state.charAt(0).toUpperCase() + r.state.slice(1),
-  //         country: r.country.charAt(0).toUpperCase() + r.country.slice(1),
+  //         description: r.description,
+  //         head: r.head,
   //         descrip: r.description,
   //       }));
   //       setFile(obj);
   //     },
   //   });
   // };
+
+  const userData = JSON.parse(localStorage.getItem("user"));
+  console.log(userData);
   const changeHandler = (event) => {
     Papa.parse(event.target.files[0], {
       header: true,
       skipEmptyLines: true,
       complete(results) {
-        // const userData = JSON.parse(localStorage.getItem("user"));
-
-        const userInfo = JSON.parse(localStorage.getItem("user"));
-        const schoolID = userInfo.schoolID;
-        console.log(userInfo);
-        // console.log(schoolID);
-        // const facultyID = facultyx;
+        const userData = JSON.parse(localStorage.getItem("user"));
+        console.log(userData);
+        const schoolID = userData.schoolID;
+        const facultyID = facultyx;
         const obj = results.data;
         const objx = obj.map(
           ({
@@ -111,12 +115,12 @@ export default function FacultyMultiple() {
         console.log(objx);
 
         objx.forEach((element) => {
-          // element.facultyID = facultyID;
+          element.facultyID = facultyID;
           element.schoolID = schoolID;
         });
         const objc = objx.map(
           ({
-            // facultyID,
+            facultyID,
             schoolID,
             name,
             description,
@@ -127,20 +131,17 @@ export default function FacultyMultiple() {
               name,
               description,
               head,
-              // facultyID,
+              facultyID,
               schoolID,
             };
           }
         );
-        console.log(objc);
         const why = JSON.stringify(objc);
+        console.log(why);
         setFile(why);
       },
     });
   };
-
-  const userInfo = JSON.parse(localStorage.getItem("user"));
-  console.log(userInfo);
   const handleUpload = () => {
     setOpened(true);
     handleClose();
@@ -151,7 +152,7 @@ export default function FacultyMultiple() {
       redirect: "follow",
     };
     fetch(
-      `${process.env.REACT_APP_SCHPROJECT_URL}/faculties/addMultiple`,
+      `${process.env.REACT_APP_SCHPROJECT_URL}/departments/addMultiple`,
       requestOptions
     )
       .then(async (res) => {
@@ -160,6 +161,7 @@ export default function FacultyMultiple() {
         return res.json();
       })
       .then((result) => {
+        console.log(result);
         // if (result.message === "Expired Access") {
         //   navigate("/authentication/sign-in");
         //   window.location.reload();
@@ -198,6 +200,35 @@ export default function FacultyMultiple() {
         });
       });
   };
+
+  useEffect(() => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/faculties/gets/${schID}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setFaculties(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  }, []);
   return (
     <div className="content">
       <Card mx={2}>
@@ -220,10 +251,41 @@ export default function FacultyMultiple() {
               variant="h5"
               className="headz"
             >
-              Add Faculties Using CSV
+              Add Departments Through CSV
             </Typography>
           </Button>
           <br />
+          {/* <Box >
+            <div className="row">
+              <div className="col-sm-6"> */}
+          {/* <Container> */}
+          <Typography
+            variant="button"
+            fontWeight="regular"
+            fontSize="80%"
+            textAlign="center"
+            color="text"
+          >
+            Select Faculty
+          </Typography>
+          <br />
+          <Form.Select
+            style={{ marginBottom: "20px" }}
+            value={facultyx || ""}
+            aria-label="Default select example"
+            onChange={(e) => setFaculty(e.target.value)}
+          >
+            <option value="">--Select Faculty--</option>
+            {faculties.map((apic) => (
+              <option key={apic.id} value={apic.id}>
+                {apic.name}
+              </option>
+            ))}
+          </Form.Select>
+          {/* </Container> */}
+          {/* </div>
+            </div>
+          </Box> */}
           <Typography mt={2}>
             <u>Before Proceeding Please Read carefully:</u>
           </Typography>
@@ -263,7 +325,7 @@ export default function FacultyMultiple() {
           {/* <Button onClick={handleOpen2} variant="success">
             Preview
           </Button> */}
-          <Button onClick={handleUpload} color="success">
+          <Button onClick={handleUpload} color="info">
             Upload
           </Button>
           {/* <Modal

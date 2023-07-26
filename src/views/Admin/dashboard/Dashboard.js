@@ -49,7 +49,7 @@ import {
   chartExample3,
   chartExample4,
 } from "variables/charts.js";
-import { CustomNotification } from "views/notification/Notifications";
+import { CustomNotification } from "views/Admin/notification/Notifications";
 
 function Dashboard(props) {
   const [firer, setFirer] = React.useState(false);
@@ -87,7 +87,7 @@ function Dashboard(props) {
                         className={classNames("btn-simple", {
                           active: bigChartData === "data1",
                         })}
-                        color="info"
+                        color="secondary"
                         id="0"
                         size="sm"
                         onClick={() => setBgChartData("data1")}

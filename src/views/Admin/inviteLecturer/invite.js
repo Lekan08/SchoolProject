@@ -167,7 +167,7 @@ export default function InviteLecturer() {
               display: "flex",
               marginTop: "20px",
             }}
-            color="success"
+            color="info"
             onClick={() => handleClick()}
           >
             Invite

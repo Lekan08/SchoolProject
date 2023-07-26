@@ -221,7 +221,6 @@ function Sidebar(props) {
               <li className="active-pro"></li>
               <Box p={2} mt="auto">
                 <Button
-                  variant="gradient"
                   color="secondary"
                   onClick={() => Navigate("/sign-in")}
                 >

@@ -325,7 +325,7 @@ export default function CourseUpdate() {
               display: "flex",
               marginTop: "20px",
             }}
-            color="success"
+            color="info"
             onClick={() => handleAdd()}
           >
             Update Course
