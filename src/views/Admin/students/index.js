@@ -238,9 +238,9 @@ export default function Students() {
             { Header: "Matric number", accessor: "matricNumber" },
             { Header: "department", accessor: "departmentName" },
             { Header: "faculty", accessor: "facultyName" },
-            { Header: "sex", accessor: "sex" },
+            { Header: "sex", accessor: "sex", width: 100 },
             { Header: "phone number", accessor: "phoneNumber" },
-            { Header: "email", accessor: "email", width: 250 },
+            { Header: "email", accessor: "email", width: 200 },
             {
               Header: "Date Of Birth",
               width: 200,
