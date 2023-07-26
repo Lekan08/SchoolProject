@@ -146,6 +146,7 @@ export default function Courses() {
               marginRight: "auto",
               marginLeft: "auto",
               // height: "50px",
+              // fontFamily: "Roboto",
               marginTop: "20px",
             }}
           >

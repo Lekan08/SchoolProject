@@ -199,7 +199,7 @@ var routes = [
   },
   {
     path: "/courses",
-    name: "course creation",
+    name: "courses",
     icon: "menu_book",
     component: Courses,
     admin: true,
@@ -336,7 +336,7 @@ var routes = [
 
 
 
-  
+
   {
     path: "/dashboard-student",
     name: "Student Dashboard",
