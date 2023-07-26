@@ -57,10 +57,15 @@ function FixedPlugin(props) {
                 }}
               />{" "}
               <Badge
-                color="success"
                 className={
-                  props.bgColor === backgroundColors.green ? "active" : ""
+                  props.bgColor === backgroundColors.green
+                    ? "active dark-badge ml-2"
+                    : "dark-badge ml-2"
                 }
+                style={{
+                  border:
+                    props.bgColor === backgroundColors.green ? "white 2px solid" : "",
+                }}
                 onClick={() => {
                   props.handleBgClick(backgroundColors.green);
                 }}
@@ -68,7 +73,10 @@ function FixedPlugin(props) {
             </div>
           </li>
           <li className="header-title">BACKGROUND COLOR</li>
-          <li className="adjustments-line text-center color-change" style={{paddingBottom: "100px"}}>
+          <li
+            className="adjustments-line text-center color-change"
+            style={{ paddingBottom: "100px" }}
+          >
             <ThemeContext.Consumer>
               {({ changeTheme }) => (
                 <>

@@ -53,6 +53,7 @@ import Courses from "views/Admin/courses";
 import CourseAdd from "views/Admin/courses/Add";
 import CourseMultiple from "views/Admin/courses/Multiple";
 import CourseUpdate from "views/Admin/courses/update";
+import StudentProfileUpdate from "views/Student/student-profile";
 var routes = [
   {
     path: "/sign-in",
@@ -289,13 +290,6 @@ var routes = [
     redirect: true,
   },
   {
-    path: "/dashboard-student",
-    name: "Student Dashboard",
-    icon: "dashboard",
-    component: DashboardStudent,
-    admin: false,
-  },
-  {
     path: "/icons",
     name: "icons",
     icon: "flag",
@@ -335,6 +329,27 @@ var routes = [
     component: Settings,
     redirect: "true",
     admin: true,
+  },
+
+
+
+
+
+
+  
+  {
+    path: "/dashboard-student",
+    name: "Student Dashboard",
+    icon: "dashboard",
+    component: DashboardStudent,
+    admin: false,
+  },
+  {
+    path: "/student-profile-update",
+    name: "Your Profile",
+    icon: "account_circle",
+    component: StudentProfileUpdate,
+    admin: false,
   },
 ];
 export default routes;
