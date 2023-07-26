@@ -220,7 +220,7 @@ var routes = [
   },
   {
     path: "/courses/update",
-    // name: "Add multiple departments",
+    name: "Update course",
     // icon: "school",
     component: CourseUpdate,
     redirect: true,
