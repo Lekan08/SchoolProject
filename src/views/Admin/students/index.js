@@ -239,11 +239,8 @@ export default function Students() {
             { Header: "department", accessor: "departmentName" },
             { Header: "faculty", accessor: "facultyName" },
             { Header: "sex", accessor: "sex" },
-            { Header: "city", accessor: "city" },
-            { Header: "state", accessor: "state" },
-            { Header: "country", accessor: "country" },
             { Header: "phone number", accessor: "phoneNumber" },
-            { Header: "email", accessor: "email" },
+            { Header: "email", accessor: "email", width: 250 },
             {
               Header: "Date Of Birth",
               width: 200,

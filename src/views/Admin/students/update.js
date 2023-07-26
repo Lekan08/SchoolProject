@@ -417,7 +417,7 @@ export default function StudentUpdate() {
               display: "flex",
               marginTop: "20px",
             }}
-            color="success"
+            color="info"
             onClick={() => handleAdd()}
           >
             Update Student Profile
