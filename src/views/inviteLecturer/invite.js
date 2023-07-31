@@ -29,11 +29,67 @@ export default function InviteLecturer() {
   const [lastNamex, setLastName] = useState("");
   const [emailx, setEmail] = useState("");
   //   const [items, setItems] = useState([]);
-  //   const { allPHeaders: myHeaders } = PHeaders();
+  const { allPHeaders: myHeaders } = PHeaders();
   //   const { allGHeaders: miHeaders } = GHeaders();
   //   const queryString = window.location.search;
   //   const urlParams = new URLSearchParams(queryString);
   //   const idx = urlParams.get("id");
+
+  const handleAdd = () => {
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+
+    const raw = JSON.stringify({
+      firstName: firstNamex,
+      lastName: lastNamex,
+      email: emailx,
+      schoolID: schID,
+      roleID: "0",
+    });
+    console.log(raw);
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+    setOpened(true);
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/staffLogin/invite`,
+      requestOptions
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        if (result.status === "SUCCESS") {
+          Swal.fire({
+            title: result.status,
+            icon: "success",
+            text: result.message,
+          });
+        } else {
+          Swal.fire({
+            title: result.status,
+            icon: "error",
+            text: result.message,
+          });
+        }
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
 
   const handleClick = () => {
     // sessionStorage.setItem("admin", true);
@@ -46,8 +102,8 @@ export default function InviteLecturer() {
 
     const userData = JSON.parse(localStorage.getItem("user"));
     console.log(userData);
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
+    // const myHeaders = new Headers();
+    // myHeaders.append("Content-Type", "application/json");
     const raw = JSON.stringify({
       firstName: firstNamex,
       lastName: lastNamex,
@@ -168,7 +224,7 @@ export default function InviteLecturer() {
               marginTop: "20px",
             }}
             color="success"
-            onClick={() => handleClick()}
+            onClick={() => handleAdd()}
           >
             Invite
           </Button>
