@@ -376,7 +376,7 @@ export default function Faculties() {
           <Button
             tag="label"
             className="data1"
-            color="success"
+            color="secondary"
             style={{
               width: "40vw",
               fontSize: "20px",

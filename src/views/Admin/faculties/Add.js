@@ -227,7 +227,7 @@ export default function FacultyAdd() {
               display: "flex",
               marginTop: "20px",
             }}
-            color="success"
+            color="info"
             onClick={() => handleAdd()}
           >
             Add Faculty

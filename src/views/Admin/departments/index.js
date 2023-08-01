@@ -4,21 +4,18 @@ import { Button, Card } from "reactstrap";
 import DataTable from "examples/TableList";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
-// import Swal from "sweetalert2";
+import Swal from "sweetalert2";
 import AllCountriesAndStates from "countries-states-master/countries";
 import { Dropdown, Form } from "react-bootstrap";
 import { Settings } from "@mui/icons-material";
 import Navigate from "useNavigate";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
-import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
 import "../Css.css";
 
-export default function InviteLecturers() {
+export default function Departments() {
   const { countriesAndStates: AlCountry } = AllCountriesAndStates();
   const [allStates, setAllStates] = useState([]);
-  const MySwal = withReactContent(Swal);
 
   const [residentialStatex, setResidentialState] = useState("");
   const [residentialCountryx, setResidentialCountry] = useState("");
@@ -62,42 +59,22 @@ export default function InviteLecturers() {
   };
   // useEffect(() => {
   //   setOpened(true);
-  //   const headers = miHeaders;
-
   //   const userData = JSON.parse(localStorage.getItem("user"));
   //   console.log(userData);
-  //   fetch(
-  //     `${process.env.REACT_APP_SCH_URL}/faculties/gets/${userData.schoolID}`,
-  //     { headers }
-  //   )
+  //   const schId = userData.schoolID;
+  //   const headers = miHeaders;
+  //   fetch(`${process.env.REACT_APP_SCH_URL}/departments/gets/${schId}`, {
+  //     headers,
+  //   })
   //     .then(async (res) => {
   //       // const aToken = res.headers.get("token-1");
   //       // localStorage.setItem("rexxdex", aToken);
   //       return res.json();
-  //       console.log(res);
   //     })
   //     .then((result) => {
   //       setOpened(false);
-  //       console.log("result");
   //       console.log(result);
-  //       // setItems(result);
-  //       if (result.status === "SUCCESS") {
-  //         //   localStorage.setItem("admin", result.data);
-  //         // Navigate("/departments");
-  //         MySwal.fire({
-  //           title: result.status,
-  //           type: "success",
-  //           text: result.message,
-  //         }).then(() => {
-  //           window.location.reload();
-  //         });
-  //       } else {
-  //         MySwal.fire({
-  //           title: result.status,
-  //           type: "error",
-  //           text: result.message,
-  //         });
-  //       }
+  //       setItems(result);
   //     })
   //     .catch((error) => {
   //       setOpened(false);
@@ -109,43 +86,33 @@ export default function InviteLecturers() {
   //     });
   // }, []);
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("user"));
-    console.log(userData);
-    const schId = userData.schoolID;
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
     const headers = miHeaders;
-    let isMounted = true;
-    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/staffs/gets/${schId}`, {
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/departments/gets/${schID}`, {
       headers,
     })
       .then(async (res) => {
-        // const aToken = res.headers.get("token-1");
-        // localStorage.setItem("rexxdex", aToken);
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         console.log(result);
-        // if (result.message === "Expired Access") {
-        //   navigate("/authentication/sign-in");
-        //   window.location.reload();
-        // }
-        // if (result.message === "Token Does Not Exist") {
-        //   navigate("/authentication/sign-in");
-        //   window.location.reload();
-        // }
-        // if (result.message === "Unauthorized Access") {
-        //   navigate("/authentication/forbiddenPage");
-        //   window.location.reload();
-        // }
-        if (isMounted) {
-          console.log(result);
-          setItems(result);
-        }
+        setItems(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
       });
-    return () => {
-      isMounted = false;
-    };
   }, []);
-
   const handleDelete = (val) => {
     Swal.fire({
       title: "Are you sure?",
@@ -163,7 +130,7 @@ export default function InviteLecturers() {
         };
 
         fetch(
-          `${process.env.REACT_APP_SCHPROJECT_URL}-/staffs/delete/${val}`,
+          `${process.env.REACT_APP_SCHPROJECT_URL}/departments/delete/${val}`,
           requestOptions
         )
           .then(async (res) => {
@@ -213,7 +180,7 @@ export default function InviteLecturers() {
           <Button
             tag="label"
             className="data1"
-            color="success"
+            color="secondary"
             style={{
               width: "40vw",
               fontSize: "20px",
@@ -228,7 +195,7 @@ export default function InviteLecturers() {
               variant="h5"
               className="headz"
             >
-              All Lecturers
+              All Departments
             </Typography>
           </Button>
           <div
@@ -266,9 +233,9 @@ export default function InviteLecturers() {
                   lineHeight: "4rem",
                   marginLeft: "auto",
                 }}
-                onClick={() => Navigate("/inviteLecturer/invite")}
+                onClick={() => Navigate("/departments/add")}
               >
-                Invite a Lecturer
+                Add a department
               </div>
             </Paper>
             <Paper
@@ -290,9 +257,9 @@ export default function InviteLecturers() {
                   lineHeight: "4rem",
                   marginLeft: "auto",
                 }}
-                onClick={() => Navigate("/inviteLecturer/multiple")}
+                onClick={() => Navigate("/departments/multiple")}
               >
-                Add multiple Lecturers (CSV)
+                Add multiple departments (CSV)
               </div>
             </Paper>
           </div>
@@ -303,19 +270,16 @@ export default function InviteLecturers() {
         data={{
           columns: [
             {
-              Header: "First Name",
-              accessor: "firstName",
+              Header: "Name",
+              accessor: "name",
               // renderCell: (params) => {
               //   return `${params.row.firstName} ${params.row.lastName}`;
               // },
             },
-            {
-              Header: "Last Name",
-              accessor: "lastName",
-            },
-            { Header: "Email", accessor: "email" },
-            // { Header: "head", accessor: "head" },
+            { Header: "description", accessor: "desc", width: 250 },
+            { Header: "Head Of Department", accessor: "head" },
             // { Header: "school", accessor: "school" },
+            { Header: "faculty", accessor: "facultyName" },
             // { Header: "college", accessor: "college" },
             {
               Header: "options",
@@ -338,23 +302,18 @@ export default function InviteLecturers() {
                   <Dropdown.Menu>
                     <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}
-                      // onClick={() => {
-                      //   Navigate(`/customers/view?id=${cell.row.id}`);
-                      // }}
                       onClick={() => handleDelete(cell.row.id)}
                     >
                       Delete
                     </Dropdown.Item>
-                    {/* <Dropdown.Item
+                    <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}
                       onClick={() =>
-                        Navigate(
-                          `/customers/referral?id=${cell.row.id}&name=${cell.row.firstName} ${cell.row.lastName}`
-                        )
+                        Navigate(`/departments/update?id=${cell.row.id}`)
                       }
                     >
-                      View Referrals
-                    </Dropdown.Item> */}
+                      Update
+                    </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
               ),

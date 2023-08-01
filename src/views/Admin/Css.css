@@ -1,0 +1,79 @@
+.signbox {
+  display: flex;
+}
+.cards {
+  width: 60vw;
+}
+.paperz {
+  margin-left: 20px;
+}
+.resizer2 {
+  background-color: #2196f3 !important;
+  color: white !important;
+  font-weight: 500;
+  font-size: medium;
+  transition: all ease 2s !important;
+}
+.resizer2:hover {
+  transform: translateY(-20px);
+}
+@media screen and (max-width: 450px) {
+  .col-res {
+    line-height: 2rem !important;
+  }
+  .row-res {
+    margin-top: 40vw !important;
+  }
+  .stu {
+    background-color: red !important;
+  }
+  .img-res {
+    display: none;
+  }
+  .calamity {
+    /* position: absolute !important; */
+    /* margin-top: 20px !important; */
+  }
+  .bubble2 { 
+    margin-top: -10vw;
+    background-image: url(../authentication/students.jpg) !important;
+  }
+  .signbox {
+    width: 95vw !important;
+    display: flex !important;
+    margin-right: auto !important;
+    padding-left: 0px !important;
+    margin-top: 100px;
+    /* visibility: hidden; */
+    margin-left: auto !important;
+  }
+  .resizer {
+    margin-top: 30px;
+    height: 73vh !important;
+  }
+  #forgotpassword {
+    font-size: 11px;
+  }
+  .maza {
+    font-size: 20px !important;
+  }
+  .cards {
+    width: 100vw;
+  }
+  .description {
+    width: 22rem !important;
+  }
+  .paperz {
+    margin-left: -20px;
+  }
+  .table {
+    width: 90vw !important;
+  }
+  .headz {
+    font-size: 1rem !important;
+  }
+  .preview {
+    width: 90vw !important;
+    padding: 0 !important;
+  }
+}

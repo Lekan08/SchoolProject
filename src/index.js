@@ -30,7 +30,7 @@ import ThemeContextWrapper from "./components/ThemeWrapper/ThemeWrapper";
 import BackgroundColorWrapper from "./components/BackgroundColorWrapper/BackgroundColorWrapper";
 import SignIn from "views/authentication/SignIn";
 import ResetPassword from "views/authentication/ResetPassword";
-import Invitation from "views/invitation";
+import Invitation from "views/Admin/invitation";
 import CompleteResetPassword from "views/authentication/complete-resetPassword";
 import SignInAdmin from "views/authentication/SignInAdmin";
 import SignInStudent from "./views/authentication/SignInStudent";

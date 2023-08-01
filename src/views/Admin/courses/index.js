@@ -13,7 +13,7 @@ import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 import "../Css.css";
 
-export default function Students() {
+export default function Courses() {
   const { countriesAndStates: AlCountry } = AllCountriesAndStates();
   const [allStates, setAllStates] = useState([]);
   const [residentialStatex, setResidentialState] = useState("");
@@ -62,7 +62,7 @@ export default function Students() {
     const userInfo = JSON.parse(localStorage.getItem("user"));
     const schID = userInfo.schoolID;
     const headers = miHeaders;
-    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/students/gets/${schID}`, {
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/courses/gets/${schID}`, {
       headers,
     })
       .then(async (res) => {
@@ -84,7 +84,54 @@ export default function Students() {
         });
       });
   }, []);
-
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed === true) {
+        const requestOptions = {
+          method: "DELETE",
+          headers: miHeaders,
+        };
+        fetch(
+          `${process.env.REACT_APP_SCHPROJECT_URL}/courses/delete/${id}`,
+          requestOptions
+        )
+          .then((res) => res.json())
+          .then((resx) => {
+            if (resx.message === "Expired Access") {
+              Navigate("/sign-in");
+            }
+            if (resx.message === "Token Does Not Exist") {
+              Navigate("/sign-in");
+            }
+            if (resx.message === "Unauthorized Access") {
+              Navigate("/sign-in");
+            }
+            Swal.fire({
+              title: resx.status,
+              icon: "success",
+              text: resx.message,
+            }).then(() => {
+              window.location.reload();
+            });
+          })
+          .catch((error) => {
+            Swal.fire({
+              title: error.status,
+              icon: "error",
+              text: error.message,
+            });
+          });
+      }
+    });
+  };
   return (
     <div className="content">
       <Paper elevation={8}>
@@ -92,13 +139,14 @@ export default function Students() {
           <Button
             tag="label"
             className="data1"
-            color="success"
+            color="secondary"
             style={{
               width: "40vw",
               fontSize: "20px",
               marginRight: "auto",
               marginLeft: "auto",
               // height: "50px",
+              // fontFamily: "Roboto",
               marginTop: "20px",
             }}
           >
@@ -107,7 +155,7 @@ export default function Students() {
               variant="h5"
               className="headz"
             >
-              All Students
+              All Courses
             </Typography>
           </Button>
           <div
@@ -145,9 +193,9 @@ export default function Students() {
                   lineHeight: "4rem",
                   marginLeft: "auto",
                 }}
-                onClick={() => Navigate("/students/add")}
+                onClick={() => Navigate("/courses/add")}
               >
-                Add a student
+                Add a course
               </div>
             </Paper>
             <Paper
@@ -169,9 +217,9 @@ export default function Students() {
                   lineHeight: "4rem",
                   marginLeft: "auto",
                 }}
-                onClick={() => Navigate("/students/multiple")}
+                onClick={() => Navigate("/courses/multiple")}
               >
-                Add multiple students (CSV)
+                Add multiple courses (CSV)
               </div>
             </Paper>
           </div>
@@ -183,30 +231,11 @@ export default function Students() {
           columns: [
             {
               Header: "Name",
-              accessor: "firstName",
-              renderCell: (params) => {
-                return `${params.row.firstName} ${params.row.lastName}`;
-              },
+              accessor: "name",
             },
-            { Header: "Matric number", accessor: "matricNumber" },
+            { Header: "description", accessor: "description", width: 250 },
             { Header: "department", accessor: "departmentName" },
             { Header: "faculty", accessor: "facultyName" },
-            { Header: "sex", accessor: "sex" },
-            { Header: "city", accessor: "city" },
-            { Header: "state", accessor: "state" },
-            { Header: "country", accessor: "country" },
-            { Header: "phone number", accessor: "phoneNumber" },
-            { Header: "email", accessor: "email" },
-            {
-              Header: "Date Of Birth",
-              width: 200,
-              accessor: "dateOfBirth",
-              renderCell: (params) => {
-                return `${new Date(
-                  Number(params.row.dateOfBirth)
-                ).toLocaleDateString()}`;
-              },
-            },
             {
               Header: "options",
               accessor: "id",
@@ -229,7 +258,7 @@ export default function Students() {
                     <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}
                       onClick={() => {
-                        Navigate(`/students/view?id=${cell.row.id}`);
+                        Navigate(`/courses/view?id=${cell.row.id}`);
                       }}
                     >
                       View
@@ -237,10 +266,16 @@ export default function Students() {
                     <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}
                       onClick={() =>
-                        Navigate(`/students/update?id=${cell.row.id}`)
+                        Navigate(`/courses/update?id=${cell.row.id}`)
                       }
                     >
                       Update
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      style={{ fontweight: "bold", color: "black" }}
+                      onClick={() => handleDelete(cell.row.id)}
+                    >
+                      Delete
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>

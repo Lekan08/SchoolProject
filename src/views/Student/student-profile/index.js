@@ -6,7 +6,7 @@ import GHeaders from "getHeader";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import { AccountCircleSharp, School } from "@mui/icons-material";
-import { Card, TextField } from "@mui/material";
+import { Card, TextField, Typography } from "@mui/material";
 import {
   Button,
   FormGroup,
@@ -17,31 +17,31 @@ import {
   //   Card,
 } from "reactstrap";
 import { Form } from "react-bootstrap";
-import Navigate from "useNavigate";
 
-export default function StudentAdd() {
+export default function StudentProfileUpdate() {
   const [opened, setOpened] = useState(false);
   const [phonex, setPhonex] = useState(0);
-  const [dob, setDob] = useState("2000-01-01");
+  const [dob, setDob] = useState("");
   const [fname, setFname] = useState("");
-  const { allPHeaders: myHeaders } = PHeaders();
-  const { allGHeaders: miHeaders } = GHeaders();
   const [lname, setLname] = useState("");
   const [type, setType] = useState("");
   const [matric, setMatric] = useState("");
-  const [sex, setSex] = useState("");
-  const [email, setEmail] = useState("");
   const [faculties, setFaculties] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [faculty, setFaculty] = useState("");
   const [department, setDepartment] = useState("");
+  const [sex, setSex] = useState("");
+  const [email, setEmail] = useState("");
+  const [items, setItems] = useState({});
+  const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
   useEffect(() => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
-    console.log(userInfo);
-    const schID = userInfo.schoolID;
+    const idx = userInfo.id;
+    // console.log(idx);
     const headers = miHeaders;
-    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/faculties/gets/${schID}`, {
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/students/getByIds/${idx}`, {
       headers,
     })
       .then(async (res) => {
@@ -50,9 +50,30 @@ export default function StudentAdd() {
         return res.json();
       })
       .then((result) => {
+        const dateOfBirth = Number(result[0].dateOfBirth);
+        const day = () => {
+          let day = new Date(dateOfBirth).getDate();
+          if (String(day).length === 1) return `0${day}`;
+          return day;
+        };
+        const month = () => {
+          let day = new Date(dateOfBirth).getMonth() + 1;
+          if (String(day).length === 1) return `0${day}`;
+          return day;
+        };
         setOpened(false);
         console.log(result);
-        setFaculties(result);
+        setFname(result[0].firstName);
+        setLname(result[0].lastName);
+        setSex(result[0].sex);
+        setType(String(result[0].studentType));
+        setEmail(result[0].email);
+        setMatric(result[0].matricNumber);
+        setDob(`${new Date(dateOfBirth).getFullYear()}-${month()}-${day()}`);
+        setPhonex(`+${result[0].phoneNumber}`);
+        setFaculty(result[0].facultyName);
+        setDepartment(result[0].departmentName);
+        setItems(result[0]);
       })
       .catch((error) => {
         setOpened(false);
@@ -63,152 +84,11 @@ export default function StudentAdd() {
         });
       });
   }, []);
-  const handleDepartment = (w) => {
-    setOpened(true);
-    const userInfo = JSON.parse(localStorage.getItem("user"));
-    console.log(userInfo);
-    const headers = miHeaders;
-    fetch(
-      `${process.env.REACT_APP_SCHPROJECT_URL}/departments/getByFacultyID/${w}`,
-      {
-        headers,
-      }
-    )
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        setOpened(false);
-        console.log(result);
-        setDepartments(result);
-      })
-      .catch((error) => {
-        setOpened(false);
-        Swal.fire({
-          title: error.status,
-          icon: "error",
-          text: error.message,
-        });
-      });
-  };
-  const handleAdd = () => {
-    console.log(`${fname}/${matric}`);
-    setOpened(true);
-    const userInfo = JSON.parse(localStorage.getItem("user"));
-    const raw2 = JSON.stringify({
-      firstName: fname,
-      lastName: lname,
-      email: email,
-      phoneNumber: phonex,
-      sex: sex,
-      dateOfBirth: new Date(dob).getTime(),
-      schoolID: userInfo.schoolID,
-      depID: department,
-      facultyID: faculty,
-      matricNumber: matric,
-      studentType: Number(type),
-    });
-    console.log(raw2);
-    const requestOptions2 = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw2,
-      redirect: "follow",
-    };
-    fetch(
-      `${process.env.REACT_APP_SCHPROJECT_URL}/students/add`,
-      requestOptions2
-    )
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        const resultx = await res.text();
-        if (resultx === null || resultx === undefined || resultx === "") {
-          return {};
-        }
-        return JSON.parse(resultx);
-      })
-      .then((resultx) => {
-        console.log(resultx);
-        setOpened(false);
-        if (resultx.status !== "SUCCESS") {
-          // localStorage.setItem("admin4", result.data);
-          // Navigate("/dashboard");
-          const raw = JSON.stringify({
-            username: matric,
-            password: `${fname}/${matric}`,
-          });
-          console.log(raw);
-          const requestOptions = {
-            method: "POST",
-            headers: myHeaders,
-            body: raw,
-            redirect: "follow",
-          };
-          // setOpened(true);
-          fetch(
-            `${process.env.REACT_APP_SCHPROJECT_URL}/studentLogin/addLogin`,
-            requestOptions
-          )
-            .then(async (res) => {
-              // console.log(res.headers);;;;
-              const aToken = res.headers.get("token-1");
-              localStorage.setItem("rexxdex1", aToken);
-              return res.json();
-            })
-            .then((result) => {
-              setOpened(false);
-              if (result.status === "SUCCESS") {
-                //   localStorage.setItem("admin", result.data);
-                Swal.fire({
-                  title: result.status,
-                  icon: "success",
-                  text: result.message,
-                }).then(() => {
-                  localStorage.setItem("user", JSON.stringify(result.data));
-                  Navigate("/dashboard");
-                });
-              } else {
-                Swal.fire({
-                  title: result.status,
-                  icon: "error",
-                  text: result.message,
-                });
-              }
-            })
-            .catch((error) => {
-              setOpened(false);
-              Swal.fire({
-                title: error.status,
-                icon: "error",
-                text: error.message,
-              });
-            });
-        }
-        // MySwal.fire({
-        //   title: result.status,
-        //   type: "success",
-        //   text: result.message,
-        // }).then(() => {
-        //   window.location.reload();
-        // });
-      })
-      .catch((error) => {
-        setOpened(false);
-        Swal.fire({
-          title: error.status,
-          icon: "error",
-          text: error.message,
-        });
-      });
-  };
   return (
     <div className="content">
       <Card mx={2}>
         <CardBody>
-          <School
+          <AccountCircleSharp
             sx={{
               fontSize: 230,
               marginLeft: "auto",
@@ -225,10 +105,10 @@ export default function StudentAdd() {
                   onChange={(e) => {
                     setFname(e.target.value);
                   }}
+                  disabled
                   // defaultValue={`${data11.firstName}`}
                   placeholder="First Name"
-                  //   value={firstName}
-                  //   disabled
+                  value={fname}
                   type="text"
                 />
               </FormGroup>
@@ -244,8 +124,8 @@ export default function StudentAdd() {
                   placeholder="Last Name"
                   // onChange={() => console.log()}
                   type="text"
-                  //   value={items[0]?.lastName}
-                  // disabled
+                  value={lname}
+                  disabled
                 />
               </FormGroup>
             </Col>
@@ -257,6 +137,7 @@ export default function StudentAdd() {
                 <Form.Select
                   style={{ marginBottom: "20px" }}
                   value={sex || ""}
+                  disabled
                   aria-label="Default select example"
                   onChange={(e) => setSex(e.target.value)}
                 >
@@ -272,6 +153,7 @@ export default function StudentAdd() {
                 <Form.Select
                   style={{ marginBottom: "20px" }}
                   value={type || ""}
+                  disabled
                   aria-label="Default select example"
                   onChange={(e) => setType(e.target.value)}
                 >
@@ -294,8 +176,8 @@ export default function StudentAdd() {
                   placeholder="Mail"
                   //   onChange={() => console.log()}
                   type="text"
-                  //   value={items[0]?.email}
-                  // disabled
+                  value={email}
+                  disabled
                 />
               </FormGroup>
             </Col>
@@ -305,8 +187,9 @@ export default function StudentAdd() {
                 // value={phonex}
                 onChange={(val) => setPhonex(val)}
                 id="phone"
+                disabled
                 placeholder="+234 812 345 6789"
-                // value="+"
+                value={phonex}
                 inputStyle={{ marginTop: "3.8%" }}
                 // onChange={setPhone}
               />
@@ -318,21 +201,17 @@ export default function StudentAdd() {
                 <label>Faculty</label>
                 <Form.Select
                   style={{ marginBottom: "20px" }}
-                  // value={sex || ""}
+                  value={faculty || ""}
                   size="sm"
+                  disabled
                   aria-label="Default select example"
                   onChange={(e) => {
-                    handleDepartment(e.target.value);
                     setFaculty(e.target.value);
-                    console.log(e.target.key);
                   }}
                 >
-                  <option value="">--Select Faculty--</option>
-                  {faculties.map((apic) => (
-                    <option key={apic.id} value={apic.id}>
-                      {apic.name}
-                    </option>
-                  ))}
+                  <option key={faculty} value={faculty}>
+                    {faculty}
+                  </option>
                 </Form.Select>
               </FormGroup>
             </Col>
@@ -341,31 +220,30 @@ export default function StudentAdd() {
                 <label>Department</label>
                 <Form.Select
                   style={{ marginBottom: "20px" }}
-                  // value={sex || ""}
+                  value={department || ""}
+                  disabled
                   size="sm"
                   aria-label="Default select example"
                   onChange={(e) => setDepartment(e.target.value)}
                 >
-                  <option value="">--Select Department--</option>
-                  {departments.map((apic) => (
-                    <option key={apic.id} value={apic.id}>
-                      {apic.name}
-                    </option>
-                  ))}
+                  <option key={department} value={department}>
+                    {department}
+                  </option>
                 </Form.Select>
               </FormGroup>
             </Col>
             <Col className="pl-md-1" md="4">
               <FormGroup>
-                <label>College (optional) </label>
+                <label>College </label>
                 <Form.Select
                   style={{ marginBottom: "20px" }}
                   // value={sex || ""}
+                  disabled
                   size="sm"
                   aria-label="Default select example"
                   // onChange={(e) => setSex(e.target.value)}
                 >
-                  <option value="">--Choose--</option>
+                  <option value=""></option>
                   {/* <option value="Male">Male</option>
                   <option value="Female">Female</option> */}
                 </Form.Select>
@@ -378,7 +256,6 @@ export default function StudentAdd() {
                 <label>Date Of Birth</label>
                 <br />
                 <TextField
-                  // id="datetime-local"
                   // label="*"
                   color="secondary"
                   type="date"
@@ -388,7 +265,7 @@ export default function StudentAdd() {
                   }}
                   size="small"
                   value={dob}
-                  // disabled={disab}
+                  disabled
                   onChange={(e) => setDob(e.target.value)}
                 />
               </FormGroup>
@@ -402,29 +279,12 @@ export default function StudentAdd() {
                   placeholder="0000-0000-0000"
                   //   onChange={() => console.log()}
                   type="text"
-                  //   value={String(items[0]?.referralCode)}
-                  // disabled
+                  value={matric}
+                  disabled
                 />
-                <label style={{ color: "red", marginTop: 10 }}>
-                  Password to the student's profile will be the first name /
-                  matric number : {fname}/{matric}
-                </label>
               </FormGroup>
             </Col>
           </Row>
-          <Button
-            variant="gradient"
-            style={{
-              marginLeft: "auto",
-              marginRight: "auto",
-              display: "flex",
-              marginTop: "20px",
-            }}
-            color="success"
-            onClick={() => handleAdd()}
-          >
-            Add Student
-          </Button>
         </CardBody>
       </Card>
       <Backdrop

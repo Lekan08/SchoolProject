@@ -268,7 +268,7 @@ export default function DepartmentAdd() {
             </Col>
           </Row>
           <Row style={{ marginTop: 20 }}>
-            <Col md="3" className="pl-md-1">
+            <Col md="4" className="pl-md-1">
               <FormGroup>
                 <label>Head of Department</label>
                 <Input
@@ -282,6 +282,7 @@ export default function DepartmentAdd() {
                 />
               </FormGroup>
             </Col>{" "}
+            {/* <Col md="1" /> */}
             <Col
               md="4"
               className="pl-md-1"
@@ -292,6 +293,7 @@ export default function DepartmentAdd() {
               }}
             >
               <FormGroup>
+                <label>Faculty</label>
                 <Form.Select
                   style={{ marginBottom: "20px" }}
                   value={facultyx || ""}
@@ -358,7 +360,7 @@ export default function DepartmentAdd() {
               display: "flex",
               marginTop: "20px",
             }}
-            color="success"
+            color="info"
             onClick={() => handleClick()}
           >
             Add Department

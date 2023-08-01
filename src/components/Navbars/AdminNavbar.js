@@ -135,7 +135,7 @@ function AdminNavbar(props) {
                 <DropdownMenu className="dropdown-navbar" right tag="ul">
                   <NavLink tag="li">
                     <DropdownItem className="nav-item">
-                      This is Mazaways 😀! 
+                      This is a school website 😀! 
                     </DropdownItem>
                   </NavLink>
                 </DropdownMenu>

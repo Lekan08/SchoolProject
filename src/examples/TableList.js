@@ -36,7 +36,7 @@ function DataTable({ data }) {
     field: r.accessor,
     headerName: r.Header.toUpperCase(),
     headerClassName: "bd",
-    width: r.width ? r.width : 150,
+    width: r.width ? r.width : 250,
     renderCell: r.renderCell,
     key: r.id,
   }));

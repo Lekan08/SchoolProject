@@ -6,7 +6,8 @@ import GHeaders from "getHeader";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import { AccountCircleSharp, School } from "@mui/icons-material";
-import { Card, TextField, Typography } from "@mui/material";
+import Select from "react-select";
+import { Card, TextField } from "@mui/material";
 import {
   Button,
   FormGroup,
@@ -17,27 +18,28 @@ import {
   //   Card,
 } from "reactstrap";
 import { Form } from "react-bootstrap";
+import Navigate from "useNavigate";
 
-export default function StudentUpdate() {
+export default function StudentAdd() {
   const [opened, setOpened] = useState(false);
   const [phonex, setPhonex] = useState(0);
-  const [dob, setDob] = useState("");
+  const [dob, setDob] = useState("2000-01-01");
   const [fname, setFname] = useState("");
+  const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
   const [lname, setLname] = useState("");
   const [type, setType] = useState("");
   const [matric, setMatric] = useState("");
+  const [sex, setSex] = useState("");
+  const [email, setEmail] = useState("");
   const [faculties, setFaculties] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [faculty, setFaculty] = useState("");
   const [department, setDepartment] = useState("");
-  const [sex, setSex] = useState("");
-  const [email, setEmail] = useState("");
-  const [items, setItems] = useState({});
-  const { allPHeaders: myHeaders } = PHeaders();
-  const { allGHeaders: miHeaders } = GHeaders();
   useEffect(() => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
     const schID = userInfo.schoolID;
     const headers = miHeaders;
     fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/faculties/gets/${schID}`, {
@@ -50,8 +52,10 @@ export default function StudentUpdate() {
       })
       .then((result) => {
         setOpened(false);
-        // console.log(result);
-        setFaculties(result);
+        console.log(result);
+        const spec = result.map((r) => ({ value: r.id, label: r.name }));
+
+        setFaculties(spec);
       })
       .catch((error) => {
         setOpened(false);
@@ -64,6 +68,8 @@ export default function StudentUpdate() {
   }, []);
   const handleDepartment = (w) => {
     setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
     const headers = miHeaders;
     fetch(
       `${process.env.REACT_APP_SCHPROJECT_URL}/departments/getByFacultyID/${w}`,
@@ -78,8 +84,8 @@ export default function StudentUpdate() {
       })
       .then((result) => {
         setOpened(false);
-        console.log(result);
-        setDepartments(result);
+        const newdp = result.map((r) => ({ value: r.id, label: r.name }));
+        setDepartments(newdp);
       })
       .catch((error) => {
         setOpened(false);
@@ -90,63 +96,11 @@ export default function StudentUpdate() {
         });
       });
   };
-  useEffect(() => {
-    setOpened(true);
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const idx = urlParams.get("id");
-    // console.log(idx);
-    const headers = miHeaders;
-    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/students/getByIds/${idx}`, {
-      headers,
-    })
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        const dateOfBirth = Number(result[0].dateOfBirth);
-        const day = () => {
-          let day = new Date(dateOfBirth).getDate();
-          if (String(day).length === 1) return `0${day}`;
-          return day;
-        };
-        const month = () => {
-          let day = new Date(dateOfBirth).getMonth() + 1;
-          if (String(day).length === 1) return `0${day}`;
-          return day;
-        };
-        setOpened(false);
-        console.log(result);
-        setFname(result[0].firstName);
-        setLname(result[0].lastName);
-        setSex(result[0].sex);
-        setType(String(result[0].studentType));
-        setEmail(result[0].email);
-        setMatric(result[0].matricNumber);
-        setDob(`${new Date(dateOfBirth).getFullYear()}-${month()}-${day()}`);
-        setPhonex(`+${result[0].phoneNumber}`);
-        handleDepartment(result[0].facultyID);
-        setFaculty(result[0].facultyID);
-        setDepartment(result[0].depID);
-        setItems(result[0]);
-      })
-      .catch((error) => {
-        setOpened(false);
-        Swal.fire({
-          title: error.status,
-          icon: "error",
-          text: error.message,
-        });
-      });
-  }, []);
   const handleAdd = () => {
+    console.log(`${fname}/${matric}`);
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
     const raw2 = JSON.stringify({
-      id: items.id,
-      schoolName: items.schoolName,
       firstName: fname,
       lastName: lname,
       email: email,
@@ -156,20 +110,18 @@ export default function StudentUpdate() {
       schoolID: userInfo.schoolID,
       depID: department,
       facultyID: faculty,
-      departmentName: items.departmentName,
-      facultyName: items.facultyName,
       matricNumber: matric,
       studentType: Number(type),
     });
     console.log(raw2);
     const requestOptions2 = {
-      method: "PUT",
+      method: "POST",
       headers: myHeaders,
       body: raw2,
       redirect: "follow",
     };
     fetch(
-      `${process.env.REACT_APP_SCHPROJECT_URL}/students/update`,
+      `${process.env.REACT_APP_SCHPROJECT_URL}/students/add`,
       requestOptions2
     )
       .then(async (res) => {
@@ -181,22 +133,70 @@ export default function StudentUpdate() {
         }
         return JSON.parse(resultx);
       })
-      .then((result) => {
-        console.log(result);
+      .then((resultx) => {
+        console.log(resultx);
         setOpened(false);
-        if (result.status === "SUCCESS") {
-          Swal.fire({
-            title: result.status,
-            icon: "success",
-            text: "UPDATED STUDENT PROFILE SUCCESSFULLY",
+        if (resultx.status === "SUCCESS") {
+          // localStorage.setItem("admin4", result.data);
+          // Navigate("/dashboard");
+          const raw = JSON.stringify({
+            username: matric,
+            password: `${fname}/${matric}`,
           });
-        } else {
-          Swal.fire({
-            title: result.status,
-            icon: "error",
-            text: result.message,
-          });
+          console.log(raw);
+          const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: raw,
+            redirect: "follow",
+          };
+          // setOpened(true);
+          fetch(
+            `${process.env.REACT_APP_SCHPROJECT_URL}/studentLogin/addLogin`,
+            requestOptions
+          )
+            .then(async (res) => {
+              // console.log(res.headers);;;;
+              const aToken = res.headers.get("token-1");
+              localStorage.setItem("rexxdex1", aToken);
+              return res.json();
+            })
+            .then((result) => {
+              setOpened(false);
+              if (result.status === "SUCCESS") {
+                //   localStorage.setItem("admin", result.data);
+                Swal.fire({
+                  title: result.status,
+                  icon: "success",
+                  text: result.message,
+                }).then(() => {
+                  localStorage.setItem("user", JSON.stringify(result.data));
+                  Navigate("/students");
+                });
+              } else {
+                Swal.fire({
+                  title: result.status,
+                  icon: "error",
+                  text: result.message,
+                });
+              }
+            })
+            .catch((error) => {
+              setOpened(false);
+              Swal.fire({
+                title: error.status,
+                icon: "error",
+                text: error.message,
+              });
+            });
         }
+        // MySwal.fire({
+        //   title: result.status,
+        //   type: "success",
+        //   text: result.message,
+        // }).then(() => {
+        //   window.location.reload();
+        // });
       })
       .catch((error) => {
         setOpened(false);
@@ -211,7 +211,7 @@ export default function StudentUpdate() {
     <div className="content">
       <Card mx={2}>
         <CardBody>
-          <AccountCircleSharp
+          <School
             sx={{
               fontSize: 230,
               marginLeft: "auto",
@@ -230,7 +230,8 @@ export default function StudentUpdate() {
                   }}
                   // defaultValue={`${data11.firstName}`}
                   placeholder="First Name"
-                  value={fname}
+                  //   value={firstName}
+                  //   disabled
                   type="text"
                 />
               </FormGroup>
@@ -246,7 +247,7 @@ export default function StudentUpdate() {
                   placeholder="Last Name"
                   // onChange={() => console.log()}
                   type="text"
-                  value={lname}
+                  //   value={items[0]?.lastName}
                   // disabled
                 />
               </FormGroup>
@@ -296,7 +297,7 @@ export default function StudentUpdate() {
                   placeholder="Mail"
                   //   onChange={() => console.log()}
                   type="text"
-                  value={email}
+                  //   value={items[0]?.email}
                   // disabled
                 />
               </FormGroup>
@@ -308,7 +309,7 @@ export default function StudentUpdate() {
                 onChange={(val) => setPhonex(val)}
                 id="phone"
                 placeholder="+234 812 345 6789"
-                value={phonex}
+                // value="+"
                 inputStyle={{ marginTop: "3.8%" }}
                 // onChange={setPhone}
               />
@@ -318,9 +319,17 @@ export default function StudentUpdate() {
             <Col className="pl-md-1" md="4">
               <FormGroup>
                 <label>Faculty</label>
+                <Select
+                  options={faculties}
+                  onChange={(e) => {
+                    handleDepartment(e.value);
+                    setFaculty(e.value);
+                  }}
+                />
+                {/* <label>Faculty</label>
                 <Form.Select
                   style={{ marginBottom: "20px" }}
-                  value={faculty || ""}
+                  // value={sex || ""}
                   size="sm"
                   aria-label="Default select example"
                   onChange={(e) => {
@@ -335,15 +344,22 @@ export default function StudentUpdate() {
                       {apic.name}
                     </option>
                   ))}
-                </Form.Select>
+                </Form.Select> */}
               </FormGroup>
             </Col>
             <Col className="pl-md-1" md="4">
               <FormGroup>
                 <label>Department</label>
+                <Select
+                  options={departments}
+                  onChange={(e) => {
+                    setDepartment(e.value);
+                  }}
+                />
+                {/* <label>Department</label>
                 <Form.Select
                   style={{ marginBottom: "20px" }}
-                  value={department || ""}
+                  // value={sex || ""}
                   size="sm"
                   aria-label="Default select example"
                   onChange={(e) => setDepartment(e.target.value)}
@@ -354,23 +370,13 @@ export default function StudentUpdate() {
                       {apic.name}
                     </option>
                   ))}
-                </Form.Select>
+                </Form.Select> */}
               </FormGroup>
             </Col>
             <Col className="pl-md-1" md="4">
               <FormGroup>
                 <label>College (optional) </label>
-                <Form.Select
-                  style={{ marginBottom: "20px" }}
-                  // value={sex || ""}
-                  size="sm"
-                  aria-label="Default select example"
-                  // onChange={(e) => setSex(e.target.value)}
-                >
-                  <option value="">--Choose--</option>
-                  {/* <option value="Male">Male</option>
-                  <option value="Female">Female</option> */}
-                </Form.Select>
+                <Select />
               </FormGroup>
             </Col>
           </Row>
@@ -380,6 +386,7 @@ export default function StudentUpdate() {
                 <label>Date Of Birth</label>
                 <br />
                 <TextField
+                  // id="datetime-local"
                   // label="*"
                   color="secondary"
                   type="date"
@@ -403,9 +410,13 @@ export default function StudentUpdate() {
                   placeholder="0000-0000-0000"
                   //   onChange={() => console.log()}
                   type="text"
-                  value={matric}
+                  //   value={String(items[0]?.referralCode)}
                   // disabled
                 />
+                <label style={{ color: "red", marginTop: 10 }}>
+                  Password to the student's profile will be the first name /
+                  matric number : {fname}/{matric}
+                </label>
               </FormGroup>
             </Col>
           </Row>
@@ -417,10 +428,10 @@ export default function StudentUpdate() {
               display: "flex",
               marginTop: "20px",
             }}
-            color="success"
+            color="info"
             onClick={() => handleAdd()}
           >
-            Update Student Profile
+            Add Student
           </Button>
         </CardBody>
       </Card>

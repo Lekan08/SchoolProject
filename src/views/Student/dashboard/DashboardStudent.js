@@ -49,7 +49,7 @@ import {
   chartExample3,
   chartExample4,
 } from "variables/charts.js";
-import { CustomNotification } from "views/notification/Notifications";
+import { CustomNotification } from "views/Admin/notification/Notifications";
 
 function DashboardStudent(props) {
   const [firer, setFirer] = React.useState(false);
