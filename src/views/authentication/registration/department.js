@@ -16,7 +16,7 @@ import Button from "react-bootstrap/Button";
 import "./index.css";
 import { Container, FloatingLabel, Row, Col } from "react-bootstrap";
 
-function Department({ formData, setFormData }) {
+function LectDepartment({ formData, setFormData }) {
   const Navigate = useNavigate();
   useEffect(() => {
     if (window.location.pathname === "/sign-up") Navigate("/");
@@ -195,4 +195,4 @@ function Department({ formData, setFormData }) {
   );
 }
 
-export default Department;
+export default LectDepartment;

@@ -284,11 +284,11 @@ export default function DepartmentUpdate() {
           <Row>
             <Col className="pl-md-1" md="6">
               <FormGroup>
-                <label>Name</label>
+                <label>Name Of Faculty</label>
                 <Input
                   // onChange={() => {}}
                   // defaultValue={`${data11.firstName}`}
-                  placeholder="First Name"
+                  placeholder="Name Of Faculty"
                   value={namex}
                   onChange={(e) => setName(e.target.value)}
                   //   disabled

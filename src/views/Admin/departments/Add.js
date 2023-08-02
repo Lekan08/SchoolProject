@@ -240,11 +240,11 @@ export default function DepartmentAdd() {
           <Row>
             <Col className="pl-md-1" md="6">
               <FormGroup>
-                <label>Name</label>
+                <label>Name Of Department</label>
                 <Input
                   // onChange={() => {}}
                   // defaultValue={`${data11.firstName}`}
-                  placeholder="First Name"
+                  placeholder="Name Of Department"
                   value={namex}
                   onChange={(e) => setName(e.target.value)}
                   //   disabled

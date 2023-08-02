@@ -270,7 +270,7 @@ export default function Departments() {
         data={{
           columns: [
             {
-              Header: "Name",
+              Header: "Name Of Department",
               accessor: "name",
               // renderCell: (params) => {
               //   return `${params.row.firstName} ${params.row.lastName}`;

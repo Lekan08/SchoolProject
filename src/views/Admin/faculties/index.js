@@ -490,7 +490,7 @@ export default function Faculties() {
       <DataTable
         data={{
           columns: [
-            { Header: "Name", accessor: "name" },
+            { Header: "Name Of Faculty", accessor: "name" },
             { Header: "description", accessor: "desc" },
             { Header: "Head Of Faculty", accessor: "head" },
             {

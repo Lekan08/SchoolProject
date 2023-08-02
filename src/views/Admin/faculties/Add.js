@@ -139,13 +139,13 @@ export default function FacultyAdd() {
           <Row>
             <Col className="pl-md-1" md="6">
               <FormGroup>
-                <label>Name</label>
+                <label>Name Of Faculty</label>
                 <Input
                   onChange={(e) => {
                     setName(e.target.value);
                   }}
                   // defaultValue={`${data11.firstName}`}
-                  placeholder="First Name"
+                  placeholder="Name Of Faculty"
                   //   value={firstName}
                   //   disabled
                   type="text"
