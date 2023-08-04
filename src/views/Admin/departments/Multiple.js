@@ -25,6 +25,7 @@ import {
 import example from "./example.jpg";
 import DataTable from "examples/TableList";
 import Form from "react-bootstrap/Form";
+import Navigate from "useNavigate";
 
 export default function DepartmentMultiple() {
   const style = {
@@ -181,7 +182,7 @@ export default function DepartmentMultiple() {
             icon: "success",
             text: result.message,
           }).then(() => {
-            window.location.reload();
+            Navigate(`/departments`);
           });
         } else {
           Swal.fire({

@@ -19,6 +19,7 @@ import withReactContent from "sweetalert2-react-content";
 import { Box } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Form from "react-bootstrap/Form";
+import Navigate from "useNavigate";
 
 export default function DepartmentAdd() {
   const [opened, setOpened] = useState(false);
@@ -147,7 +148,7 @@ export default function DepartmentAdd() {
             type: "success",
             text: result.message,
           }).then(() => {
-            window.location.reload();
+            Navigate(`/departments`);
           });
         } else {
           MySwal.fire({
