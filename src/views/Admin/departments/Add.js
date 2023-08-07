@@ -30,6 +30,11 @@ export default function DepartmentAdd() {
   const { allGHeaders: miHeaders } = GHeaders();
   const [faculties, setFaculties] = useState([]);
   const [facultyx, setFaculty] = useState("");
+  const [showOtherFac, setShowOtherFac] = useState(false);
+  const [otherProgFac, setOtherProgFac] = useState("");
+  const [otherProgFaculties, setOtherProgFaculties] = useState([]);
+  const [otherProgram, setOtherProg] = useState("");
+  const [getAllStaff, setGetAllStaff] = useState([]);
   //   const { allPHeaders: myHeaders } = PHeaders();
   //   const { allGHeaders: miHeaders } = GHeaders();
   //   const queryString = window.location.search;
@@ -115,8 +120,9 @@ export default function DepartmentAdd() {
       schoolID: userData.schoolID,
       // collegeID: userData.schoolID,
       facultyID: facultyx,
+      otherProgramsID: otherProgram,
     });
-    // console.log(raw);
+    console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -225,6 +231,78 @@ export default function DepartmentAdd() {
       });
   }, []);
 
+  useEffect(() => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/otherPrograms/gets/${schID}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setOtherProgFaculties(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  }, []);
+
+  const handleOnChange = (value) => {
+    setOtherProgFac(value);
+    const callClientType = value.toString();
+    if (callClientType === "1") {
+      setShowOtherFac(true);
+    } else if (callClientType === "2") {
+      setShowOtherFac(false);
+    }
+  };
+
+  useEffect(() => {
+    setOpened(true);
+    const headers = miHeaders;
+
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/staffs/gets/${schID}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setGetAllStaff(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  }, []);
+
   return (
     <div className="content">
       <Card mx={2}>
@@ -269,7 +347,7 @@ export default function DepartmentAdd() {
             </Col>
           </Row>
           <Row style={{ marginTop: 20 }}>
-            <Col md="4" className="pl-md-1">
+            {/* <Col md="4" className="pl-md-1">
               <FormGroup>
                 <label>Head of Department</label>
                 <Input
@@ -282,8 +360,56 @@ export default function DepartmentAdd() {
                   // disabled
                 />
               </FormGroup>
+            </Col>{" "} */}
+            <Col md="6" className="pl-md-1">
+              <FormGroup>
+                <label>Head Of Department</label>
+                <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  value={headOfDepart || ""}
+                  aria-label="Default select example"
+                  onChange={(e) => setHeadOfDepart(e.target.value)}
+                >
+                  <option value="">--Head Of Department--</option>
+                  {getAllStaff.map((apic) => (
+                    <option key={apic.id} value={apic.id}>
+                      {apic.firstName} {apic.lastName}
+                    </option>
+                  ))}
+                </Form.Select>
+              </FormGroup>
             </Col>{" "}
-            {/* <Col md="1" /> */}
+            <Col
+              md="4"
+              className="pl-md-1"
+              style={{
+                justifyContent: "center",
+                marginLeft: "auto",
+                marginRight: "auto",
+              }}
+            >
+              <FormGroup>
+                <label>Faculty/Other Program</label>
+                {/* <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  value={facultyx || ""}
+                  aria-label="Default select example"
+                  onChange={(e) => handleOnChange(e.target.value)}
+                >
+                  <option value="1">Faculty</option>
+                  <option value="2">Other Program</option>
+                 </Form.Select> */}
+                <Form.Select
+                  onChange={(e) => handleOnChange(e.target.value)}
+                  value={otherProgFac || ""}
+                  aria-label="Default select example"
+                >
+                  <option>--Select Other program/Faculty--</option>
+                  <option value="2">Faculty</option>
+                  <option value="1">Other Program</option>
+                </Form.Select>
+              </FormGroup>
+            </Col>
             <Col
               md="4"
               className="pl-md-1"
@@ -295,63 +421,37 @@ export default function DepartmentAdd() {
             >
               <FormGroup>
                 <label>Faculty</label>
-                <Form.Select
-                  style={{ marginBottom: "20px" }}
-                  value={facultyx || ""}
-                  aria-label="Default select example"
-                  onChange={(e) => setFaculty(e.target.value)}
-                >
-                  <option value="">--Select Faculty--</option>
-                  {faculties.map((apic) => (
-                    <option key={apic.id} value={apic.id}>
-                      {apic.name}
-                    </option>
-                  ))}
-                </Form.Select>
+                {showOtherFac ? (
+                  <Form.Select
+                    style={{ marginBottom: "20px" }}
+                    value={otherProgram || ""}
+                    aria-label="Default select example"
+                    onChange={(e) => setOtherProg(e.target.value)}
+                  >
+                    <option value="">--Select Other Program--</option>
+                    {otherProgFaculties.map((apic) => (
+                      <option key={apic.id} value={apic.id}>
+                        {apic.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                ) : (
+                  <Form.Select
+                    style={{ marginBottom: "20px" }}
+                    value={facultyx || ""}
+                    aria-label="Default select example"
+                    onChange={(e) => setFaculty(e.target.value)}
+                  >
+                    <option value="">--Select Faculty--</option>
+                    {faculties.map((apic) => (
+                      <option key={apic.id} value={apic.id}>
+                        {apic.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                )}
               </FormGroup>
             </Col>
-            {/* <Col md="3" className="pl-md-1">
-              <FormGroup>
-                <label>School</label>
-                <Input
-                  onChange={() => {}}
-                  // defaultValue={`${data11.lastName}`}
-                  placeholder="school"
-                  //   onChange={() => console.log()}
-                  type="text"
-                  //   value={items[0]?.walletBalance}
-                  // disabled
-                />
-              </FormGroup>
-            </Col>{" "} */}
-            {/* <Col md="3" className="pl-md-1">
-              <FormGroup>
-                <label>Faculty</label>
-                <Input
-                  onChange={() => {}}
-                  // defaultValue={`${data11.lastName}`}
-                  placeholder="faculty"
-                  //   onChange={() => console.log()}
-                  type="text"
-                  //   value={items[0]?.walletBalance}
-                  // disabled
-                />
-              </FormGroup>
-            </Col> */}
-            {/* <Col md="3" className="pl-md-1">
-              <FormGroup>
-                <label>College</label>
-                <Input
-                  onChange={() => {}}
-                  // defaultValue={`${data11.lastName}`}
-                  placeholder="College"
-                  //   onChange={() => console.log()}
-                  type="text"
-                  //   value={items[0]?.walletBalance}
-                  // disabled
-                />
-              </FormGroup>
-            </Col> */}
           </Row>
           <Button
             variant="gradient"

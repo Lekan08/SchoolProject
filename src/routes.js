@@ -54,6 +54,12 @@ import CourseAdd from "views/Admin/courses/Add";
 import CourseMultiple from "views/Admin/courses/Multiple";
 import CourseUpdate from "views/Admin/courses/update";
 import StudentProfileUpdate from "views/Student/student-profile";
+import Level from "views/Admin/level";
+import LevelUpdate from "views/Admin/level/update";
+import OtherPrograms from "views/Admin/otherPrograms";
+import OtherProgramUpdate from "views/Admin/otherPrograms/update";
+import CourseAdvisor from "views/Admin/courseAdvisor";
+
 var routes = [
   {
     path: "/sign-in",
@@ -226,6 +232,13 @@ var routes = [
     redirect: true,
   },
   {
+    path: "/courseAdvisor",
+    name: "Course Advisor",
+    icon: "menu_book",
+    component: CourseAdvisor,
+    admin: true,
+  },
+  {
     path: "/department",
     // name: "Departments",
     // icon: "class",
@@ -290,6 +303,36 @@ var routes = [
     redirect: true,
   },
   {
+    path: "/level",
+    name: "Level",
+    icon: "grading",
+    component: Level,
+    admin: true,
+  },
+  {
+    path: "/level/update",
+    // name: "Level",
+    // icon: "grading",
+    component: LevelUpdate,
+    // admin: true,
+    redirect: true,
+  },
+  {
+    path: "/otherPrograms",
+    name: "Other Programs",
+    icon: "grading",
+    component: OtherPrograms,
+    admin: true,
+  },
+  {
+    path: "/otherPrograms/update",
+    // name: "Level",
+    // icon: "grading",
+    component: OtherProgramUpdate,
+    // admin: true,
+    redirect: true,
+  },
+  {
     path: "/icons",
     name: "icons",
     icon: "flag",
@@ -330,12 +373,6 @@ var routes = [
     redirect: "true",
     admin: true,
   },
-
-
-
-
-
-
 
   {
     path: "/dashboard-student",

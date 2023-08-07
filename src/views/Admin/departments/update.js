@@ -30,6 +30,11 @@ export default function DepartmentUpdate() {
   const [faculties, setFaculties] = useState([]);
   const [facultyx, setFaculty] = useState("");
   const [items, setItems] = useState("");
+  const [showOtherFac, setShowOtherFac] = useState(false);
+  const [otherProgFac, setOtherProgFac] = useState("");
+  const [otherProgFaculties, setOtherProgFaculties] = useState([]);
+  const [otherProgram, setOtherProg] = useState("");
+  const [getAllStaff, setGetAllStaff] = useState([]);
   //   const { allPHeaders: myHeaders } = PHeaders();
   //   const { allGHeaders: miHeaders } = GHeaders();
   //   const queryString = window.location.search;
@@ -129,7 +134,7 @@ export default function DepartmentUpdate() {
         setOpened(false);
         console.log(result);
         setName(result[0].name);
-        setDescrip(result[0].description);
+        setDescrip(result[0].desc);
         setHeadOfDepart(result[0].head);
         setFaculty(result[0].facultyID);
         setItems(result);
@@ -268,6 +273,78 @@ export default function DepartmentUpdate() {
       });
   }, []);
 
+  useEffect(() => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/otherPrograms/gets/${schID}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setOtherProgFaculties(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  }, []);
+
+  useEffect(() => {
+    setOpened(true);
+    const headers = miHeaders;
+
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/staffs/gets/${schID}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setGetAllStaff(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  }, []);
+
+  const handleOnChange = (value) => {
+    setOtherProgFac(value);
+    const callClientType = value.toString();
+    if (callClientType === "1") {
+      setShowOtherFac(true);
+    } else if (callClientType === "2") {
+      setShowOtherFac(false);
+    }
+  };
+
   return (
     <div className="content">
       <Card mx={2}>
@@ -312,7 +389,7 @@ export default function DepartmentUpdate() {
             </Col>
           </Row>
           <Row style={{ marginTop: 20 }}>
-            <Col md="3" className="pl-md-1">
+            {/* <Col md="3" className="pl-md-1">
               <FormGroup>
                 <label>Head of Department</label>
                 <Input
@@ -325,8 +402,99 @@ export default function DepartmentUpdate() {
                   // disabled
                 />
               </FormGroup>
+            </Col>{" "} */}
+            <Col md="6" className="pl-md-1">
+              <FormGroup>
+                <label>Head Of Department</label>
+                <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  value={headOfDepart || ""}
+                  aria-label="Default select example"
+                  onChange={(e) => setHeadOfDepart(e.target.value)}
+                >
+                  <option value="">--Head Of Department--</option>
+                  {getAllStaff.map((apic) => (
+                    <option key={apic.id} value={apic.id}>
+                      {apic.firstName} {apic.lastName}
+                    </option>
+                  ))}
+                </Form.Select>
+              </FormGroup>
             </Col>{" "}
             <Col
+              md="4"
+              className="pl-md-1"
+              style={{
+                justifyContent: "center",
+                marginLeft: "auto",
+                marginRight: "auto",
+              }}
+            >
+              <FormGroup>
+                <label>Faculty/Other Program</label>
+                {/* <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  value={facultyx || ""}
+                  aria-label="Default select example"
+                  onChange={(e) => handleOnChange(e.target.value)}
+                >
+                  <option value="1">Faculty</option>
+                  <option value="2">Other Program</option>
+                 </Form.Select> */}
+                <Form.Select
+                  onChange={(e) => handleOnChange(e.target.value)}
+                  value={otherProgFac || ""}
+                  aria-label="Default select example"
+                >
+                  <option>--Select Other program/Faculty--</option>
+                  <option value="2">Faculty</option>
+                  <option value="1">Other Program</option>
+                </Form.Select>
+              </FormGroup>
+            </Col>
+            <Col
+              md="4"
+              className="pl-md-1"
+              style={{
+                justifyContent: "center",
+                marginLeft: "auto",
+                marginRight: "auto",
+              }}
+            >
+              <FormGroup>
+                <label>Faculty</label>
+                {showOtherFac ? (
+                  <Form.Select
+                    style={{ marginBottom: "20px" }}
+                    value={otherProgram || ""}
+                    aria-label="Default select example"
+                    onChange={(e) => setOtherProg(e.target.value)}
+                  >
+                    <option value="">--Select Other Program--</option>
+                    {otherProgFaculties.map((apic) => (
+                      <option key={apic.id} value={apic.id}>
+                        {apic.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                ) : (
+                  <Form.Select
+                    style={{ marginBottom: "20px" }}
+                    value={facultyx || ""}
+                    aria-label="Default select example"
+                    onChange={(e) => setFaculty(e.target.value)}
+                  >
+                    <option value="">--Select Faculty--</option>
+                    {faculties.map((apic) => (
+                      <option key={apic.id} value={apic.id}>
+                        {apic.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                )}
+              </FormGroup>
+            </Col>
+            {/* <Col
               md="4"
               className="pl-md-1"
               style={{
@@ -350,7 +518,7 @@ export default function DepartmentUpdate() {
                   ))}
                 </Form.Select>
               </FormGroup>
-            </Col>
+            </Col> */}
             {/* <Col md="3" className="pl-md-1">
               <FormGroup>
                 <label>School</label>

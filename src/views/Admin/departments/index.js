@@ -277,7 +277,7 @@ export default function Departments() {
               // },
             },
             { Header: "description", accessor: "desc", width: 250 },
-            { Header: "Head Of Department", accessor: "head" },
+            { Header: "Head Of Department", accessor: "headOfDepName" },
             // { Header: "school", accessor: "school" },
             { Header: "faculty", accessor: "facultyName" },
             // { Header: "college", accessor: "college" },
