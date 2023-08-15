@@ -54,6 +54,8 @@ import CourseAdd from "views/Admin/courses/Add";
 import CourseMultiple from "views/Admin/courses/Multiple";
 import CourseUpdate from "views/Admin/courses/update";
 import StudentProfileUpdate from "views/Student/student-profile";
+import CourseRegistartion from "views/Student/course-Registaration";
+import StudentProfile from "views/Student/studentProfile";
 import Level from "views/Admin/level";
 import LevelUpdate from "views/Admin/level/update";
 import OtherPrograms from "views/Admin/otherPrograms";
@@ -394,6 +396,20 @@ var routes = [
     name: "Your Profile",
     icon: "account_circle",
     component: StudentProfileUpdate,
+    admin: false,
+  },
+  {
+    path: "/course-Registration",
+    name: "Course Registration",
+    icon: "account_circle",
+    component: CourseRegistartion,
+    admin: false,
+  },
+  {
+    path: "/studentProfile",
+    name: "Student Profile",
+    icon: "account_circle",
+    component: StudentProfile,
     admin: false,
   },
 ];

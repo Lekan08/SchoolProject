@@ -135,7 +135,7 @@ function AdminNavbar(props) {
                 <DropdownMenu className="dropdown-navbar" right tag="ul">
                   <NavLink tag="li">
                     <DropdownItem className="nav-item">
-                      This is a school website 😀! 
+                      This is a school website 😀!
                     </DropdownItem>
                   </NavLink>
                 </DropdownMenu>
@@ -154,14 +154,14 @@ function AdminNavbar(props) {
                   <p className="d-lg-none">Log out</p>
                 </DropdownToggle>
                 <DropdownMenu className="dropdown-navbar" right tag="ul">
-                  <NavLink tag="li" onClick={()=> Navigate("/user-profile")}>
+                  <NavLink tag="li" onClick={() => Navigate("/user-profile")}>
                     <DropdownItem className="nav-item">Profile</DropdownItem>
                   </NavLink>
-                  <NavLink tag="li" onClick={()=> Navigate("/settings")}>
+                  <NavLink tag="li" onClick={() => Navigate("/settings")}>
                     <DropdownItem className="nav-item">Settings</DropdownItem>
                   </NavLink>
                   <DropdownItem divider tag="li" />
-                  <NavLink tag="li" onClick={()=> Navigate("/sign-in")}>
+                  <NavLink tag="li" onClick={() => Navigate("/sign-in")}>
                     <DropdownItem className="nav-item">Log out</DropdownItem>
                   </NavLink>
                 </DropdownMenu>
