@@ -468,7 +468,7 @@ export default function CourseAdvisor() {
       <DataTable
         data={{
           columns: [
-            { Header: "Name", accessor: "name" },
+            { Header: "Department Name", accessor: "depName" },
             { Header: "Level", accessor: "level" },
             { Header: "Staff Name", accessor: "staffName" },
             {
@@ -505,7 +505,7 @@ export default function CourseAdvisor() {
                     <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}
                       onClick={() =>
-                        Navigate(`/level/update?id=${cell.row.id}`)
+                        Navigate(`/courseAdvisor/update?id=${cell.row.id}`)
                       }
                     >
                       Update

@@ -137,25 +137,13 @@ export default function OtherProgramUpdate() {
       })
       .then((result) => {
         setOpened(false);
-        if (result.message === "Expired Access") {
-          Navigate("/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Token Does Not Exist") {
-          Navigate("/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Unauthorized Access") {
-          Navigate("/authentication/forbiddenPage");
-          window.location.reload();
-        }
         console.log(result);
         if (result.status === "SUCCESS") {
           Swal.fire({
             title: result.status,
             icon: "success",
             text: result.message,
-          }).then(() => Navigate("/faculties"));
+          }).window.location.reload();
         } else {
           Swal.fire({
             title: result.status,

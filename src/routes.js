@@ -59,6 +59,7 @@ import LevelUpdate from "views/Admin/level/update";
 import OtherPrograms from "views/Admin/otherPrograms";
 import OtherProgramUpdate from "views/Admin/otherPrograms/update";
 import CourseAdvisor from "views/Admin/courseAdvisor";
+import CourseAdvisorUpdate from "views/Admin/courseAdvisor/update";
 
 var routes = [
   {
@@ -237,6 +238,13 @@ var routes = [
     icon: "menu_book",
     component: CourseAdvisor,
     admin: true,
+  },
+  {
+    path: "/courseAdvisor/update",
+    name: "Update courseAdvisor",
+    // icon: "school",
+    component: CourseAdvisorUpdate,
+    redirect: true,
   },
   {
     path: "/department",
