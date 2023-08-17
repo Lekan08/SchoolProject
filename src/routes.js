@@ -63,6 +63,8 @@ import OtherProgramUpdate from "views/Admin/otherPrograms/update";
 import CourseAdvisor from "views/Admin/courseAdvisor";
 import CourseAdvisorUpdate from "views/Admin/courseAdvisor/update";
 
+import CompleteResetPassword from "views/authentication/complete-resetPassword";
+
 var routes = [
   {
     path: "/sign-in",
@@ -115,6 +117,14 @@ var routes = [
     // name: "Admin Dashboard",
     // icon: "dashboard",
     component: SignUpAdmin,
+    redirect: "true",
+    admin: true,
+  },
+  {
+    path: "/complete-reset-password",
+    // name: "Admin Dashboard",
+    // icon: "dashboard",
+    component: CompleteResetPassword,
     redirect: "true",
     admin: true,
   },

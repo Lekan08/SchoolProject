@@ -18,7 +18,7 @@
 import React, { useState } from "react";
 
 // reactstrap components
-import logo from "assets/img/react-logo.png";
+import forgotPassword from "assets/img/forgotPassword.jpg";
 // import Typography from "@mui/material/Typography";
 // import Link from "@mui/material/Link";
 // import Box from "@mui/material/Box";
@@ -62,7 +62,7 @@ function ResetPassword() {
     };
     setOpened(true);
     fetch(
-      `${process.env.REACT_APP_MAZA_URL}/login/initiate-reset-password`,
+      `${process.env.REACT_APP_SCHPROJECT_URL}/login/initiate-reset-password`,
       requestOptions
     )
       .then(async (res) => {
@@ -80,12 +80,11 @@ function ResetPassword() {
             text: "Kindly Check Your Mail To Recover Your Password (You can check your promotions or spam section if you still haven't seen the mail).",
           }).then(() => Navigate("/sign-in"));
         } else if (result.status === "INVALID_ACTION") {
-         
           Swal.fire({
             title: result.status,
             icon: "warning",
             text: "You have already requested for a password reset (You can check your promotions or spam section if you still haven't seen the mail).",
-          })
+          });
         } else {
           // alert(result.message);
           Swal.fire({
@@ -139,10 +138,10 @@ function ResetPassword() {
                     }}
                   >
                     <img
-                      src={logo}
+                      src={forgotPassword}
                       alt="companylogo"
                       style={{
-                        height: "15vh",
+                        height: "30vh",
                         width: "40vh",
                         borderRadius: "10px",
                         marginLeft: "auto",
@@ -153,7 +152,7 @@ function ResetPassword() {
                     <div className="font-icon-detail">
                       <p
                         style={{
-                          marginTop: 0,
+                          marginTop: -60,
                           cursor: "pointer",
                           color: "#5e72e4",
                         }}
