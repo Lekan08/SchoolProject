@@ -143,7 +143,10 @@ export default function OtherProgramUpdate() {
             title: result.status,
             icon: "success",
             text: result.message,
-          }).window.location.reload();
+          }).then(() => {
+            window.location.reload();
+          });
+          // .window.location.reload();
         } else {
           Swal.fire({
             title: result.status,
