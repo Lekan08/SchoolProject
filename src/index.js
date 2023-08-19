@@ -31,8 +31,9 @@ import BackgroundColorWrapper from "./components/BackgroundColorWrapper/Backgrou
 import SignIn from "views/authentication/SignIn";
 import ResetPassword from "views/authentication/ResetPassword";
 import Invitation from "views/Admin/invitation";
-// import CompleteResetPassword from "views/authentication/complete-resetPassword";
+import ResetStudentPassword from "views/authentication/resetStudentPassword";
 import CompleteResetPassword from "views/authentication/complete-resetPassword";
+import CompleteResetStudentPassword from "views/authentication/complete-resetStudent-password";
 import SignInAdmin from "views/authentication/SignInAdmin";
 import SignInStudent from "./views/authentication/SignInStudent";
 import SignUpAdmin from "views/authentication/SIgnUpAdmin";
@@ -60,6 +61,14 @@ root.render(
           <Route path="/faculty" element={<Faculty />} />
           <Route path="/department" element={<Department />} />
           <Route path="/invitedStaff" element={<InvitedStaff />} />
+          <Route
+            path="/reset-student-password"
+            element={<ResetStudentPassword />}
+          />
+          <Route
+            path="/complete-resetStudent-password"
+            element={<CompleteResetStudentPassword />}
+          />
 
           {/* <Route path="/reset-password" element={<ResetPassword />} /> */}
           {/* <Route path="/authentication/complete-reset-Password" element={<CompleteResetPassword />} /> */}

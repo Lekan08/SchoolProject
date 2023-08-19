@@ -36,7 +36,7 @@ import Navigate from "useNavigate";
 import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
 import Swal from "sweetalert2";
 
-function ResetPassword() {
+function ResetStudentPassword() {
   const [emailx, setEmail] = useState("");
   const [opened, setOpened] = useState(false);
 
@@ -205,4 +205,4 @@ function ResetPassword() {
   );
 }
 
-export default ResetPassword;
+export default ResetStudentPassword;

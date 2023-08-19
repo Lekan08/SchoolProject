@@ -98,7 +98,6 @@ function SignInStudent() {
           // localStorage.setItem("user", result.data);
           localStorage.setItem("user", JSON.stringify(result.data));
           localStorage.setItem("user1", JSON.stringify(result.data));
-
         } else {
           Swal.fire({
             title: result.status,
@@ -267,7 +266,7 @@ function SignInStudent() {
                       <Typography
                         component={Link}
                         // to="/authentication/resetpassword"
-                        // onClick={() => Navigate("/reset-password")}
+                        onClick={() => Navigate("/reset-student-password")}
                         variant="button"
                         color="primary"
                         fontWeight="medium"
