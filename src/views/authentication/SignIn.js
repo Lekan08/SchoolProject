@@ -23,7 +23,7 @@ import { Card, Col } from "reactstrap";
 import "../userProfile/Css.css";
 import "../Css.css";
 import { useNavigate } from "react-router-dom";
-import Students from "./students.jpg";
+import Studygroup2 from "./studygroup2.jpg";
 
 import { styled } from "@mui/material/styles";
 function SignIn() {
@@ -106,117 +106,120 @@ function SignIn() {
   };
   const Widget = styled("div")(({ theme }) => ({
     padding: 16,
-    borderRadius: 16,
+    borderRadius: 10,
     maxWidth: "100%",
     boxShadow: "0px 0px 50px rgba(255,255,255,0.805)",
     margin: "auto",
     position: "relative",
     zIndex: 1,
     backgroundColor:
-      theme.palette.mode === "dark"
-        ? "rgba(0,0,0,0.6)"
-        : "rgba(255,255,255,0.805)",
+      theme.palette.mode === "dark" ? "rgba(0,0,0,0.6)" : "#30A2FF",
     backdropFilter: "blur(40px)",
   }));
   return (
     <div>
       <img
-        src={Students}
+        src={Studygroup2}
         alt="img"
         className="img-res"
         style={{
           position: "absolute",
           zIndex: 1,
-          width: "100vw",
+          width: "100%",
           marginTop: -50,
-          borderRadius: 10,
         }}
-      />
-      <div className="bubble2">
-        {/* <Col md="12"> */}
-        <Widget
-        className="calamity"
+      ></img>
+      <Widget
+        // className="calamity"
+        style={{
+          marginTop: 20,
+          justifyContent: "center",
+          textAlign: "center",
+          alignItems: "center",
+          alignContent: "center",
+        }}
+      >
+        <h2
           style={{
-            marginTop: "3rem",
-            justifyContent: "center",
+            color: "#ffff",
+            textTransform: "uppercase",
+            fontWeight: "bold",
+            fontSize: 20,
+            marginTop: 20,
+          }}
+        >
+          School Portal
+        </h2>
+      </Widget>
+      <div
+        className="row-res"
+        style={{
+          padding: 10,
+          margin: 10,
+          marginTop: "20vw",
+          display: "grid",
+          gridTemplateColumns: "30vw 30vw",
+          gridColumnGap: "5vw",
+          marginRight: "auto",
+          marginLeft: "auto",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 100,
+          gridGap: "10vw",
+        }}
+      >
+        <Paper
+          elevation={8}
+          // className="signbox"
+          className="resizer2"
+          style={{
+            textAlign: "center",
+            marginTop: 10,
+            zIndex: 100,
+            borderRadius: 500,
+          }}
+        >
+          <div
+            // lg="5"
+            className="col-res"
+            style={{
+              marginRight: "auto",
+              cursor: "pointer",
+              lineHeight: "4rem",
+              marginLeft: "auto",
+            }}
+            onClick={() => Navigate("/sign-in-student")}
+          >
+            Log in as a student
+          </div>
+        </Paper>
+        <Paper
+          elevation={8}
+          // className="signbox"
+          className="resizer2"
+          style={{
+            zIndex: 100,
+            marginTop: 10,
+            borderRadius: 500,
             textAlign: "center",
           }}
         >
-          <ButtonGroup variant="text" aria-label="text button group">
-            <Button>School Portal</Button>
-          </ButtonGroup>
-        </Widget>
-        <div
-          className="row-res"
-          style={{
-            // height: "100vh",
-            padding: 10,
-            margin: 10,
-            marginTop: "10vw",
-            display: "grid",
-            gridTemplateColumns: "30vw 30vw",
-            gridColumnGap: "5vw",
-            marginRight: "auto",
-            marginLeft: "auto",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 100,
-            gridGap: "10vw",
-          }}
-        >
-          <Paper
-            elevation={8}
-            // className="signbox"
-            className="resizer2"
+          <div
+            className="col-res"
+            // lg="5"
             style={{
-              textAlign: "center",
-              marginTop: 10,
-              zIndex: 100,
-              borderRadius: 500,
+              cursor: "pointer",
+              marginRight: "auto",
+              lineHeight: "4rem",
+              marginLeft: "auto",
             }}
+            onClick={() => Navigate("/sign-in-admin")}
           >
-            <div
-              // lg="5"
-              className="col-res"
-              style={{
-                marginRight: "auto",
-                cursor: "pointer",
-                lineHeight: "4rem",
-                marginLeft: "auto",
-              }}
-              onClick={() => Navigate("/sign-in-student")}
-            >
-              Log in as a student
-            </div>
-          </Paper>
-          <Paper
-            elevation={8}
-            // className="signbox"
-            className="resizer2"
-            style={{
-              zIndex: 100,
-              marginTop: 10,
-              borderRadius: 500,
-              textAlign: "center",
-            }}
-          >
-            <div
-              className="col-res"
-              // lg="5"
-              style={{
-                cursor: "pointer",
-                marginRight: "auto",
-                lineHeight: "4rem",
-                marginLeft: "auto",
-              }}
-              onClick={() => Navigate("/sign-in-admin")}
-            >
-              Log in as an admin
-            </div>
-          </Paper>
-        </div>
-        <div style={{height: "20px"}} />
+            Log in as an admin
+          </div>
+        </Paper>
       </div>
+      <div style={{ height: "20px" }} />
     </div>
   );
 }
