@@ -88,11 +88,15 @@ function StudentProfile() {
                     <div class="card">
                       <div class="card-body">
                         <div class="d-flex flex-column align-items-center text-center">
-                          <img
+                          {/* <img
                             src="https://bootdey.com/img/Content/avatar/avatar7.png"
                             alt="Admin"
                             class="rounded-circle"
                             width="150"
+                          /> */}
+                          <img
+                            alt="..."
+                            src={require("assets/img/anime3.png")}
                           />
                           <div class="mt-3">
                             <h4>
@@ -125,7 +129,7 @@ function StudentProfile() {
                                 onChange={(e) => {
                                   setFname(e.target.value);
                                 }}
-                                disabled
+                                // disabled
                                 placeholder="First Name"
                                 value={fname}
                                 type="text"
@@ -144,7 +148,7 @@ function StudentProfile() {
                                 onChange={(e) => {
                                   setFname(e.target.value);
                                 }}
-                                disabled
+                                // disabled
                                 placeholder="Last Name"
                                 value={lname}
                                 type="text"
@@ -179,7 +183,7 @@ function StudentProfile() {
                               <Form.Select
                                 style={{ marginBottom: "20px" }}
                                 value={sex || ""}
-                                disabled
+                                // disabled
                                 aria-label="Default select example"
                                 onChange={(e) => setSex(e.target.value)}
                               >
@@ -201,10 +205,10 @@ function StudentProfile() {
                                 onChange={(e) => {
                                   setEmail(e.target.value);
                                 }}
-                                placeholder="Mail"
+                                placeholder="Email"
                                 type="text"
                                 value={email}
-                                disabled
+                                // disabled
                               />
                             </FormGroup>
                           </div>

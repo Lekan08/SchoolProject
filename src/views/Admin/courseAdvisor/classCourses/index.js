@@ -12,11 +12,11 @@ import Navigate from "useNavigate";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
-import "../Css.css";
-import { School } from "@mui/icons-material";
+// import withReactContent from "sweetalert2-react-content";
+// import "../Css.css";
+// import { School } from "@mui/icons-material";
 
-export default function CourseAdvisor() {
+export default function ClassCourses() {
   const [open, setOpen] = React.useState(false);
   const handleClose = () => {
     setOpen(false);
@@ -33,7 +33,10 @@ export default function CourseAdvisor() {
   const [levelss, setLevelsss] = useState([]);
   const [headOfDepart, setHeadOfDepart] = useState("");
   const [getAllStaff, setGetAllStaff] = useState([]);
-  const [staff, setStaff] = useState("");
+  const [course, setCourse] = useState("");
+  // const [courseAdvisor, setCourseAdvisor] = useState("");
+  const [coursex, setCoursex] = useState([]);
+  // const [courseAdviserx, setCourseAdviserx] = useState([]);
 
   const style = {
     position: "absolute",
@@ -214,12 +217,21 @@ export default function CourseAdvisor() {
     const userInfo = JSON.parse(localStorage.getItem("user"));
     console.log(userInfo);
     const schID = userInfo.schoolID;
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const idx = urlParams.get("id");
 
     const raw = JSON.stringify({
       schoolID: schID,
       depID: headOfDepart,
       levelID: levelx,
-      staffID: staff,
+      courseID: course,
+      courseAdviserID: idx,
+
+      // schoolID: schID,
+      // depID: headOfDepart,
+      // levelID: levelx,
+      // staffID: staff,
     });
     console.log(raw);
     const requestOptions = {
@@ -230,7 +242,7 @@ export default function CourseAdvisor() {
     };
     setOpened(true);
     fetch(
-      `${process.env.REACT_APP_SCHPROJECT_URL}/courseAdvisers/add`,
+      `${process.env.REACT_APP_SCHPROJECT_URL}/classCourses/add`,
       requestOptions
     )
       .then(async (res) => {
@@ -269,12 +281,11 @@ export default function CourseAdvisor() {
 
   useEffect(() => {
     setOpened(true);
-    const headers = miHeaders;
 
     const userInfo = JSON.parse(localStorage.getItem("user"));
-    console.log(userInfo);
     const schID = userInfo.schoolID;
-    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/staffs/gets/${schID}`, {
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/courses/gets/${schID}`, {
       headers,
     })
       .then(async (res) => {
@@ -285,7 +296,7 @@ export default function CourseAdvisor() {
       .then((result) => {
         setOpened(false);
         console.log(result);
-        setGetAllStaff(result);
+        setCoursex(result);
       })
       .catch((error) => {
         setOpened(false);
@@ -296,6 +307,38 @@ export default function CourseAdvisor() {
         });
       });
   }, []);
+
+  // useEffect(() => {
+  //   setOpened(true);
+  //   const userInfo = JSON.parse(localStorage.getItem("user"));
+  //   console.log(userInfo);
+  //   const schID = userInfo.schoolID;
+  //   const headers = miHeaders;
+  //   fetch(
+  //     `${process.env.REACT_APP_SCHPROJECT_URL}/courseAdvisers/gets/${schID}`,
+  //     {
+  //       headers,
+  //     }
+  //   )
+  //     .then(async (res) => {
+  //       const aToken = res.headers.get("token-1");
+  //       localStorage.setItem("rexxdex", aToken);
+  //       return res.json();
+  //     })
+  //     .then((result) => {
+  //       setOpened(false);
+  //       console.log(result);
+  //       setCourseAdviserx(result);
+  //     })
+  //     .catch((error) => {
+  //       setOpened(false);
+  //       Swal.fire({
+  //         title: error.status,
+  //         icon: "error",
+  //         text: error.message,
+  //       });
+  //     });
+  // }, []);
 
   useEffect(() => {
     setOpened(true);
@@ -377,7 +420,7 @@ export default function CourseAdvisor() {
               variant="h5"
               className="head"
             >
-              Course Advisor
+              Class Course
             </Typography>
           </Button>
           <CardBody>
@@ -431,22 +474,40 @@ export default function CourseAdvisor() {
             <Row>
               <Col md="6" className="pl-md-1">
                 <FormGroup>
-                  <label>Staff</label>
+                  <label>Course</label>
                   <Form.Select
                     style={{ marginBottom: "20px" }}
-                    value={staff || ""}
+                    value={course || ""}
                     aria-label="Default select example"
-                    onChange={(e) => setStaff(e.target.value)}
+                    onChange={(e) => setCourse(e.target.value)}
                   >
-                    <option value="">--Staff--</option>
-                    {getAllStaff.map((apic) => (
+                    <option value="">--Select Course--</option>
+                    {coursex.map((apic) => (
                       <option key={apic.id} value={apic.id}>
-                        {apic.firstName} {apic.lastName}
+                        {apic.name}
                       </option>
                     ))}
                   </Form.Select>
                 </FormGroup>
               </Col>{" "}
+              {/* <Col md="6" className="pl-md-1">
+                <FormGroup>
+                  <label>Level</label>
+                  <Form.Select
+                    style={{ marginBottom: "20px" }}
+                    value={courseAdvisor || ""}
+                    aria-label="Default select example"
+                    onChange={(e) => setCourseAdvisor(e.target.value)}
+                  >
+                    <option value="">--Select Course Advisor--</option>
+                    {courseAdviserx.map((apic) => (
+                      <option key={apic.id} value={apic.id}>
+                        {apic.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </FormGroup>
+              </Col>{" "} */}
             </Row>
             <Button
               variant="gradient"
@@ -492,14 +553,16 @@ export default function CourseAdvisor() {
                   <Dropdown.Menu>
                     <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}
-                      onClick={() =>
-                        Navigate(
-                          `/courseAdvisor/classCourses?id=${cell.row.id}`
-                        )
-                      }
+                      onClick={() => handleDelete(cell.row.id)}
                     >
-                      Class Course
+                      Delete
                     </Dropdown.Item>
+                    {/* <Dropdown.Item
+                      style={{ fontweight: "bold", color: "black" }}
+                      onClick={() => handleOnChange(cell.row.id)}
+                    >
+                      Update
+                    </Dropdown.Item> */}
                     <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}
                       onClick={() =>
@@ -507,12 +570,6 @@ export default function CourseAdvisor() {
                       }
                     >
                       Update
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      style={{ fontweight: "bold", color: "black" }}
-                      onClick={() => handleDelete(cell.row.id)}
-                    >
-                      Delete
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>

@@ -223,6 +223,48 @@ export default function Courses() {
               </div>
             </Paper>
           </div>
+          {/* <div
+            className="row-res"
+            style={{
+              // height: "100vh",
+              margin: "4vw",
+              display: "grid",
+              gridTemplateColumns: "30vw 30vw",
+              gridColumnGap: "5vw",
+              marginRight: "auto",
+              marginLeft: "33%",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 100,
+              gridGap: "10vw",
+            }}
+          >
+            <Paper
+              elevation={8}
+              // className="signbox"
+              className="resizer2"
+              style={{
+                textAlign: "center",
+                zIndex: 100,
+                borderRadius: 500,
+              }}
+            >
+              <div
+                // lg="5"
+                className="col-res"
+                style={{
+                  marginRight: "auto",
+                  cursor: "pointer",
+                  lineHeight: "4rem",
+                  justifyContent: "center",
+                  marginLeft: "auto",
+                }}
+                onClick={() => Navigate("/courses/classCourses")}
+              >
+                Add class course
+              </div>
+            </Paper>
+          </div> */}
         </Card>
       </Paper>
       <br />
@@ -232,6 +274,14 @@ export default function Courses() {
             {
               Header: "Name",
               accessor: "name",
+            },
+            {
+              Header: "Course Code",
+              accessor: "courseCode",
+            },
+            {
+              Header: "Unit",
+              accessor: "unit",
             },
             { Header: "description", accessor: "description", width: 250 },
             { Header: "department", accessor: "departmentName" },

@@ -62,6 +62,7 @@ import OtherPrograms from "views/Admin/otherPrograms";
 import OtherProgramUpdate from "views/Admin/otherPrograms/update";
 import CourseAdvisor from "views/Admin/courseAdvisor";
 import CourseAdvisorUpdate from "views/Admin/courseAdvisor/update";
+import ClassCourses from "views/Admin/courseAdvisor/classCourses";
 
 import CompleteResetPassword from "views/authentication/complete-resetPassword";
 
@@ -242,6 +243,13 @@ var routes = [
     name: "Update course",
     // icon: "school",
     component: CourseUpdate,
+    redirect: true,
+  },
+  {
+    path: "/courseAdvisor/classCourses",
+    // name: "courses",
+    // icon: "menu_book",s
+    component: ClassCourses,
     redirect: true,
   },
   {
