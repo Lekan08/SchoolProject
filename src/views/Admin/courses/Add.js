@@ -28,14 +28,16 @@ export default function CourseAdd() {
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
   const [lname, setLname] = useState("");
-  const [type, setType] = useState("");
-  const [matric, setMatric] = useState("");
+  const [unitx, setUnit] = useState("");
+  const [courseCodex, setCourseCode] = useState("");
   const [sex, setSex] = useState("");
   const [email, setEmail] = useState("");
   const [faculties, setFaculties] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [faculty, setFaculty] = useState("");
   const [department, setDepartment] = useState("");
+
+  console.log(faculties);
   useEffect(() => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
@@ -53,9 +55,12 @@ export default function CourseAdd() {
       .then((result) => {
         setOpened(false);
         console.log(result);
-        const spec = result.map((r) => ({ value: r.id, label: r.name }));
-        setDob(spec);
+        // const spec = result.map((r) => ({ value: r.id, label: r.name }));
+        // setDob(spec);
         setFaculties(result);
+        const spec = result.map((r) => ({ value: r.id, label: r.name }));
+
+        setFaculties(spec);
       })
       .catch((error) => {
         setOpened(false);
@@ -108,6 +113,8 @@ export default function CourseAdd() {
       schoolID: userInfo.schoolID,
       depID: department,
       facultyID: faculty,
+      courseCode: courseCodex,
+      unit: unitx,
     });
     console.log(raw2);
     const requestOptions2 = {
@@ -186,6 +193,38 @@ export default function CourseAdd() {
                 />
               </FormGroup>
             </Col>
+            <Col className="pl-md-1" md="4">
+              <FormGroup>
+                <label>Course Code</label>
+                <Input
+                  onChange={(e) => {
+                    setCourseCode(e.target.value);
+                  }}
+                  // defaultValue={`${data11.firstName}`}
+                  placeholder="Course Code"
+                  //   value={firstName}
+                  //   disabled
+                  type="text"
+                />
+              </FormGroup>
+            </Col>
+            <Col className="pl-md-1" md="4">
+              <FormGroup>
+                <label>Unit</label>
+                <Input
+                  onChange={(e) => {
+                    setUnit(e.target.value);
+                  }}
+                  // defaultValue={`${data11.firstName}`}
+                  placeholder="Unit"
+                  //   value={firstName}
+                  //   disabled
+                  type="text"
+                />
+              </FormGroup>
+            </Col>
+          </Row>
+          <Row style={{ marginTop: 20 }}>
             <Col className="pl-md-1" md="8">
               <FormGroup>
                 <label>Description</label>
@@ -207,7 +246,8 @@ export default function CourseAdd() {
             <Col className="pl-md-1" md="4">
               <label>Faculty</label>
               <Select
-                options={dob}
+                options={faculties}
+                maxMenuHeight={80}
                 onChange={(e) => {
                   handleDepartment(e.value);
                   setFaculty(e.value);

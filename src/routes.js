@@ -62,6 +62,9 @@ import OtherPrograms from "views/Admin/otherPrograms";
 import OtherProgramUpdate from "views/Admin/otherPrograms/update";
 import CourseAdvisor from "views/Admin/courseAdvisor";
 import CourseAdvisorUpdate from "views/Admin/courseAdvisor/update";
+import ClassCourses from "views/Admin/courseAdvisor/classCourses";
+import Grading from "views/Admin/grading";
+import GradingUpdate from "views/Admin/grading/update";
 
 import CompleteResetPassword from "views/authentication/complete-resetPassword";
 
@@ -245,6 +248,13 @@ var routes = [
     redirect: true,
   },
   {
+    path: "/courseAdvisor/classCourses",
+    // name: "courses",
+    // icon: "menu_book",s
+    component: ClassCourses,
+    redirect: true,
+  },
+  {
     path: "/courseAdvisor",
     name: "Course Advisor",
     icon: "menu_book",
@@ -256,6 +266,20 @@ var routes = [
     name: "Update courseAdvisor",
     // icon: "school",
     component: CourseAdvisorUpdate,
+    redirect: true,
+  },
+  {
+    path: "/grading",
+    name: "Grading",
+    icon: "menu_book",
+    component: Grading,
+    admin: true,
+  },
+  {
+    path: "/grading/update",
+    name: "Grading Update",
+    // icon: "school",
+    component: GradingUpdate,
     redirect: true,
   },
   {
@@ -411,7 +435,7 @@ var routes = [
   {
     path: "/course-Registration",
     name: "Course Registration",
-    icon: "account_circle",
+    icon: "how_to_reg",
     component: CourseRegistartion,
     admin: false,
   },

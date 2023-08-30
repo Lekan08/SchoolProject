@@ -3,6 +3,7 @@ import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Card } from "@mui/material";
 import GHeaders from "getHeader";
+import PHeaders from "postHeader";
 import { CardBody, Input, Button } from "reactstrap";
 import { Form } from "react-bootstrap";
 import Backdrop from "@mui/material/Backdrop";
@@ -10,6 +11,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Swal from "sweetalert2";
 
 function CourseRegistartion() {
+  const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
   const [opened, setOpened] = useState(false);
   const [phonex, setPhonex] = useState(0);
@@ -18,6 +20,11 @@ function CourseRegistartion() {
   const [matric, setMatric] = useState("");
   const [department, setDepartment] = useState("");
   const [faculty, setFaculty] = useState("");
+  const [levelx, setLevelx] = useState("");
+  const [levelss, setLevelsss] = useState([]);
+  const [depart, setDepart] = useState([]);
+  const [headOfDepart, setHeadOfDepart] = useState("");
+  const [studentId, setStudentId] = useState("");
   //   const [faculties, setFaculties] = useState([]);
   //   const [departments, setDepartments] = useState([]);
 
@@ -38,6 +45,7 @@ function CourseRegistartion() {
       .then((result) => {
         setOpened(false);
         console.log(result);
+        setStudentId(result[0]);
         setFname(result[0].firstName);
         setLname(result[0].lastName);
         setMatric(result[0].matricNumber);
@@ -54,6 +62,135 @@ function CourseRegistartion() {
         });
       });
   }, []);
+
+  useEffect(() => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/departments/gets/${schID}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setDepart(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  }, []);
+
+  useEffect(() => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/levels/gets/${schID}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setLevelsss(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  }, []);
+
+  console.log(levelx);
+  console.log(headOfDepart);
+  const userInfo = JSON.parse(localStorage.getItem("user"));
+  const schID = userInfo.schoolID;
+  console.log(schID);
+  console.log(studentId);
+  const handleAdd = () => {
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+
+    const raw = JSON.stringify([
+      {
+        // schoolID: schID,
+        // depID: headOfDepart,
+        // levelID: levelx,
+        // staffID: staff,
+
+        levelID: levelx,
+        depID: headOfDepart,
+        studentID: studentId.id,
+        schoolID: schID,
+      },
+    ]);
+    console.log(raw);
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+    setOpened(true);
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/courseRegistration/register`,
+      requestOptions
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        if (result.status === "SUCCESS") {
+          Swal.fire({
+            title: result.status,
+            icon: "success",
+            text: result.message,
+          }).then(() => {
+            window.location.reload();
+          });
+        } else {
+          Swal.fire({
+            title: result.status,
+            icon: "error",
+            text: result.message,
+          });
+        }
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+
   return (
     <>
       <div>
@@ -64,12 +201,13 @@ function CourseRegistartion() {
                 <div className="card">
                   <div className="card-body">
                     <div className="d-flex flex-column align-items-center text-center">
-                      <img
+                      {/* <img
                         src="https://bootdey.com/img/Content/avatar/avatar7.png"
                         alt="Admin"
                         className="rounded-circle"
                         width="150"
-                      />
+                      /> */}
+                      <img alt="..." src={require("assets/img/anime3.png")} />
                       <div className="mt-3">
                         <h4>
                           {fname} {lname}
@@ -89,12 +227,25 @@ function CourseRegistartion() {
                         <h6 className="mb-0">Faculty</h6>
                       </div>
                       <div className="col-sm-9 ">
-                        <Input
+                        <Form.Select
+                          style={{ marginBottom: "20px" }}
+                          value={levelx || ""}
+                          aria-label="Default select example"
+                          onChange={(e) => setLevelx(e.target.value)}
+                        >
+                          <option value="">--Level--</option>
+                          {levelss.map((apic) => (
+                            <option key={apic.id} value={apic.id}>
+                              {apic.name}
+                            </option>
+                          ))}
+                        </Form.Select>
+                        {/* <Input
                           disabled
                           placeholder="Faculty"
                           value={faculty}
                           type="text"
-                        />
+                        /> */}
                       </div>
                     </div>
                     <hr />
@@ -103,17 +254,30 @@ function CourseRegistartion() {
                         <h6 className="mb-0">Department</h6>
                       </div>
                       <div className="col-sm-9 ">
-                        <Input
+                        <Form.Select
+                          style={{ marginBottom: "20px" }}
+                          value={headOfDepart || ""}
+                          aria-label="Default select example"
+                          onChange={(e) => setHeadOfDepart(e.target.value)}
+                        >
+                          <option value="">--Department--</option>
+                          {depart.map((apic) => (
+                            <option key={apic.id} value={apic.id}>
+                              {apic.name}
+                            </option>
+                          ))}
+                        </Form.Select>
+                        {/* <Input
                           disabled
                           placeholder="Faculty"
                           value={department}
                           type="text"
-                        />
+                        /> */}
                       </div>
                     </div>
                     <hr />
 
-                    <div className="row">
+                    {/* <div className="row">
                       <div className="col-sm-3">
                         <h6 className="mb-0">Course List</h6>
                       </div>
@@ -130,12 +294,12 @@ function CourseRegistartion() {
                           <option value="Female">Female</option>
                         </Form.Select>
                       </div>
-                    </div>
-                    <hr />
+                    </div> */}
+                    {/* <hr /> */}
 
                     <div className="row">
                       <div className="col-sm-12">
-                        <Button>Save</Button>
+                        <Button onClick={handleAdd}>Save</Button>
                       </div>
                     </div>
                   </div>
