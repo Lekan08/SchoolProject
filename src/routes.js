@@ -64,6 +64,7 @@ import CourseAdvisor from "views/Admin/courseAdvisor";
 import CourseAdvisorUpdate from "views/Admin/courseAdvisor/update";
 import ClassCourses from "views/Admin/courseAdvisor/classCourses";
 import Grading from "views/Admin/grading";
+import Result from "views/Admin/result";
 import GradingUpdate from "views/Admin/grading/update";
 
 import CompleteResetPassword from "views/authentication/complete-resetPassword";
@@ -273,6 +274,14 @@ var routes = [
     name: "Grading",
     icon: "menu_book",
     component: Grading,
+    admin: true,
+  },
+
+  {
+    path: "/result",
+    name: "Result",
+    icon: "menu_book",
+    component: Result,
     admin: true,
   },
   {

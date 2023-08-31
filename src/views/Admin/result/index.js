@@ -24,29 +24,74 @@ export default function Result() {
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
   const [items, setItems] = useState([]);
-  const [levels, setLevels] = useState("");
-  const [description, setDescription] = useState("");
   const [opened, setOpened] = useState(false);
-  const [depart, setDepart] = useState([]);
-  const [descriptionx, setDescriptionx] = useState("");
+  const [colorCodex, setColorCode] = useState("");
+  const [matNumer, setMatNumer] = useState([]);
+  const [matNumerx, setMatNumerx] = useState("");
+  const [scorex, setScore] = useState("");
+  const [level, setLevel] = useState([]);
   const [levelx, setLevelx] = useState("");
-  const [levelss, setLevelsss] = useState([]);
-  const [headOfDepart, setHeadOfDepart] = useState("");
-  const [getAllStaff, setGetAllStaff] = useState([]);
-  const [staff, setStaff] = useState("");
+  const [sessionx, setSession] = useState("");
+  const [course, setCourse] = useState([]);
+  const [coursex, setCoursex] = useState("");
 
-  const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 600,
-    bgcolor: "background.paper",
-    border: "2px solid gray",
-    boxShadow: 24,
-    p: 4,
-    textAlign: "center",
-  };
+  useEffect(() => {
+    setOpened(true);
+
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/courses/gets/${schID}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setCourse(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  }, []);
+
+  useEffect(() => {
+    setOpened(true);
+
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/students/gets/${schID}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setMatNumer(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  }, []);
 
   useEffect(() => {
     setOpened(true);
@@ -54,12 +99,38 @@ export default function Result() {
     console.log(userInfo);
     const schID = userInfo.schoolID;
     const headers = miHeaders;
-    fetch(
-      `${process.env.REACT_APP_SCHPROJECT_URL}/courseAdvisers/gets/${schID}`,
-      {
-        headers,
-      }
-    )
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/levels/gets/${schID}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setLevel(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  }, []);
+
+  useEffect(() => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/grading/gets/${schID}`, {
+      headers,
+    })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -80,74 +151,6 @@ export default function Result() {
       });
   }, []);
 
-  const handleUpdate = (val) => {
-    console.log(val);
-    const userInfo = JSON.parse(localStorage.getItem("user"));
-    console.log(userInfo);
-    const schID = userInfo.schoolID;
-
-    const raw = JSON.stringify({
-      id: val,
-      name: levels,
-      description: descriptionx,
-      schoolID: schID,
-      // college:
-    });
-    console.log(raw);
-    const requestOptions = {
-      method: "PUT",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-    setOpened(true);
-    fetch(
-      `${process.env.REACT_APP_SCHPROJECT_URL}/levels/update`,
-      requestOptions
-    )
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        setOpened(false);
-        if (result.message === "Expired Access") {
-          Navigate("/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Token Does Not Exist") {
-          Navigate("/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Unauthorized Access") {
-          Navigate("/authentication/forbiddenPage");
-          window.location.reload();
-        }
-        console.log(result);
-        if (result.status === "SUCCESS") {
-          Swal.fire({
-            title: result.status,
-            icon: "success",
-            text: result.message,
-          }).then(() => Navigate("/faculties"));
-        } else {
-          Swal.fire({
-            title: result.status,
-            icon: "error",
-            text: result.message,
-          });
-        }
-      })
-      .catch((error) => {
-        setOpened(false);
-        Swal.fire({
-          title: error.status,
-          icon: "error",
-          text: error.message,
-        });
-      });
-  };
   const handleDelete = (val) => {
     console.log(val);
     Swal.fire({
@@ -166,7 +169,7 @@ export default function Result() {
         };
 
         fetch(
-          `${process.env.REACT_APP_SCHPROJECT_URL}/courseAdvisers/delete/${val}`,
+          `${process.env.REACT_APP_SCHPROJECT_URL}/grading/delete/${val}`,
           requestOptions
         )
           .then(async (res) => {
@@ -213,13 +216,16 @@ export default function Result() {
   const handleAdd = () => {
     const userInfo = JSON.parse(localStorage.getItem("user"));
     console.log(userInfo);
+    console.log("userInfo");
     const schID = userInfo.schoolID;
 
     const raw = JSON.stringify({
       schoolID: schID,
-      depID: headOfDepart,
-      levelID: levelx,
-      staffID: staff,
+      courseID: coursex,
+      matricNumber: matNumerx,
+      score: scorex,
+      level: levelx,
+      session: sessionx,
     });
     console.log(raw);
     const requestOptions = {
@@ -229,10 +235,7 @@ export default function Result() {
       redirect: "follow",
     };
     setOpened(true);
-    fetch(
-      `${process.env.REACT_APP_SCHPROJECT_URL}/courseAdvisers/add`,
-      requestOptions
-    )
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/result/add`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -267,94 +270,6 @@ export default function Result() {
       });
   };
 
-  useEffect(() => {
-    setOpened(true);
-    const headers = miHeaders;
-
-    const userInfo = JSON.parse(localStorage.getItem("user"));
-    console.log(userInfo);
-    const schID = userInfo.schoolID;
-    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/staffs/gets/${schID}`, {
-      headers,
-    })
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        setOpened(false);
-        console.log(result);
-        setGetAllStaff(result);
-      })
-      .catch((error) => {
-        setOpened(false);
-        Swal.fire({
-          title: error.status,
-          icon: "error",
-          text: error.message,
-        });
-      });
-  }, []);
-
-  useEffect(() => {
-    setOpened(true);
-    const userInfo = JSON.parse(localStorage.getItem("user"));
-    console.log(userInfo);
-    const schID = userInfo.schoolID;
-    const headers = miHeaders;
-    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/levels/gets/${schID}`, {
-      headers,
-    })
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        setOpened(false);
-        console.log(result);
-        setLevelsss(result);
-      })
-      .catch((error) => {
-        setOpened(false);
-        Swal.fire({
-          title: error.status,
-          icon: "error",
-          text: error.message,
-        });
-      });
-  }, []);
-
-  useEffect(() => {
-    setOpened(true);
-    const userInfo = JSON.parse(localStorage.getItem("user"));
-    console.log(userInfo);
-    const schID = userInfo.schoolID;
-    const headers = miHeaders;
-    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/departments/gets/${schID}`, {
-      headers,
-    })
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        setOpened(false);
-        console.log(result);
-        setDepart(result);
-      })
-      .catch((error) => {
-        setOpened(false);
-        Swal.fire({
-          title: error.status,
-          icon: "error",
-          text: error.message,
-        });
-      });
-  }, []);
-
   return (
     <div className="content">
       <Paper elevation={8}>
@@ -377,38 +292,44 @@ export default function Result() {
               variant="h5"
               className="head"
             >
-              Course Advisor
+              Result
             </Typography>
           </Button>
           <CardBody>
-            {/* <School
-              sx={{
-                fontSize: 230,
-                marginLeft: "auto",
-                marginRight: "auto",
-                display: "flex",
-              }}
-            />
-            <br /> */}
             <Row>
               <Col md="6" className="pl-md-1">
                 <FormGroup>
-                  <label>Department</label>
+                  <label>Matric Number</label>
                   <Form.Select
                     style={{ marginBottom: "20px" }}
-                    value={headOfDepart || ""}
+                    value={matNumerx || ""}
                     aria-label="Default select example"
-                    onChange={(e) => setHeadOfDepart(e.target.value)}
+                    onChange={(e) => setMatNumerx(e.target.value)}
                   >
-                    <option value="">--Department--</option>
-                    {depart.map((apic) => (
+                    <option value="">--Matric Number--</option>
+                    {matNumer.map((apic) => (
                       <option key={apic.id} value={apic.id}>
-                        {apic.name}
+                        {apic.matricNumber}
                       </option>
                     ))}
                   </Form.Select>
                 </FormGroup>
-              </Col>{" "}
+              </Col>
+              <Col className="pl-md-1" md="6">
+                <FormGroup>
+                  <label>Score</label>
+                  <Input
+                    onChange={(e) => {
+                      setScore(e.target.value);
+                    }}
+                    placeholder="Score"
+                    type="text"
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
+            <Row>
+              {" "}
               <Col md="6" className="pl-md-1">
                 <FormGroup>
                   <label>Level</label>
@@ -419,34 +340,44 @@ export default function Result() {
                     onChange={(e) => setLevelx(e.target.value)}
                   >
                     <option value="">--Level--</option>
-                    {levelss.map((apic) => (
+                    {level.map((apic) => (
                       <option key={apic.id} value={apic.id}>
                         {apic.name}
                       </option>
                     ))}
                   </Form.Select>
                 </FormGroup>
-              </Col>{" "}
-            </Row>
-            <Row>
+              </Col>
+              <Col className="pl-md-1" md="6">
+                <FormGroup>
+                  <label>Session</label>
+                  <Input
+                    onChange={(e) => {
+                      setSession(e.target.value);
+                    }}
+                    placeholder="Session"
+                    type="text"
+                  />
+                </FormGroup>
+              </Col>
               <Col md="6" className="pl-md-1">
                 <FormGroup>
-                  <label>Staff</label>
+                  <label>Course</label>
                   <Form.Select
                     style={{ marginBottom: "20px" }}
-                    value={staff || ""}
+                    value={coursex || ""}
                     aria-label="Default select example"
-                    onChange={(e) => setStaff(e.target.value)}
+                    onChange={(e) => setCoursex(e.target.value)}
                   >
-                    <option value="">--Staff--</option>
-                    {getAllStaff.map((apic) => (
+                    <option value="">--Course--</option>
+                    {course.map((apic) => (
                       <option key={apic.id} value={apic.id}>
-                        {apic.firstName} {apic.lastName}
+                        {apic.name}
                       </option>
                     ))}
                   </Form.Select>
                 </FormGroup>
-              </Col>{" "}
+              </Col>
             </Row>
             <Button
               variant="gradient"
@@ -459,7 +390,7 @@ export default function Result() {
               color="info"
               onClick={() => handleAdd()}
             >
-              Add Level
+              Add Result
             </Button>
           </CardBody>
         </Card>
@@ -468,9 +399,10 @@ export default function Result() {
       <DataTable
         data={{
           columns: [
-            { Header: "Department Name", accessor: "depName" },
-            { Header: "Level", accessor: "level" },
-            { Header: "Staff Name", accessor: "staffName" },
+            { Header: "Value", accessor: "value" },
+            { Header: "Grade", accessor: "grade" },
+            { Header: "Minimum Score", accessor: "minScore" },
+            { Header: "Maximum Score", accessor: "maxScore" },
             {
               Header: "options",
               accessor: "id",
@@ -490,25 +422,29 @@ export default function Result() {
                   </Dropdown.Toggle>
 
                   <Dropdown.Menu>
+                    {/* <Dropdown.Item
+                      style={{ fontweight: "bold", color: "black" }}
+                      onClick={() =>
+                        Navigate(
+                          `/courseAdvisor/classCourses?id=${cell.row.id}`
+                        )
+                      }
+                    >
+                      Class Course
+                    </Dropdown.Item> */}
+                    <Dropdown.Item
+                      style={{ fontweight: "bold", color: "black" }}
+                      onClick={() =>
+                        Navigate(`/grading/update?id=${cell.row.id}`)
+                      }
+                    >
+                      Update
+                    </Dropdown.Item>
                     <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}
                       onClick={() => handleDelete(cell.row.id)}
                     >
                       Delete
-                    </Dropdown.Item>
-                    {/* <Dropdown.Item
-                      style={{ fontweight: "bold", color: "black" }}
-                      onClick={() => handleOnChange(cell.row.id)}
-                    >
-                      Update
-                    </Dropdown.Item> */}
-                    <Dropdown.Item
-                      style={{ fontweight: "bold", color: "black" }}
-                      onClick={() =>
-                        Navigate(`/courseAdvisor/update?id=${cell.row.id}`)
-                      }
-                    >
-                      Update
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
@@ -518,63 +454,6 @@ export default function Result() {
           rows: items,
         }}
       />
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Row>
-            <Col className="pl-md-1" md="6">
-              <FormGroup>
-                <label>Level</label>
-                <Input
-                  onChange={(e) => {
-                    setLevels(e.target.value);
-                  }}
-                  // defaultValue={`${data11.firstName}`}
-                  placeholder="Level"
-                  value={levels}
-                  //   disabled
-                  type="text"
-                />
-              </FormGroup>
-            </Col>
-            <Col className="pl-md-1" md="6">
-              <FormGroup>
-                <label>Description</label>
-                <Input
-                  onChange={(e) => {
-                    setDescriptionx(e.target.value);
-                  }}
-                  // defaultValue={`${data11.lastName}`}
-                  placeholder="description"
-                  //   onChange={() => console.log()}
-                  type="textarea"
-                  // value={String(items[0]?.verificationComment)}
-                  // disabled
-                />
-              </FormGroup>
-            </Col>
-          </Row>
-          <Box mt={8}>
-            <Button
-              variant="gradient"
-              style={{
-                marginLeft: "auto",
-                marginRight: "auto",
-                display: "flex",
-              }}
-              color="info"
-              onClick={() => handleUpdate()}
-            >
-              Update
-            </Button>
-          </Box>
-          <br />
-        </Box>
-      </Modal>
       <Backdrop
         sx={{ color: "white", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={opened}
