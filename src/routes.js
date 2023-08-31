@@ -466,5 +466,5 @@ export default routes;
 // import Permissions from "views/rolesAndPermi/permissions";
 // import UserManagement from "views/userManagement";
 // import Verification from "views/riders/verification";
-// import ViewTrip from "views/trips/view";
+// import ViewTrip from "views/trips/view";T20E5W23
 // import PaymentRequests from "views/payment-requests";
