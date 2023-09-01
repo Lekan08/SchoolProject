@@ -25,6 +25,8 @@ export default function FacultyUpdate() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [head, setHead] = useState("");
+  const [college, setCollege] = useState("");
+  const [collegeMap, setCollegeMap] = useState([]);
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
   //   const queryString = window.location.search;
@@ -56,6 +58,7 @@ export default function FacultyUpdate() {
         setName(result[0].name);
         setDescription(result[0].desc);
         setHead(result[0].head);
+        setCollege(result[0].collegeID);
         setItems(result);
       })
       .catch((error) => {
@@ -170,6 +173,35 @@ export default function FacultyUpdate() {
       });
   };
 
+  useEffect(() => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/colleges/getAll`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setCollegeMap(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  }, []);
+
   return (
     <div className="content">
       <Card mx={2}>
@@ -246,6 +278,24 @@ export default function FacultyUpdate() {
                   {getAllStaff.map((apic) => (
                     <option key={apic.id} value={apic.id}>
                       {apic.firstName} {apic.lastName}
+                    </option>
+                  ))}
+                </Form.Select>
+              </FormGroup>
+            </Col>{" "}
+            <Col md="6" className="pl-md-1">
+              <FormGroup>
+                <label>College</label>
+                <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  value={college || ""}
+                  aria-label="Default select example"
+                  onChange={(e) => setCollege(e.target.value)}
+                >
+                  <option value="">--College--</option>
+                  {collegeMap.map((apic) => (
+                    <option key={apic.id} value={apic.id}>
+                      {apic.name}
                     </option>
                   ))}
                 </Form.Select>

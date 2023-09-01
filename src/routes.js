@@ -66,6 +66,8 @@ import ClassCourses from "views/Admin/courseAdvisor/classCourses";
 import Grading from "views/Admin/grading";
 import Result from "views/Admin/result";
 import GradingUpdate from "views/Admin/grading/update";
+import College from "views/Admin/college";
+import CollegeUpdate from "views/Admin/college/update";
 
 import CompleteResetPassword from "views/authentication/complete-resetPassword";
 
@@ -276,7 +278,6 @@ var routes = [
     component: Grading,
     admin: true,
   },
-
   {
     path: "/result",
     name: "Result",
@@ -426,7 +427,28 @@ var routes = [
     redirect: "true",
     admin: true,
   },
-
+  {
+    path: "/result",
+    name: "Result",
+    icon: "menu_book",
+    component: Result,
+    admin: true,
+  },
+  {
+    path: "/college",
+    name: "College",
+    icon: "menu_book",
+    component: College,
+    admin: true,
+  },
+  {
+    path: "/college/update",
+    // name: "Level",
+    // icon: "grading",
+    component: CollegeUpdate,
+    // admin: true,
+    redirect: true,
+  },
   {
     path: "/dashboard-student",
     name: "Student Dashboard",
