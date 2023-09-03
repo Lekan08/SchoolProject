@@ -128,7 +128,7 @@ export default function Result() {
     console.log(userInfo);
     const schID = userInfo.schoolID;
     const headers = miHeaders;
-    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/grading/gets/${schID}`, {
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/result/gets/${schID}`, {
       headers,
     })
       .then(async (res) => {
@@ -169,7 +169,7 @@ export default function Result() {
         };
 
         fetch(
-          `${process.env.REACT_APP_SCHPROJECT_URL}/grading/delete/${val}`,
+          `${process.env.REACT_APP_SCHPROJECT_URL}/result/delete/${val}`,
           requestOptions
         )
           .then(async (res) => {
@@ -308,7 +308,7 @@ export default function Result() {
                   >
                     <option value="">--Matric Number--</option>
                     {matNumer.map((apic) => (
-                      <option key={apic.id} value={apic.id}>
+                      <option key={apic.id} value={apic.matricNumber}>
                         {apic.matricNumber}
                       </option>
                     ))}
@@ -399,10 +399,10 @@ export default function Result() {
       <DataTable
         data={{
           columns: [
-            { Header: "Value", accessor: "value" },
-            { Header: "Grade", accessor: "grade" },
-            { Header: "Minimum Score", accessor: "minScore" },
-            { Header: "Maximum Score", accessor: "maxScore" },
+            { Header: "Matric Number", accessor: "matricNumber" },
+            { Header: "Level", accessor: "levelName" },
+            { Header: "Course", accessor: "courseName" },
+            { Header: "Score", accessor: "score" },
             {
               Header: "options",
               accessor: "id",
@@ -435,7 +435,7 @@ export default function Result() {
                     <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}
                       onClick={() =>
-                        Navigate(`/grading/update?id=${cell.row.id}`)
+                        Navigate(`/result/update?id=${cell.row.id}`)
                       }
                     >
                       Update
