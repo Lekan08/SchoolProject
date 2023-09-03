@@ -67,6 +67,8 @@ import Grading from "views/Admin/grading";
 import Result from "views/Admin/result";
 import ResultUpdate from "views/Admin/result/update";
 import GradingUpdate from "views/Admin/grading/update";
+import College from "views/Admin/college";
+import CollegeUpdate from "views/Admin/college/update";
 
 import CompleteResetPassword from "views/authentication/complete-resetPassword";
 
@@ -277,7 +279,6 @@ var routes = [
     component: Grading,
     admin: true,
   },
-
   {
     path: "/result",
     name: "Result",
@@ -434,7 +435,28 @@ var routes = [
     redirect: "true",
     admin: true,
   },
-
+  {
+    path: "/result",
+    name: "Result",
+    icon: "menu_book",
+    component: Result,
+    admin: true,
+  },
+  {
+    path: "/college",
+    name: "College",
+    icon: "menu_book",
+    component: College,
+    admin: true,
+  },
+  {
+    path: "/college/update",
+    // name: "Level",
+    // icon: "grading",
+    component: CollegeUpdate,
+    // admin: true,
+    redirect: true,
+  },
   {
     path: "/dashboard-student",
     name: "Student Dashboard",
@@ -483,5 +505,5 @@ export default routes;
 // import Permissions from "views/rolesAndPermi/permissions";
 // import UserManagement from "views/userManagement";
 // import Verification from "views/riders/verification";
-// import ViewTrip from "views/trips/view";
+// import ViewTrip from "views/trips/view";T20E5W23
 // import PaymentRequests from "views/payment-requests";
