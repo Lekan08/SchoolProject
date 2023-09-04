@@ -403,6 +403,7 @@ export default function Result() {
             { Header: "Level", accessor: "levelName" },
             { Header: "Course", accessor: "courseName" },
             { Header: "Score", accessor: "score" },
+            { Header: "Session", accessor: "session" },
             {
               Header: "options",
               accessor: "id",
