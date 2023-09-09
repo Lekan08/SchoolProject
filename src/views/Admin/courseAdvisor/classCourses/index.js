@@ -525,60 +525,6 @@ export default function ClassCourses() {
           </CardBody>
         </Card>
       </Paper>
-      <br />
-      <DataTable
-        data={{
-          columns: [
-            { Header: "Department Name", accessor: "depName" },
-            { Header: "Level", accessor: "level" },
-            { Header: "Staff Name", accessor: "staffName" },
-            {
-              Header: "options",
-              accessor: "id",
-              renderCell: (cell) => (
-                <Dropdown style={{ position: "absolute" }}>
-                  <Dropdown.Toggle
-                    style={{ width: "5rem", height: "30px", padding: 0 }}
-                    variant="info"
-                    size="lg"
-                  >
-                    <Settings
-                      sx={{
-                        textAlign: "center",
-                        fontSize: "18px",
-                      }}
-                    />
-                  </Dropdown.Toggle>
-
-                  <Dropdown.Menu>
-                    <Dropdown.Item
-                      style={{ fontweight: "bold", color: "black" }}
-                      onClick={() => handleDelete(cell.row.id)}
-                    >
-                      Delete
-                    </Dropdown.Item>
-                    {/* <Dropdown.Item
-                      style={{ fontweight: "bold", color: "black" }}
-                      onClick={() => handleOnChange(cell.row.id)}
-                    >
-                      Update
-                    </Dropdown.Item> */}
-                    <Dropdown.Item
-                      style={{ fontweight: "bold", color: "black" }}
-                      onClick={() =>
-                        Navigate(`/courseAdvisor/update?id=${cell.row.id}`)
-                      }
-                    >
-                      Update
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-              ),
-            },
-          ],
-          rows: items,
-        }}
-      />
       <Modal
         open={open}
         onClose={handleClose}
