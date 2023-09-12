@@ -36,6 +36,30 @@ export default function ResultUpdate() {
   const [coursex, setCoursex] = useState("");
   const [update, setUpdate] = useState("");
 
+  const mySession = [
+    { value: "2019/2020", key: 1 },
+    { value: "2020/2021", key: 2 },
+    { value: "2021/2022", key: 3 },
+    { value: "2022/2023", key: 4 },
+    { value: "2023/2024", key: 5 },
+    { value: "2024/2025", key: 6 },
+    { value: "2025/2026", key: 7 },
+    { value: "2026/2027", key: 8 },
+    { value: "2027/2028", key: 9 },
+    { value: "2028/2029", key: 10 },
+    { value: "2029/2030", key: 11 },
+    { value: "2030/2031", key: 12 },
+    { value: "2031/2032", key: 13 },
+    { value: "2032/2033", key: 14 },
+    { value: "2033/2034", key: 15 },
+    { value: "2034/2035", key: 16 },
+    { value: "2035/2036", key: 17 },
+    { value: "2036/2037", key: 18 },
+    { value: "2037/2038", key: 19 },
+    { value: "2038/2039", key: 20 },
+    { value: "2039/2040", key: 21 },
+  ];
+
   useEffect(() => {
     setOpened(true);
 
@@ -324,24 +348,29 @@ export default function ResultUpdate() {
                   >
                     <option value="">--Level--</option>
                     {level.map((apic) => (
-                      <option key={apic.id} value={apic.levelName}>
+                      <option key={apic.id} value={apic.id}>
                         {apic.name}
                       </option>
                     ))}
                   </Form.Select>
                 </FormGroup>
               </Col>
-              <Col className="pl-md-1" md="6">
+              <Col md="6" className="pl-md-1">
                 <FormGroup>
                   <label>Session</label>
-                  <Input
-                    onChange={(e) => {
-                      setSession(e.target.value);
-                    }}
-                    placeholder="Session"
-                    type="text"
-                    value={sessionx}
-                  />
+                  <Form.Select
+                    style={{ marginBottom: "20px" }}
+                    value={sessionx || ""}
+                    aria-label="Default select example"
+                    onChange={(e) => setSession(e.target.value)}
+                  >
+                    <option value="">--Session--</option>
+                    {mySession.map((apic) => (
+                      <option key={apic.key} value={apic.value}>
+                        {apic.value}
+                      </option>
+                    ))}
+                  </Form.Select>
                 </FormGroup>
               </Col>
               <Col md="6" className="pl-md-1">
@@ -355,8 +384,8 @@ export default function ResultUpdate() {
                   >
                     <option value="">--Course--</option>
                     {course.map((apic) => (
-                      <option key={apic.id} value={apic.id}>
-                        {apic.name}
+                      <option key={apic.id} value={apic.courseCode}>
+                        {apic.courseCode}
                       </option>
                     ))}
                   </Form.Select>

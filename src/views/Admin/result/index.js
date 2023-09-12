@@ -31,7 +31,7 @@ export default function Result() {
   const [scorex, setScore] = useState("");
   const [level, setLevel] = useState([]);
   const [levelx, setLevelx] = useState("");
-  const [sessionx, setSession] = useState("");
+  const [sessionx, setSessionx] = useState("");
   const [course, setCourse] = useState([]);
   const [coursex, setCoursex] = useState("");
 
@@ -411,7 +411,8 @@ export default function Result() {
           columns: [
             { Header: "Matric Number", accessor: "matricNumber" },
             { Header: "Level", accessor: "levelName" },
-            { Header: "Course", accessor: "courseName" },
+            // { Header: "Department ", accessor: "departmentName" },
+            { Header: "Course", accessor: "courseCode" },
             { Header: "Score", accessor: "score" },
             { Header: "Session", accessor: "session" },
             {

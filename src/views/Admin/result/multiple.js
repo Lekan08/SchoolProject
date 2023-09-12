@@ -9,10 +9,13 @@ import { Typography, Box, Modal } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
+import Navigate from "useNavigate";
 import Swal from "sweetalert2";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import { AccountCircleSharp, School } from "@mui/icons-material";
+
+import ResultCSV from "./resultCSV.png";
 import { Card } from "@mui/material";
 import {
   FormGroup,
@@ -67,6 +70,12 @@ export default function ResultMultiple() {
   const [file, setFile] = useState([]);
   const [faculties, setFaculties] = useState([]);
   const [facultyx, setFaculty] = useState("");
+  const [level, setLevel] = useState([]);
+  const [levelx, setLevelx] = useState("");
+  const [sessionx, setSessionx] = useState("");
+  // const [mySession, setSession] = useState([]);
+  const [course, setCourse] = useState([]);
+  const [coursex, setCoursex] = useState("");
 
   const [opened, setOpened] = useState(false);
   // const changeHandler = (event) => {
@@ -85,6 +94,87 @@ export default function ResultMultiple() {
   //   });
   // };
 
+  const mySession = [
+    { value: "2019/2020", key: 1 },
+    { value: "2020/2021", key: 2 },
+    { value: "2021/2022", key: 3 },
+    { value: "2022/2023", key: 4 },
+    { value: "2023/2024", key: 5 },
+    { value: "2024/2025", key: 6 },
+    { value: "2025/2026", key: 7 },
+    { value: "2026/2027", key: 8 },
+    { value: "2027/2028", key: 9 },
+    { value: "2028/2029", key: 10 },
+    { value: "2029/2030", key: 11 },
+    { value: "2030/2031", key: 12 },
+    { value: "2031/2032", key: 13 },
+    { value: "2032/2033", key: 14 },
+    { value: "2033/2034", key: 15 },
+    { value: "2034/2035", key: 16 },
+    { value: "2035/2036", key: 17 },
+    { value: "2036/2037", key: 18 },
+    { value: "2037/2038", key: 19 },
+    { value: "2038/2039", key: 20 },
+    { value: "2039/2040", key: 21 },
+  ];
+
+  useEffect(() => {
+    setOpened(true);
+
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/courses/gets/${schID}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setCourse(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  }, []);
+
+  useEffect(() => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/levels/gets/${schID}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setLevel(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  }, []);
   const userData = JSON.parse(localStorage.getItem("user"));
   console.log(userData);
   const changeHandler = (event) => {
@@ -95,19 +185,21 @@ export default function ResultMultiple() {
         const userData = JSON.parse(localStorage.getItem("user"));
         console.log(userData);
         const schoolID = userData.schoolID;
-        const facultyID = facultyx;
+        const courseID = coursex;
+        const levelID = levelx;
+        console.log(levelx);
         const obj = results.data;
         const objx = obj.map(
           ({
-            name,
-            description,
-            head,
+            matricNumber,
+            score,
+            session,
             // eslint-disable-next-line arrow-body-style
           }) => {
             return {
-              name,
-              description,
-              head,
+              matricNumber,
+              score,
+              session,
             };
           }
         );
@@ -115,27 +207,34 @@ export default function ResultMultiple() {
         console.log(objx);
 
         objx.forEach((element) => {
-          element.facultyID = facultyID;
+          element.courseID = courseID;
           element.schoolID = schoolID;
+          element.level = levelID;
+          // element.sessionID = schoolID;
         });
+        console.log(objx);
         const objc = objx.map(
           ({
-            facultyID,
             schoolID,
-            name,
-            description,
-            head,
+            courseID,
+            matricNumber,
+            score,
+            level,
+            session,
+
             // eslint-disable-next-line arrow-body-style
           }) => {
             return {
-              name,
-              description,
-              head,
-              facultyID,
               schoolID,
+              courseID,
+              matricNumber,
+              score,
+              level,
+              session,
             };
           }
         );
+        console.log(objc);
         const why = JSON.stringify(objc);
         console.log(why);
         setFile(why);
@@ -145,14 +244,16 @@ export default function ResultMultiple() {
   const handleUpload = () => {
     setOpened(true);
     handleClose();
+    console.log(file);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
       body: file,
       redirect: "follow",
     };
+
     fetch(
-      `${process.env.REACT_APP_SCHPROJECT_URL}/departments/addMultiple`,
+      `${process.env.REACT_APP_SCHPROJECT_URL}/result/addMultiple`,
       requestOptions
     )
       .then(async (res) => {
@@ -181,7 +282,7 @@ export default function ResultMultiple() {
             icon: "success",
             text: result.message,
           }).then(() => {
-            window.location.reload();
+            Navigate("/result");
           });
         } else {
           Swal.fire({
@@ -251,37 +352,67 @@ export default function ResultMultiple() {
               variant="h5"
               className="headz"
             >
-              Add Courses Through CSV
+              Add Result Through CSV
             </Typography>
           </Button>
           <br />
-          {/* <Box >
-            <div className="row">
-              <div className="col-sm-6"> */}
-          {/* <Container> */}
-          <Typography
-            variant="button"
-            fontWeight="regular"
-            fontSize="80%"
-            textAlign="center"
-            color="text"
-          >
-            Select Faculty
-          </Typography>
-          <br />
-          <Form.Select
-            style={{ marginBottom: "20px" }}
-            value={facultyx || ""}
-            aria-label="Default select example"
-            onChange={(e) => setFaculty(e.target.value)}
-          >
-            <option value="">--Select Faculty--</option>
-            {faculties.map((apic) => (
-              <option key={apic.id} value={apic.id}>
-                {apic.name}
-              </option>
-            ))}
-          </Form.Select>
+          <Row>
+            {" "}
+            <Col md="6" className="pl-md-1">
+              <FormGroup>
+                <Typography
+                  variant="button"
+                  fontWeight="regular"
+                  fontSize="80%"
+                  textAlign="center"
+                  color="text"
+                >
+                  Level
+                </Typography>
+                <br />{" "}
+                <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  value={levelx || ""}
+                  aria-label="Default select example"
+                  onChange={(e) => setLevelx(e.target.value)}
+                >
+                  <option value="">--Level--</option>
+                  {level.map((apic) => (
+                    <option key={apic.id} value={apic.id}>
+                      {apic.name}
+                    </option>
+                  ))}
+                </Form.Select>
+              </FormGroup>
+            </Col>
+            <Col md="6" className="pl-md-1">
+              <FormGroup>
+                <Typography
+                  variant="button"
+                  fontWeight="regular"
+                  fontSize="80%"
+                  textAlign="center"
+                  color="text"
+                >
+                  Course
+                </Typography>
+                <br />{" "}
+                <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  value={coursex || ""}
+                  aria-label="Default select example"
+                  onChange={(e) => setCoursex(e.target.value)}
+                >
+                  <option value="">--Course--</option>
+                  {course.map((apic) => (
+                    <option key={apic.id} value={apic.id}>
+                      {apic.courseCode}
+                    </option>
+                  ))}
+                </Form.Select>
+              </FormGroup>
+            </Col>
+          </Row>
           {/* </Container> */}
           {/* </div>
             </div>
@@ -305,6 +436,9 @@ export default function ResultMultiple() {
           </Box>
           {/* <img className="img" src={example} alt="example" /> */}
           <br />
+
+          <img className="img" src={ResultCSV} alt="ResultCSV" />
+          <br />
           <Box textAlign="center" p={5}>
             <Typography
               variant="h4"
@@ -322,6 +456,7 @@ export default function ResultMultiple() {
               />
             </Typography>
           </Box>
+
           {/* <Button onClick={handleOpen2} variant="success">
             Preview
           </Button> */}
