@@ -94,10 +94,10 @@ function SignInStudent() {
         setOpened(false);
         console.log(result);
         if (result.status === "SUCCESS") {
-          Navigate("/dashboard-student");
+          Navigate("/student-profile-update");
           // localStorage.setItem("user", result.data);
-          localStorage.setItem("user", JSON.stringify(result.data));
-          localStorage.setItem("user1", JSON.stringify(result.data));
+          localStorage.setItem("user2", JSON.stringify(result.data));
+          localStorage.setItem("user3", JSON.stringify(result.data));
         } else {
           Swal.fire({
             title: result.status,

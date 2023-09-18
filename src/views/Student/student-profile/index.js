@@ -22,6 +22,7 @@ export default function StudentProfileUpdate() {
   const [opened, setOpened] = useState(false);
   const [phonex, setPhonex] = useState(0);
   const [dob, setDob] = useState("");
+  const [edit, setEdit] = useState(true);
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [type, setType] = useState("");
@@ -32,13 +33,17 @@ export default function StudentProfileUpdate() {
   const [department, setDepartment] = useState("");
   const [sex, setSex] = useState("");
   const [email, setEmail] = useState("");
+  const [oName, setOName] = useState("");
+
   const [items, setItems] = useState({});
+
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
   useEffect(() => {
     setOpened(true);
-    const userInfo = JSON.parse(localStorage.getItem("user"));
+    const userInfo = JSON.parse(localStorage.getItem("user2"));
     const idx = userInfo.id;
+    setOName(userInfo.otherName);
     // console.log(idx);
     const headers = miHeaders;
     fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/students/getByIds/${idx}`, {
@@ -84,6 +89,9 @@ export default function StudentProfileUpdate() {
         });
       });
   }, []);
+
+  const userInfo = JSON.parse(localStorage.getItem("user2"));
+  console.log(userInfo);
   return (
     <div className="content">
       <Card mx={2}>
@@ -98,7 +106,7 @@ export default function StudentProfileUpdate() {
           />
           <br />
           <Row>
-            <Col className="pl-md-1" md="6">
+            <Col className="pl-md-1" md="4">
               <FormGroup>
                 <label>First Name</label>
                 <Input
@@ -113,7 +121,7 @@ export default function StudentProfileUpdate() {
                 />
               </FormGroup>
             </Col>
-            <Col className="pl-md-1" md="6">
+            <Col className="pl-md-1" md="4">
               <FormGroup>
                 <label>Last Name</label>
                 <Input
@@ -129,9 +137,41 @@ export default function StudentProfileUpdate() {
                 />
               </FormGroup>
             </Col>
+            <Col className="pl-md-1" md="4">
+              <FormGroup>
+                <label>Other Name</label>
+                <Input
+                  onChange={(e) => {
+                    setOName(e.target.value);
+                  }}
+                  // defaultValue={`${data11.lastName}`}
+                  placeholder="Other Name"
+                  // onChange={() => console.log()}
+                  type="text"
+                  value={oName}
+                  disabled
+                />
+              </FormGroup>
+            </Col>
           </Row>
           <Row style={{ marginTop: 20 }}>
-            <Col md="5" className="pl-md-1">
+            <Col md="4" className="pl-md-1">
+              <FormGroup>
+                <label>Email</label>
+                <Input
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                  }}
+                  // defaultValue={`${data11.lastName}`}
+                  placeholder="Mail"
+                  //   onChange={() => console.log()}
+                  type="text"
+                  value={email}
+                  disabled={true}
+                />
+              </FormGroup>
+            </Col>
+            <Col md="4" className="pl-md-1">
               <FormGroup>
                 <label>Sex</label>
                 <Form.Select
@@ -147,6 +187,21 @@ export default function StudentProfileUpdate() {
                 </Form.Select>
               </FormGroup>
             </Col>
+            <Col md="4" className="pl-md-1">
+              <label>Phone Number</label>
+              <PhoneInput
+                // value={phonex}
+                onChange={(val) => setPhonex(val)}
+                id="phone"
+                disabled
+                placeholder="+234 812 345 6789"
+                value={phonex}
+                inputStyle={{ marginTop: "3.8%", width: "100%" }}
+                // onChange={setPhone}
+              />
+            </Col>
+          </Row>
+          {/* <Row style={{ marginTop: 20 }}>
             <Col md="5" className="pl-md-1">
               <FormGroup>
                 <label>Student Type</label>
@@ -163,38 +218,7 @@ export default function StudentProfileUpdate() {
                 </Form.Select>
               </FormGroup>
             </Col>
-          </Row>
-          <Row style={{ marginTop: 20 }}>
-            <Col md="6" className="pl-md-1">
-              <FormGroup>
-                <label>Email</label>
-                <Input
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                  }}
-                  // defaultValue={`${data11.lastName}`}
-                  placeholder="Mail"
-                  //   onChange={() => console.log()}
-                  type="text"
-                  value={email}
-                  disabled
-                />
-              </FormGroup>
-            </Col>
-            <Col md="6" className="pl-md-1">
-              <label>Phone Number</label>
-              <PhoneInput
-                // value={phonex}
-                onChange={(val) => setPhonex(val)}
-                id="phone"
-                disabled
-                placeholder="+234 812 345 6789"
-                value={phonex}
-                inputStyle={{ marginTop: "3.8%" }}
-                // onChange={setPhone}
-              />
-            </Col>
-          </Row>
+          </Row> */}
           <Row style={{ marginTop: 20 }}>
             <Col className="pl-md-1" md="4">
               <FormGroup>
@@ -285,6 +309,19 @@ export default function StudentProfileUpdate() {
               </FormGroup>
             </Col>
           </Row>
+          <Button
+            variant="gradient"
+            style={{
+              marginLeft: "auto",
+              marginRight: "auto",
+              display: "flex",
+              marginTop: "20px",
+            }}
+            color="info"
+            onClick={() => setEdit((edi) => !edi)}
+          >
+            {edit ? "Edit" : "Save"}
+          </Button>
         </CardBody>
       </Card>
       <Backdrop

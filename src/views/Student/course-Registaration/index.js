@@ -4,11 +4,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Card } from "@mui/material";
 import GHeaders from "getHeader";
 import PHeaders from "postHeader";
-import { CardBody, Input, Button } from "reactstrap";
+import { CardBody, Input, Button, Row, Col, FormGroup } from "reactstrap";
 import { Form } from "react-bootstrap";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import Swal from "sweetalert2";
+import { Typography, Paper } from "@mui/material";
 
 function CourseRegistartion() {
   const { allPHeaders: myHeaders } = PHeaders();
@@ -25,12 +26,17 @@ function CourseRegistartion() {
   const [depart, setDepart] = useState([]);
   const [headOfDepart, setHeadOfDepart] = useState("");
   const [studentId, setStudentId] = useState("");
+  const [compulsory, setCompulsory] = useState([]);
+  const [coursex, setCoursex] = useState([]);
+  const [checked, setChecked] = useState([]);
+  const [sessionx, setSession] = useState("");
+  const [elective, setElective] = useState([]);
   //   const [faculties, setFaculties] = useState([]);
   //   const [departments, setDepartments] = useState([]);
 
   useEffect(() => {
     setOpened(true);
-    const userInfo = JSON.parse(localStorage.getItem("user"));
+    const userInfo = JSON.parse(localStorage.getItem("user2"));
     const idx = userInfo.id;
     // console.log(idx);
     const headers = miHeaders;
@@ -65,7 +71,7 @@ function CourseRegistartion() {
 
   useEffect(() => {
     setOpened(true);
-    const userInfo = JSON.parse(localStorage.getItem("user"));
+    const userInfo = JSON.parse(localStorage.getItem("user2"));
     console.log(userInfo);
     const schID = userInfo.schoolID;
     const headers = miHeaders;
@@ -94,7 +100,7 @@ function CourseRegistartion() {
 
   useEffect(() => {
     setOpened(true);
-    const userInfo = JSON.parse(localStorage.getItem("user"));
+    const userInfo = JSON.parse(localStorage.getItem("user2"));
     console.log(userInfo);
     const schID = userInfo.schoolID;
     const headers = miHeaders;
@@ -123,14 +129,18 @@ function CourseRegistartion() {
 
   console.log(levelx);
   console.log(headOfDepart);
-  const userInfo = JSON.parse(localStorage.getItem("user"));
+  const userInfo = JSON.parse(localStorage.getItem("user2"));
   const schID = userInfo.schoolID;
   console.log(schID);
   console.log(studentId);
-  const handleAdd = () => {
-    const userInfo = JSON.parse(localStorage.getItem("user"));
+
+  const handleAdd = (value) => {
+    const userInfo = JSON.parse(localStorage.getItem("user2"));
     console.log(userInfo);
+    const level = userInfo.levelID;
+    const dep = userInfo.depID;
     const schID = userInfo.schoolID;
+    const student = userInfo.id;
 
     const raw = JSON.stringify([
       {
@@ -139,10 +149,12 @@ function CourseRegistartion() {
         // levelID: levelx,
         // staffID: staff,
 
-        levelID: levelx,
-        depID: headOfDepart,
-        studentID: studentId.id,
+        levelID: level,
+        depID: dep,
+        studentID: student,
         schoolID: schID,
+        courseID: value,
+        session: sessionx,
       },
     ]);
     console.log(raw);
@@ -191,123 +203,607 @@ function CourseRegistartion() {
       });
   };
 
+  const handleRemove = (value) => {
+    const requestOptions = {
+      method: "DELETE",
+      headers: miHeaders,
+    };
+    setOpened(true);
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/courseRegistration/remove/${value}`,
+      requestOptions
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        if (result.status === "SUCCESS") {
+          Swal.fire({
+            title: result.status,
+            icon: "success",
+            text: result.message,
+          }).then(() => {
+            window.location.reload();
+          });
+        } else {
+          Swal.fire({
+            title: result.status,
+            icon: "error",
+            text: result.message,
+          });
+        }
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+
+  const handleUNCheck = (value) => {
+    const requestOptions = {
+      method: "DELETE",
+      headers: miHeaders,
+    };
+    setOpened(true);
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/classCourses/delete/${value}`,
+      requestOptions
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        if (result.status === "SUCCESS") {
+          Swal.fire({
+            title: result.status,
+            icon: "success",
+            text: result.message,
+          }).then(() => {
+            window.location.reload();
+          });
+        } else {
+          Swal.fire({
+            title: result.status,
+            icon: "error",
+            text: result.message,
+          });
+        }
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+
+  useEffect(() => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user2"));
+    console.log(userInfo);
+    const levelID = userInfo.levelID;
+    const depID = userInfo.depID;
+    const headers = miHeaders;
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/classCourses/getForClass/${levelID}/${depID}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        if (result !== []) {
+          // setShow(true);
+          setCompulsory(result);
+          const userInfo = JSON.parse(localStorage.getItem("user2"));
+          console.log(userInfo);
+          const schID = userInfo.schoolID;
+          const queryString = window.location.search;
+          const urlParams = new URLSearchParams(queryString);
+          const idx = urlParams.get("id");
+
+          const headers = miHeaders;
+          fetch(
+            `${process.env.REACT_APP_SCHPROJECT_URL}/courses/gets/${schID}`,
+            {
+              headers,
+            }
+          )
+            .then(async (resx) => {
+              const aToken = resx.headers.get("token-1");
+              localStorage.setItem("rexxdex", aToken);
+              return resx.json();
+            })
+            .then((resultr) => {
+              setOpened(false);
+              console.log(resultr);
+              const newCompul = [];
+              resultr.map((val) => {
+                // console.log(val);
+                let comp = result.filter((valx) => valx.courseID === val.id);
+                // console.log(val);
+                if (comp.length) {
+                  // console.log(comp);
+                  return null;
+                } else {
+                  // console.log(comp);
+                  newCompul.push(val);
+                }
+              });
+              console.log(newCompul);
+              // setCoursex(newCompul);
+              if (resultr !== []) {
+                const userInfo = JSON.parse(localStorage.getItem("user2"));
+                console.log(userInfo);
+                const student = userInfo.id;
+
+                const headers = miHeaders;
+                fetch(
+                  `${process.env.REACT_APP_SCHPROJECT_URL}/courseRegistration/getForStudent/${student}`,
+                  {
+                    headers,
+                  }
+                )
+                  .then(async (resz) => {
+                    const aToken = resz.headers.get("token-1");
+                    localStorage.setItem("rexxdex", aToken);
+                    return resz.json();
+                  })
+                  .then((resultrz) => {
+                    setOpened(false);
+                    console.log(resultrz);
+                    const newCompulx = [];
+                    resultrz.map((val) => {
+                      console.log(val);
+                      let comp = resultr.filter(
+                        (valx) => valx.id === val.courseID
+                      );
+                      console.log(comp);
+                      if (comp !== []) {
+                        console.log("comp");
+                        console.log(val);
+                        newCompulx.push(val);
+                        console.log("comp");
+                        console.log(newCompul);
+                      } else {
+                        return null;
+                        // console.log(comp);
+                      }
+                    });
+                    console.log(newCompulx);
+                    setElective(newCompulx);
+                    const newCompulxx = [];
+                    console.log(newCompulxx);
+                    const newCompulz = [];
+                    newCompul.map((val) => {
+                      // console.log(val);
+                      let comp = resultrz.filter(
+                        (valx) => valx.courseID === val.id
+                      );
+                      console.log(val);
+                      if (comp.length) {
+                        // console.log(comp);
+                        return null;
+                      } else {
+                        // console.log(comp);
+                        newCompulz.push(val);
+                      }
+                    });
+                    console.log(newCompulz);
+                    // setCoursex(newCompulz);
+                  })
+                  .catch((error) => {
+                    setOpened(false);
+                    Swal.fire({
+                      title: error.status,
+                      icon: "error",
+                      text: error.message,
+                    });
+                  });
+              }
+            })
+            .catch((error) => {
+              setOpened(false);
+              Swal.fire({
+                title: error.status,
+                icon: "error",
+                text: error.message,
+              });
+            });
+        }
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  }, []);
+  console.log(elective);
+
+  // useEffect(() => {
+  //   setOpened(true);
+
+  //   const userInfo = JSON.parse(localStorage.getItem("user2"));
+  //   console.log(userInfo);
+  //   const schID = userInfo.schoolID;
+  //   const queryString = window.location.search;
+  //   const urlParams = new URLSearchParams(queryString);
+  //   const idx = urlParams.get("id");
+
+  //   const headers = miHeaders;
+  //   fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/courses/gets/${schID}`, {
+  //     headers,
+  //   })
+  //     .then(async (res) => {
+  //       const aToken = res.headers.get("token-1");
+  //       localStorage.setItem("rexxdex", aToken);
+  //       return res.json();
+  //     })
+  //     .then((result) => {
+  //       setOpened(false);
+  //       console.log(result);
+  //       setCoursex(result);
+  //     })
+  //     .catch((error) => {
+  //       setOpened(false);
+  //       Swal.fire({
+  //         title: error.status,
+  //         icon: "error",
+  //         text: error.message,
+  //       });
+  //     });
+  // }, []);
+
+  const handleCheck = (event, inn) => {
+    if (event.target.checked) {
+      setOpened(true);
+      // console.log("checked", "courseID:", event.target.value);
+      coursex[inn].checked = true;
+      // console.log(coursex);
+      handleAdd(event.target.value);
+      setCoursex(coursex);
+      // setOpened(false);
+    } else {
+      console.log("unchecked", "courseID:", event.target.value);
+      setOpened(true);
+      // setTimeout(() => setOpened(false), 500);
+      console.log("checked", "courseID:", event.target.value);
+      coursex[inn].checked = false;
+      console.log(coursex);
+      handleRemove(event.target.value);
+      setCoursex(coursex);
+      // setOpened(false);
+    }
+    // var updatedList = [...checked];
+    // if (sessionx !== "") {
+    //   if (event.target.checked) {
+    //     updatedList = [...checked, event.target.value];
+    //   } else {
+    //     updatedList.splice(checked.indexOf(event.target.value), 1);
+    //   }
+    //   console.log(event.target.value);
+    //   console.log(event.target.checked);
+    //   setChecked(updatedList);
+    // } else {
+    //   Swal.fire({
+    //     title: "Empty_Textfield",
+    //     icon: "error",
+    //     text: "Please select session",
+    //   }).then(() => {
+    //     window.location.reload();
+    //   });
+    // }
+  };
+  const handleUnCheck = (event) => {
+    var updatedList = [...checked];
+    if (event.target.checked) {
+      updatedList = [...checked, event.target.value];
+    } else {
+      updatedList.splice(checked.indexOf(event.target.value), 1);
+    }
+    console.log(event.target.checked);
+    // handleUNCheck(event.target.value);
+    // setChecked(updatedList);
+  };
+
+  const handleOnChange = (value) => {
+    console.log(value);
+    setHeadOfDepart(value);
+    const userInfo = JSON.parse(localStorage.getItem("user2"));
+    console.log(userInfo);
+    const IDs = userInfo.schoolID;
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const idx = urlParams.get("id");
+    const headers = miHeaders;
+    setOpened(true);
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/courses/getByDepID/${value}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        console.log(result);
+        const every = [];
+        console.log(compulsory);
+        if (result !== []) {
+          // setItems(result);
+          for (let i = 0; i < result.length; i++) {
+            const selElec = elective.find((r) => r.courseID === result[i].id);
+            const selComp = compulsory.find((r) => r.courseID === result[i].id);
+
+            if (selElec !== undefined) {
+              every.push({ ...selElec, checked: true });
+            } else if (selComp !== undefined) {
+              // console.log(selComp);
+            } else {
+              every.push(result[i]);
+            }
+          }
+
+          setCoursex(every);
+          setOpened(false);
+          console.log("eeeeeeeee", every);
+        }
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+
+  const isChecked = (item) =>
+    checked.includes(item) ? "checked-item" : "not-checked-item";
+
   return (
     <>
-      <div>
-        <div className="container">
-          <div className="main-body">
-            <div className="row gutters-sm">
-              <div class="col-md-4 mb-3">
-                <div className="card">
-                  <div className="card-body">
-                    <div className="d-flex flex-column align-items-center text-center">
-                      {/* <img
-                        src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                        alt="Admin"
-                        className="rounded-circle"
-                        width="150"
-                      /> */}
-                      <img alt="..." src={require("assets/img/anime3.png")} />
-                      <div className="mt-3">
-                        <h4>
-                          {fname} {lname}
-                        </h4>
-                        <h4>{matric}</h4>
-                        <h4>{phonex}</h4>
-                      </div>
+      <div className="content">
+        <Paper elevation={8}>
+          <Card mx={2}>
+            <CardBody>
+              <Row>
+                <Col md="6" className="pl-md-1">
+                  <FormGroup>
+                    <label>Session</label>
+                    <Form.Select
+                      style={{ marginBottom: "20px" }}
+                      value={sessionx || ""}
+                      aria-label="Default select example"
+                      onChange={(e) => setSession(e.target.value)}
+                    >
+                      <option value="">--Sessions--</option>
+                      <option value="2019/2020">2019/2020</option>
+                      <option value="2020/2021">2020/2021</option>
+                      <option value="2021/2022">2021/2022</option>
+                      <option value="2022/2023">2022/2023</option>
+                      <option value="2023/2024">2023/2024</option>
+                      <option value="2024/2025">2024/2025</option>
+                      <option value="2025/2026">2025/2026</option>
+                      <option value="2026/2027">2026/2027</option>
+                      <option value="2027/2028">2027/2028</option>
+                      <option value="2028/2029">2028/2029</option>
+                      <option value="2029/2030">2029/2030</option>
+                      <option value="2030/2031">2030/2031</option>
+                      <option value="2031/2032">2031/2032</option>
+                      <option value="2032/2033">2032/2033</option>
+                      <option value="2033/2034">2033/2034</option>
+                      <option value="2034/2035">2034/2035</option>
+                      <option value="2035/2036">2035/2036</option>
+                      <option value="2036/2037">2036/2037</option>
+                      <option value="2037/2038">2037/2038</option>
+                      <option value="2037/2039">2037/2039</option>
+                      <option value="2039/2040">2039/2040</option>
+                    </Form.Select>
+                  </FormGroup>
+                </Col>{" "}
+              </Row>
+              <Row>
+                <Col md="4" className="pl-md-1">
+                  <Button
+                    tag="label"
+                    className="data1"
+                    color="secondary"
+                    style={{
+                      width: "45vw",
+                      fontSize: "15px",
+                      marginRight: "auto",
+                      marginLeft: "auto",
+                      // height: "50px",
+                      marginTop: "20px",
+                    }}
+                  >
+                    <Typography
+                      style={{ color: "white", fontSize: "1.5rem" }}
+                      variant="h5"
+                      className="head"
+                    >
+                      Compulsory Course:
+                    </Typography>
+                  </Button>
+                  <br />
+                  {compulsory.map((item, index) => (
+                    <div key={index}>
+                      <input
+                        value={item.id}
+                        type="checkbox"
+                        // onChange={"handleUnCheck"}
+                        checked={true}
+                        // disabled
+                      />
+                      &nbsp;
+                      <span className={isChecked(item.courseName)}>
+                        {item.courseName} (Compulsory)
+                      </span>{" "}
                     </div>
+                  ))}
+                </Col>
+                <Col md="3">
+                  <></>
+                </Col>
+                <Col md="4" className="pl-md-1">
+                  <Button
+                    tag="label"
+                    className="data1"
+                    color="secondary"
+                    style={{
+                      width: "35vw",
+                      fontSize: "15px",
+                      marginRight: "auto",
+                      marginLeft: "auto",
+                      // height: "50px",
+                      marginTop: "20px",
+                    }}
+                  >
+                    <Typography
+                      style={{ color: "white", fontSize: "1.5rem" }}
+                      variant="h5"
+                      className="head"
+                    >
+                      Elective Course:
+                    </Typography>
+                  </Button>
+                  <Col md="6" className="pl-md-1">
+                    <FormGroup>
+                      <label>Department</label>
+                      <Form.Select
+                        style={{ marginBottom: "20px" }}
+                        value={headOfDepart || ""}
+                        aria-label="Default select example"
+                        onChange={(e) => handleOnChange(e.target.value)}
+                      >
+                        <option value="">--Department--</option>
+                        {depart.map((apic) => (
+                          <option key={apic.id} value={apic.id}>
+                            {apic.name}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </FormGroup>
+                  </Col>{" "}
+                  {coursex.map((item, index) => (
+                    <div key={index}>
+                      <input
+                        value={item.courseID ? item.courseID : item.id}
+                        type="checkbox"
+                        onChange={(e) => handleCheck(e, index)}
+                        checked={item.checked ? true : false}
+                      />
+                      &nbsp;
+                      <span className={isChecked(item.name)}>
+                        {item.name ? item.name : item.courseName}
+                      </span>{" "}
+                    </div>
+                  ))}
+                  {/* {elective.map((item, index) => (
+                    <div key={index}>
+                      <input
+                        value={item.id}
+                        type="checkbox"
+                        onChange={handleUnCheck}
+                        checked={true}
+                      />
+                      &nbsp;
+                      <span className={isChecked(item.courseName)}>
+                        {item.courseName}
+                      </span>{" "}
+                    </div>
+                  ))} */}
+                </Col>
+                {/* <Col md="2">
+                  <></>
+                </Col> */}
+              </Row>
+              <Row>
+                <Button
+                  tag="label"
+                  className="data1"
+                  color="secondary"
+                  style={{
+                    width: "45vw",
+                    fontSize: "15px",
+                    marginRight: "auto",
+                    marginLeft: "auto",
+                    // height: "50px",
+                    marginTop: "20px",
+                  }}
+                >
+                  <Typography
+                    style={{ color: "white", fontSize: "1.5rem" }}
+                    variant="h5"
+                    className="head"
+                  >
+                    Total Course:
+                  </Typography>
+                </Button>
+                <label style={{ color: "red", marginTop: 10 }}>
+                  Note: This Shows all the courses to be taken by the student
+                </label>
+                <br />
+                {compulsory.map((item, index) => (
+                  <div key={index}>
+                    <input
+                      value={item.id}
+                      type="checkbox"
+                      onChange={"handleUnCheck"}
+                      checked={true}
+                    />
+                    &nbsp;
+                    <span className={isChecked(item.courseName)}>
+                      {item.courseName} (Compulsory)
+                    </span>{" "}
                   </div>
-                </div>
-              </div>
-              <div className="col-md-8">
-                <div className="card mb-3">
-                  <div className="card-body">
-                    <div className="row">
-                      <div className="col-sm-3">
-                        <h6 className="mb-0">Faculty</h6>
-                      </div>
-                      <div className="col-sm-9 ">
-                        <Form.Select
-                          style={{ marginBottom: "20px" }}
-                          value={levelx || ""}
-                          aria-label="Default select example"
-                          onChange={(e) => setLevelx(e.target.value)}
-                        >
-                          <option value="">--Level--</option>
-                          {levelss.map((apic) => (
-                            <option key={apic.id} value={apic.id}>
-                              {apic.name}
-                            </option>
-                          ))}
-                        </Form.Select>
-                        {/* <Input
-                          disabled
-                          placeholder="Faculty"
-                          value={faculty}
-                          type="text"
-                        /> */}
-                      </div>
-                    </div>
-                    <hr />
-                    <div className="row">
-                      <div className="col-sm-3">
-                        <h6 className="mb-0">Department</h6>
-                      </div>
-                      <div className="col-sm-9 ">
-                        <Form.Select
-                          style={{ marginBottom: "20px" }}
-                          value={headOfDepart || ""}
-                          aria-label="Default select example"
-                          onChange={(e) => setHeadOfDepart(e.target.value)}
-                        >
-                          <option value="">--Department--</option>
-                          {depart.map((apic) => (
-                            <option key={apic.id} value={apic.id}>
-                              {apic.name}
-                            </option>
-                          ))}
-                        </Form.Select>
-                        {/* <Input
-                          disabled
-                          placeholder="Faculty"
-                          value={department}
-                          type="text"
-                        /> */}
-                      </div>
-                    </div>
-                    <hr />
-
-                    {/* <div className="row">
-                      <div className="col-sm-3">
-                        <h6 className="mb-0">Course List</h6>
-                      </div>
-                      <div className="col-sm-9 text-secondary">
-                        <Form.Select
-                          style={{ marginBottom: "20px" }}
-                          value={""}
-                          disabled
-                          aria-label="Default select example"
-                          //   onChange={(e) => setSex(e.target.value)}
-                        >
-                          <option value="">--Select Sex--</option>
-                          <option value="Male">Male</option>
-                          <option value="Female">Female</option>
-                        </Form.Select>
-                      </div>
-                    </div> */}
-                    {/* <hr /> */}
-
-                    <div className="row">
-                      <div className="col-sm-12">
-                        <Button onClick={handleAdd}>Save</Button>
-                      </div>
-                    </div>
+                ))}
+                {elective.map((item, index) => (
+                  <div key={index}>
+                    <input
+                      value={item.id}
+                      type="checkbox"
+                      // onChange={handleUnCheck}
+                      checked={true}
+                    />
+                    &nbsp;
+                    <span className={isChecked(item.courseName)}>
+                      {item.courseName}
+                    </span>{" "}
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+                ))}
+              </Row>
+            </CardBody>
+          </Card>
+        </Paper>
       </div>
       <Backdrop
         sx={{ color: "white", zIndex: (theme) => theme.zIndex.drawer + 1 }}

@@ -15,6 +15,7 @@ import Swal from "sweetalert2";
 // import withReactContent from "sweetalert2-react-content";
 // import "../Css.css";
 // import { School } from "@mui/icons-material";
+import "./style.css";
 
 export default function ClassCourses() {
   const [open, setOpen] = React.useState(false);
@@ -23,7 +24,7 @@ export default function ClassCourses() {
   };
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState("");
   const [levels, setLevels] = useState("");
   const [description, setDescription] = useState("");
   const [opened, setOpened] = useState(false);
@@ -36,6 +37,10 @@ export default function ClassCourses() {
   const [course, setCourse] = useState("");
   // const [courseAdvisor, setCourseAdvisor] = useState("");
   const [coursex, setCoursex] = useState([]);
+  const [checked, setChecked] = useState([]);
+  const [compulsory, setCompulsory] = useState([]);
+  const [show, setShow] = useState(false);
+  const [sessionx, setSession] = useState("");
   // const [courseAdviserx, setCourseAdviserx] = useState([]);
 
   const style = {
@@ -50,38 +55,6 @@ export default function ClassCourses() {
     p: 4,
     textAlign: "center",
   };
-
-  useEffect(() => {
-    setOpened(true);
-    const userInfo = JSON.parse(localStorage.getItem("user"));
-    console.log(userInfo);
-    const schID = userInfo.schoolID;
-    const headers = miHeaders;
-    fetch(
-      `${process.env.REACT_APP_SCHPROJECT_URL}/courseAdvisers/gets/${schID}`,
-      {
-        headers,
-      }
-    )
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        setOpened(false);
-        console.log(result);
-        setItems(result);
-      })
-      .catch((error) => {
-        setOpened(false);
-        Swal.fire({
-          title: error.status,
-          icon: "error",
-          text: error.message,
-        });
-      });
-  }, []);
 
   const handleUpdate = (val) => {
     console.log(val);
@@ -151,69 +124,8 @@ export default function ClassCourses() {
         });
       });
   };
-  const handleDelete = (val) => {
-    console.log(val);
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const requestOptions = {
-          method: "DELETE",
-          headers: miHeaders,
-        };
 
-        fetch(
-          `${process.env.REACT_APP_SCHPROJECT_URL}/courseAdvisers/delete/${val}`,
-          requestOptions
-        )
-          .then(async (res) => {
-            const aToken = res.headers.get("token-1");
-            localStorage.setItem("rexxdex", aToken);
-            const resultres = await res.text();
-            if (
-              resultres === null ||
-              resultres === undefined ||
-              resultres === ""
-            ) {
-              return {};
-            }
-            return JSON.parse(resultres);
-          })
-          .then((result) => {
-            if (result.status === "SUCCESS") {
-              Swal.fire({
-                title: result.status,
-                type: "success",
-                text: result.message,
-              }).then(() => {
-                window.location.reload();
-              });
-            } else {
-              Swal.fire({
-                title: result.status,
-                type: "error",
-                text: result.message,
-              });
-            }
-          })
-          .catch((error) => {
-            Swal.fire({
-              title: error.status,
-              type: "error",
-              text: error.message,
-            });
-          });
-      }
-    });
-  };
-
-  const handleAdd = () => {
+  const handleAdd = (value) => {
     const userInfo = JSON.parse(localStorage.getItem("user"));
     console.log(userInfo);
     const schID = userInfo.schoolID;
@@ -221,18 +133,22 @@ export default function ClassCourses() {
     const urlParams = new URLSearchParams(queryString);
     const idx = urlParams.get("id");
 
-    const raw = JSON.stringify({
-      schoolID: schID,
-      depID: headOfDepart,
-      levelID: levelx,
-      courseID: course,
-      courseAdviserID: idx,
+    const raw = JSON.stringify([
+      {
+        schoolID: schID,
+        depID: items[0].depID,
+        levelID: items[0].levelID,
+        courseID: value,
+        courseAdviserID: idx,
+        facultyID: items[0].facultyID,
+        session: sessionx,
 
-      // schoolID: schID,
-      // depID: headOfDepart,
-      // levelID: levelx,
-      // staffID: staff,
-    });
+        // schoolID: schID,
+        // depID: headOfDepart,
+        // levelID: levelx,
+        // staffID: staff,
+      },
+    ]);
     console.log(raw);
     const requestOptions = {
       method: "POST",
@@ -242,7 +158,50 @@ export default function ClassCourses() {
     };
     setOpened(true);
     fetch(
-      `${process.env.REACT_APP_SCHPROJECT_URL}/classCourses/add`,
+      `${process.env.REACT_APP_SCHPROJECT_URL}/classCourses/addMultiple`,
+      requestOptions
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        if (result.status === "SUCCESS") {
+          Swal.fire({
+            title: result.status,
+            icon: "success",
+            text: result.message,
+          }).then(() => {
+            window.location.reload();
+          });
+        } else {
+          Swal.fire({
+            title: result.status,
+            icon: "error",
+            text: result.message,
+          });
+        }
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+  const handleUNCheck = (value) => {
+    const requestOptions = {
+      method: "DELETE",
+      headers: miHeaders,
+    };
+    setOpened(true);
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/classCourses/delete/${value}`,
       requestOptions
     )
       .then(async (res) => {
@@ -279,56 +238,117 @@ export default function ClassCourses() {
       });
   };
 
-  useEffect(() => {
-    setOpened(true);
-
-    const userInfo = JSON.parse(localStorage.getItem("user"));
-    const schID = userInfo.schoolID;
-    const headers = miHeaders;
-    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/courses/gets/${schID}`, {
-      headers,
-    })
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        setOpened(false);
-        console.log(result);
-        setCoursex(result);
-      })
-      .catch((error) => {
-        setOpened(false);
-        Swal.fire({
-          title: error.status,
-          icon: "error",
-          text: error.message,
-        });
-      });
-  }, []);
-
   // useEffect(() => {
   //   setOpened(true);
+
   //   const userInfo = JSON.parse(localStorage.getItem("user"));
   //   console.log(userInfo);
   //   const schID = userInfo.schoolID;
+  //   const queryString = window.location.search;
+  //   const urlParams = new URLSearchParams(queryString);
+  //   const idx = urlParams.get("id");
+
   //   const headers = miHeaders;
-  //   fetch(
-  //     `${process.env.REACT_APP_SCHPROJECT_URL}/courseAdvisers/gets/${schID}`,
-  //     {
-  //       headers,
-  //     }
-  //   )
+  //   fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/courses/gets/${schID}`, {
+  //     headers,
+  //   })
   //     .then(async (res) => {
   //       const aToken = res.headers.get("token-1");
   //       localStorage.setItem("rexxdex", aToken);
   //       return res.json();
   //     })
-  //     .then((result) => {
+  //     .then((resultr) => {
   //       setOpened(false);
-  //       console.log(result);
-  //       setCourseAdviserx(result);
+  //       console.log(resultr);
+  //       const queryString = window.location.search;
+  //       const urlParams = new URLSearchParams(queryString);
+  //       const idx = urlParams.get("id");
+  //       const headers = miHeaders;
+  //       fetch(
+  //         `${process.env.REACT_APP_SCHPROJECT_URL}/courseAdvisers/getByIds/${idx}`,
+  //         {
+  //           headers,
+  //         }
+  //       )
+  //         .then(async (res) => {
+  //           const aToken = res.headers.get("token-1");
+  //           localStorage.setItem("rexxdex", aToken);
+  //           return res.json();
+  //         })
+  //         .then((result) => {
+  //           setOpened(false);
+  //           console.log(result);
+  //           const userInfo = JSON.parse(localStorage.getItem("user"));
+  //           console.log(userInfo);
+  //           if (result[0].staffID !== userInfo.id) {
+  //             Swal.fire({
+  //               title: "Access_Denied",
+  //               icon: "error",
+  //               text: "You are not the Course Advisor for this course",
+  //             }).then(() => {
+  //               Navigate("/courseAdvisor");
+  //             });
+  //           }
+  //           if (result !== []) {
+  //             setItems(result);
+  //             const levelID = result[0].levelID;
+  //             const depID = result[0].depID;
+  //             fetch(
+  //               `${process.env.REACT_APP_SCHPROJECT_URL}/classCourses/getForClass/${levelID}/${depID}`,
+  //               {
+  //                 headers,
+  //               }
+  //             )
+  //               .then(async (res) => {
+  //                 const aToken = res.headers.get("token-1");
+  //                 localStorage.setItem("rexxdex", aToken);
+  //                 return res.json();
+  //               })
+  //               .then((result) => {
+  //                 setOpened(false);
+  //                 const newCompul = [];
+  //                 console.log(result);
+  //                 if (result.length !== 0) {
+  //                   console.log(result);
+  //                   setShow(true);
+  //                 }
+  //                 resultr.map((val) => {
+  //                   // console.log(val);
+  //                   let comp = result.filter(
+  //                     (valx) => valx.courseID === val.id
+  //                   );
+  //                   // console.log(val);
+  //                   if (comp.length) {
+  //                     // console.log(comp);
+  //                     return null;
+  //                   } else {
+  //                     // console.log(comp);
+  //                     newCompul.push(val);
+  //                   }
+  //                 });
+  //                 console.log(newCompul);
+  //                 // setCoursex(newCompul);
+  //                 setCompulsory(result);
+  //                 console.log(newCompul);
+  //               })
+  //               .catch((error) => {
+  //                 setOpened(false);
+  //                 Swal.fire({
+  //                   title: error.status,
+  //                   icon: "error",
+  //                   text: error.message,
+  //                 });
+  //               });
+  //           }
+  //         })
+  //         .catch((error) => {
+  //           setOpened(false);
+  //           Swal.fire({
+  //             title: error.status,
+  //             icon: "error",
+  //             text: error.message,
+  //           });
+  //         });
   //     })
   //     .catch((error) => {
   //       setOpened(false);
@@ -339,35 +359,6 @@ export default function ClassCourses() {
   //       });
   //     });
   // }, []);
-
-  useEffect(() => {
-    setOpened(true);
-    const userInfo = JSON.parse(localStorage.getItem("user"));
-    console.log(userInfo);
-    const schID = userInfo.schoolID;
-    const headers = miHeaders;
-    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/levels/gets/${schID}`, {
-      headers,
-    })
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        setOpened(false);
-        console.log(result);
-        setLevelsss(result);
-      })
-      .catch((error) => {
-        setOpened(false);
-        Swal.fire({
-          title: error.status,
-          icon: "error",
-          text: error.message,
-        });
-      });
-  }, []);
 
   useEffect(() => {
     setOpened(true);
@@ -398,6 +389,303 @@ export default function ClassCourses() {
       });
   }, []);
 
+  const handleOnChange = (value) => {
+    console.log(value);
+    setHeadOfDepart(value);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const IDs = userInfo.courseAdviserID;
+    console.log(IDs);
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const idx = urlParams.get("id");
+    console.log(idx);
+    const headers = miHeaders;
+
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/courses/getByDepID/${value}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        // setCoursex(result);
+        console.log(compulsory);
+        // setDepart(result);
+        // setCoursex(newCompul);
+        // setCompulsory(result);
+        if (result.length) {
+          // setItems(result);
+          fetch(
+            `${process.env.REACT_APP_SCHPROJECT_URL}/courseAdvisers/getByIds/${IDs}`,
+            {
+              headers,
+            }
+          )
+            .then(async (res) => {
+              const aToken = res.headers.get("token-1");
+              localStorage.setItem("rexxdex", aToken);
+              return res.json();
+            })
+            .then((resultl) => {
+              setOpened(false);
+              console.log(resultl);
+              const userInfo = JSON.parse(localStorage.getItem("user2"));
+              console.log(userInfo);
+              // if (result[0].staffID !== userInfo.id) {
+              //   Swal.fire({
+              //     title: "Access_Denied",
+              //     icon: "error",
+              //     text: "You are not the Course Advisor for this course",
+              //   }).then(() => {
+              //     Navigate("/courseAdvisor");
+              //   });
+              // }
+              if (resultl.length) {
+                // setItems(resultl);
+                const levelID = resultl[0].levelID;
+                const depID = resultl[0].depID;
+                fetch(
+                  `${process.env.REACT_APP_SCHPROJECT_URL}/classCourses/getForClass/${levelID}/${depID}`,
+                  {
+                    headers,
+                  }
+                )
+                  .then(async (res) => {
+                    const aToken = res.headers.get("token-1");
+                    localStorage.setItem("rexxdex", aToken);
+                    return res.json();
+                  })
+                  .then((resultc) => {
+                    setOpened(false);
+                    const newCompul = [];
+                    const compdep = resultc.filter(
+                      (val) => val.depID === value
+                    );
+
+                    console.log(compdep);
+                    if (resultc.length !== 0) {
+                      console.log(resultc);
+                      setShow(true);
+                    }
+                    result.map((val) => {
+                      // console.log(val);
+                      let comp = compdep.filter(
+                        (valx) => valx.courseID === val.id
+                      );
+                      // console.log(val);
+                      if (comp.length) {
+                        // console.log(comp);
+                        return null;
+                      } else {
+                        // console.log(comp);
+                        newCompul.push(val);
+                      }
+                    });
+                    setCompulsory(resultc);
+                    console.log(newCompul);
+                    setCoursex(newCompul);
+                    console.log(newCompul);
+                  })
+                  .catch((error) => {
+                    setOpened(false);
+                    Swal.fire({
+                      title: error.status,
+                      icon: "error",
+                      text: error.message,
+                    });
+                  });
+              }
+            })
+            .catch((error) => {
+              setOpened(false);
+              Swal.fire({
+                title: error.status,
+                icon: "error",
+                text: error.message,
+              });
+            });
+        }
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+  // useEffect(() => {
+  //   setOpened(true);
+  //   // const userInfo = JSON.parse(localStorage.getItem("user"));
+  //   // console.log(userInfo);
+  //   // const schID = userInfo.schoolID;
+  //   const queryString = window.location.search;
+  //   const urlParams = new URLSearchParams(queryString);
+  //   const idx = urlParams.get("id");
+  //   const headers = miHeaders;
+  //   fetch(
+  //     `${process.env.REACT_APP_SCHPROJECT_URL}/courseAdvisers/getByIds/${idx}`,
+  //     {
+  //       headers,
+  //     }
+  //   )
+  //     .then(async (res) => {
+  //       const aToken = res.headers.get("token-1");
+  //       localStorage.setItem("rexxdex", aToken);
+  //       return res.json();
+  //     })
+  //     .then((result) => {
+  //       setOpened(false);
+  //       console.log(result);
+  //       const userInfo = JSON.parse(localStorage.getItem("user"));
+  //       console.log(userInfo);
+  //       if (result[0].staffID !== userInfo.id) {
+  //         Swal.fire({
+  //           title: "Access_Denied",
+  //           icon: "error",
+  //           text: "You are not the Course Advisor for this course",
+  //         }).then(() => {
+  //           Navigate("/courseAdvisor");
+  //         });
+  //       }
+  //       if (result !== []) {
+  //         setItems(result);
+  //         const levelID = result[0].levelID;
+  //         const depID = result[0].depID;
+  //         fetch(
+  //           `${process.env.REACT_APP_SCHPROJECT_URL}/classCourses/getForClass/${levelID}/${depID}`,
+  //           {
+  //             headers,
+  //           }
+  //         )
+  //           .then(async (res) => {
+  //             const aToken = res.headers.get("token-1");
+  //             localStorage.setItem("rexxdex", aToken);
+  //             return res.json();
+  //           })
+  //           .then((result) => {
+  //             setOpened(false);
+  //             const newCompul = [];
+  //             console.log(result);
+  //             if (result.length !== 0) {
+  //               console.log(result);
+  //               setShow(true);
+  //               coursex.map((val) => {
+  //                 let comp = result.filter((valx) => valx.courseID === val.id);
+  //                 console.log(comp);
+  //                 console.log(val);
+  //                 if (comp) {
+  //                   return null;
+  //                 } else {
+  //                   newCompul.push(val);
+  //                 }
+  //               });
+  //               setCoursex(newCompul);
+  //               setCompulsory(result);
+  //               console.log(newCompul);
+  //             }
+  //           })
+  //           .catch((error) => {
+  //             setOpened(false);
+  //             Swal.fire({
+  //               title: error.status,
+  //               icon: "error",
+  //               text: error.message,
+  //             });
+  //           });
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       setOpened(false);
+  //       Swal.fire({
+  //         title: error.status,
+  //         icon: "error",
+  //         text: error.message,
+  //       });
+  //     });
+  // }, []);
+
+  const handleCheck = (event) => {
+    var updatedList = [...checked];
+    if (event.target.checked) {
+      updatedList = [...checked, event.target.value];
+      handleAdd(event.target.value);
+    } else {
+      updatedList.splice(checked.indexOf(event.target.value), 1);
+    }
+    console.log(event.target.value);
+    console.log(event.target.checked);
+    setChecked(updatedList);
+  };
+  const handleUnCheck = (event) => {
+    var updatedList = [...checked];
+    if (event.target.checked) {
+      updatedList = [...checked, event.target.value];
+    } else {
+      updatedList.splice(checked.indexOf(event.target.value), 1);
+    }
+    console.log(event.target.checked);
+    handleUNCheck(event.target.value);
+    // setChecked(updatedList);
+  };
+  console.log(show);
+
+  // useEffect(() => {
+  //   setOpened(true);
+  //   const levelID = items[0].levelID;
+  //   const depID = items[0].depID;
+  //   const headers = miHeaders;
+  //   fetch(
+  //     `${process.env.REACT_APP_SCHPROJECT_URL}/classCourses/getForClass/${levelID}/${depID}`,
+  //     {
+  //       headers,
+  //     }
+  //   )
+  //     .then(async (res) => {
+  //       const aToken = res.headers.get("token-1");
+  //       localStorage.setItem("rexxdex", aToken);
+  //       return res.json();
+  //     })
+  //     .then((result) => {
+  //       setOpened(false);
+  //       console.log(result);
+  //       if (result !== []) {
+  //         setShow(true);
+  //         setCompulsory(result);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       setOpened(false);
+  //       Swal.fire({
+  //         title: error.status,
+  //         icon: "error",
+  //         text: error.message,
+  //       });
+  //     });
+  // }, []);
+
+  // Generate string of checked items
+  const checkedItems = checked.length
+    ? checked.reduce((total, item) => {
+        return total + ", " + item;
+      })
+    : "";
+
+  const checkList = coursex;
+  console.log(checkList);
+
+  const isChecked = (item) =>
+    checked.includes(item) ? "checked-item" : "not-checked-item";
+
   return (
     <div className="content">
       <Paper elevation={8}>
@@ -420,20 +708,85 @@ export default function ClassCourses() {
               variant="h5"
               className="head"
             >
-              Class Course
+              Select Compulsory Course
             </Typography>
           </Button>
+          {/* <div className="title">Courses:</div> */}
+
+          {/* <div className="list-container"> */}
+          {/* <div className="row">
+            <div className="col-sm-5">
+              {checkList.map((item, index) => (
+                <div key={index}> */}
+          {/* <input value={item.id} type="checkbox" /> &nbsp;
+                <span className={isChecked(item.name)}>{item.name}</span> */}
+          {/* <input
+                    value={item.id}
+                    type="checkbox"
+                    onChange={handleCheck}
+                  />
+                  &nbsp;
+                  <span>{item.name}</span>
+                </div>
+              ))}
+            </div>
+            <div className="col-sm-2" style={{ backgroundColor: "#offwhite" }}>
+              <></>
+            </div>
+            <Typography variant="h5">Compulsory Courses:</Typography>
+            <div className="col-sm-5">
+              {checkList.map((item, index) => (
+                <div key={index}>
+                  {/* <input value={item.id} type="checkbox" /> &nbsp;
+                <span className={isChecked(item.name)}>{item.name}</span> */}
+          {/* <input
+                    value={item.id}
+                    type="checkbox"
+                    onChange={handleCheck}
+                  />
+                  &nbsp;
+                  <span>{item.name}</span>
+                </div>
+              ))}
+            </div>
+          </div> */}
+          {/* </div> */}
           <CardBody>
-            {/* <School
-              sx={{
-                fontSize: 230,
-                marginLeft: "auto",
-                marginRight: "auto",
-                display: "flex",
-              }}
-            />
-            <br /> */}
             <Row>
+              <Col md="6" className="pl-md-1">
+                <FormGroup>
+                  <label>Session</label>
+                  <Form.Select
+                    style={{ marginBottom: "20px" }}
+                    value={sessionx || ""}
+                    aria-label="Default select example"
+                    onChange={(e) => setSession(e.target.value)}
+                  >
+                    <option value="">--Sessions--</option>
+                    <option value="2019/2020">2019/2020</option>
+                    <option value="2020/2021">2020/2021</option>
+                    <option value="2021/2022">2021/2022</option>
+                    <option value="2022/2023">2022/2023</option>
+                    <option value="2023/2024">2023/2024</option>
+                    <option value="2024/2025">2024/2025</option>
+                    <option value="2025/2026">2025/2026</option>
+                    <option value="2026/2027">2026/2027</option>
+                    <option value="2027/2028">2027/2028</option>
+                    <option value="2028/2029">2028/2029</option>
+                    <option value="2029/2030">2029/2030</option>
+                    <option value="2030/2031">2030/2031</option>
+                    <option value="2031/2032">2031/2032</option>
+                    <option value="2032/2033">2032/2033</option>
+                    <option value="2033/2034">2033/2034</option>
+                    <option value="2034/2035">2034/2035</option>
+                    <option value="2035/2036">2035/2036</option>
+                    <option value="2036/2037">2036/2037</option>
+                    <option value="2037/2038">2037/2038</option>
+                    <option value="2037/2039">2037/2039</option>
+                    <option value="2039/2040">2039/2040</option>
+                  </Form.Select>
+                </FormGroup>
+              </Col>{" "}
               <Col md="6" className="pl-md-1">
                 <FormGroup>
                   <label>Department</label>
@@ -441,7 +794,7 @@ export default function ClassCourses() {
                     style={{ marginBottom: "20px" }}
                     value={headOfDepart || ""}
                     aria-label="Default select example"
-                    onChange={(e) => setHeadOfDepart(e.target.value)}
+                    onChange={(e) => handleOnChange(e.target.value)}
                   >
                     <option value="">--Department--</option>
                     {depart.map((apic) => (
@@ -452,136 +805,97 @@ export default function ClassCourses() {
                   </Form.Select>
                 </FormGroup>
               </Col>{" "}
-              <Col md="6" className="pl-md-1">
-                <FormGroup>
-                  <label>Level</label>
-                  <Form.Select
-                    style={{ marginBottom: "20px" }}
-                    value={levelx || ""}
-                    aria-label="Default select example"
-                    onChange={(e) => setLevelx(e.target.value)}
-                  >
-                    <option value="">--Level--</option>
-                    {levelss.map((apic) => (
-                      <option key={apic.id} value={apic.id}>
-                        {apic.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </FormGroup>
-              </Col>{" "}
             </Row>
-            <Row>
-              <Col md="6" className="pl-md-1">
-                <FormGroup>
-                  <label>Course</label>
-                  <Form.Select
-                    style={{ marginBottom: "20px" }}
-                    value={course || ""}
-                    aria-label="Default select example"
-                    onChange={(e) => setCourse(e.target.value)}
-                  >
-                    <option value="">--Select Course--</option>
-                    {coursex.map((apic) => (
-                      <option key={apic.id} value={apic.id}>
-                        {apic.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </FormGroup>
-              </Col>{" "}
-              {/* <Col md="6" className="pl-md-1">
-                <FormGroup>
-                  <label>Level</label>
-                  <Form.Select
-                    style={{ marginBottom: "20px" }}
-                    value={courseAdvisor || ""}
-                    aria-label="Default select example"
-                    onChange={(e) => setCourseAdvisor(e.target.value)}
-                  >
-                    <option value="">--Select Course Advisor--</option>
-                    {courseAdviserx.map((apic) => (
-                      <option key={apic.id} value={apic.id}>
-                        {apic.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </FormGroup>
-              </Col>{" "} */}
-            </Row>
-            <Button
-              variant="gradient"
-              style={{
-                marginLeft: "auto",
-                marginRight: "auto",
-                display: "flex",
-                marginTop: "20px",
-              }}
-              color="info"
-              onClick={() => handleAdd()}
-            >
-              Add Level
-            </Button>
+            <div class="container">
+              <div class="row">
+                <div class="col-sm">
+                  <Typography variant="h5">Courses:</Typography> <br />
+                  {checkList.map((item, index) => (
+                    <div key={index}>
+                      {/* <input value={item.id} type="checkbox" /> &nbsp;
+                <span className={isChecked(item.name)}>{item.name}</span> */}
+                      <input
+                        value={item.id}
+                        type="checkbox"
+                        onChange={handleCheck}
+                        // checked={item.selected}
+                      />
+                      &nbsp;
+                      <span className={isChecked(item.courseCode)}>
+                        {item.courseCode}
+                      </span>
+                    </div>
+                  ))}
+                  {compulsory.map((item, index) => (
+                    <div key={index}>
+                      {/* <input value={item.id} type="checkbox" /> &nbsp;
+              <span className={isChecked(item.name)}>{item.name}</span> */}
+                      <input
+                        value={item.id}
+                        type="checkbox"
+                        onChange={handleUnCheck}
+                        checked={true}
+                      />
+                      &nbsp;
+                      <span className={isChecked(item.courseName)}>
+                        {item.courseCode}
+                      </span>{" "}
+                    </div>
+                  ))}
+                  {/* <Button
+                  variant="gradient"
+                  style={{
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                    display: "flex",
+                    marginTop: "20px",
+                  }}
+                  color="info"
+                  onClick={() => handleAdd()}
+                >
+                  Save
+                </Button> */}
+                </div>
+                {/* {!show ? (
+                  <></>
+                ) : (
+                  <div class="col-sm">
+                    <Typography variant="h5">Compulsory Courses:</Typography>{" "}
+                    <br /> */}
+                {/* <Button
+                  variant="gradient"
+                  style={{
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                    display: "flex",
+                    marginTop: "20px",
+                  }}
+                  color="info"
+                  onClick={() => handleAdd()}
+                >
+                  Remove
+                </Button> */}
+                {/* </div>
+                )} */}
+              </div>
+            </div>
           </CardBody>
+
+          {/* <Button
+            variant="gradient"
+            style={{
+              marginLeft: "auto",
+              marginRight: "auto",
+              display: "flex",
+              marginTop: "20px",
+            }}
+            color="info"
+            onClick={() => handleAdd()}
+          >
+            Save
+          </Button> */}
         </Card>
       </Paper>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Row>
-            <Col className="pl-md-1" md="6">
-              <FormGroup>
-                <label>Level</label>
-                <Input
-                  onChange={(e) => {
-                    setLevels(e.target.value);
-                  }}
-                  // defaultValue={`${data11.firstName}`}
-                  placeholder="Level"
-                  value={levels}
-                  //   disabled
-                  type="text"
-                />
-              </FormGroup>
-            </Col>
-            <Col className="pl-md-1" md="6">
-              <FormGroup>
-                <label>Description</label>
-                <Input
-                  onChange={(e) => {
-                    setDescriptionx(e.target.value);
-                  }}
-                  // defaultValue={`${data11.lastName}`}
-                  placeholder="description"
-                  //   onChange={() => console.log()}
-                  type="textarea"
-                  // value={String(items[0]?.verificationComment)}
-                  // disabled
-                />
-              </FormGroup>
-            </Col>
-          </Row>
-          <Box mt={8}>
-            <Button
-              variant="gradient"
-              style={{
-                marginLeft: "auto",
-                marginRight: "auto",
-                display: "flex",
-              }}
-              color="info"
-              onClick={() => handleUpdate()}
-            >
-              Update
-            </Button>
-          </Box>
-          <br />
-        </Box>
-      </Modal>
       <Backdrop
         sx={{ color: "white", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={opened}

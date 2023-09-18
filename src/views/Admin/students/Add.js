@@ -37,6 +37,9 @@ export default function StudentAdd() {
   const [faculty, setFaculty] = useState("");
   const [department, setDepartment] = useState("");
   const [oName, setOName] = useState("");
+  const [levelx, setLevelx] = useState("");
+  const [level, setLevel] = useState([]);
+
   useEffect(() => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
@@ -67,6 +70,7 @@ export default function StudentAdd() {
         });
       });
   }, []);
+
   const handleDepartment = (w) => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
@@ -113,6 +117,7 @@ export default function StudentAdd() {
       depID: department,
       facultyID: faculty,
       matricNumber: matric,
+      levelID: levelx,
       // studentType: Number(type),
     });
     console.log(raw2);
@@ -209,6 +214,36 @@ export default function StudentAdd() {
         });
       });
   };
+
+  useEffect(() => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/levels/gets/${schID}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setLevel(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  }, []);
+
   return (
     <div className="content">
       <Card mx={2}>
@@ -420,7 +455,7 @@ export default function StudentAdd() {
                 />
               </FormGroup>
             </Col>
-            <Col md="6" className="pl-md-1">
+            <Col md="4" className="pl-md-1">
               <FormGroup>
                 <label>Matric Number</label>
                 <Input
@@ -436,6 +471,24 @@ export default function StudentAdd() {
                   Password to the student's profile will be the first name /
                   matric number : {fname}/{matric}
                 </label>
+              </FormGroup>
+            </Col>
+            <Col md="4" className="pl-md-1">
+              <FormGroup>
+                <label>Level</label>
+                <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  value={levelx || ""}
+                  aria-label="Default select example"
+                  onChange={(e) => setLevelx(e.target.value)}
+                >
+                  <option value="">--Select Level--</option>
+                  {level.map((apic) => (
+                    <option key={apic.id} value={apic.id}>
+                      {apic.name}
+                    </option>
+                  ))}
+                </Form.Select>
               </FormGroup>
             </Col>
           </Row>

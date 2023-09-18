@@ -34,6 +34,8 @@ export default function CourseAdvisor() {
   const [headOfDepart, setHeadOfDepart] = useState("");
   const [getAllStaff, setGetAllStaff] = useState([]);
   const [staff, setStaff] = useState("");
+  const [fac, setFac] = useState([]);
+  const [facultyx, setFaculty] = useState("");
 
   const style = {
     position: "absolute",
@@ -220,6 +222,7 @@ export default function CourseAdvisor() {
       depID: headOfDepart,
       levelID: levelx,
       staffID: staff,
+      facultyID: facultyx,
     });
     console.log(raw);
     const requestOptions = {
@@ -355,6 +358,35 @@ export default function CourseAdvisor() {
       });
   }, []);
 
+  useEffect(() => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/faculties/gets/${schID}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setFac(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  }, []);
+
   return (
     <div className="content">
       <Paper elevation={8}>
@@ -447,6 +479,24 @@ export default function CourseAdvisor() {
                   </Form.Select>
                 </FormGroup>
               </Col>{" "}
+              <Col md="6" className="pl-md-1">
+                <FormGroup>
+                  <label>Faculty</label>
+                  <Form.Select
+                    style={{ marginBottom: "20px" }}
+                    value={facultyx || ""}
+                    aria-label="Default select example"
+                    onChange={(e) => setFaculty(e.target.value)}
+                  >
+                    <option value="">--Faculty--</option>
+                    {fac.map((apic) => (
+                      <option key={apic.id} value={apic.id}>
+                        {apic.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </FormGroup>
+              </Col>{" "}
             </Row>
             <Button
               variant="gradient"
@@ -459,7 +509,7 @@ export default function CourseAdvisor() {
               color="info"
               onClick={() => handleAdd()}
             >
-              Add Level
+              Add Course Advisor
             </Button>
           </CardBody>
         </Card>
@@ -522,63 +572,6 @@ export default function CourseAdvisor() {
           rows: items,
         }}
       />
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Row>
-            <Col className="pl-md-1" md="6">
-              <FormGroup>
-                <label>Level</label>
-                <Input
-                  onChange={(e) => {
-                    setLevels(e.target.value);
-                  }}
-                  // defaultValue={`${data11.firstName}`}
-                  placeholder="Level"
-                  value={levels}
-                  //   disabled
-                  type="text"
-                />
-              </FormGroup>
-            </Col>
-            <Col className="pl-md-1" md="6">
-              <FormGroup>
-                <label>Description</label>
-                <Input
-                  onChange={(e) => {
-                    setDescriptionx(e.target.value);
-                  }}
-                  // defaultValue={`${data11.lastName}`}
-                  placeholder="description"
-                  //   onChange={() => console.log()}
-                  type="textarea"
-                  // value={String(items[0]?.verificationComment)}
-                  // disabled
-                />
-              </FormGroup>
-            </Col>
-          </Row>
-          <Box mt={8}>
-            <Button
-              variant="gradient"
-              style={{
-                marginLeft: "auto",
-                marginRight: "auto",
-                display: "flex",
-              }}
-              color="info"
-              onClick={() => handleUpdate()}
-            >
-              Update
-            </Button>
-          </Box>
-          <br />
-        </Box>
-      </Modal>
       <Backdrop
         sx={{ color: "white", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={opened}

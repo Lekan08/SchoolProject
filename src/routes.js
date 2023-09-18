@@ -74,6 +74,7 @@ import StudentResult from "views/Student/student-Result";
 import SeeResult from "views/Student/student-Result/seeResult";
 import Transcript from "views/Student/student-Result/transcript";
 import CollegeUpdate from "views/Admin/college/update";
+// import ClassCourses from "views/Admin/courseAdvisor/classCourses";
 
 import CompleteResetPassword from "views/authentication/complete-resetPassword";
 
@@ -109,13 +110,13 @@ var routes = [
   //   component: Registration,
   //   admin: true,
   // },
-  {
-    path: "/dashboard",
-    name: "Admin Dashboard",
-    icon: "dashboard",
-    component: Dashboard,
-    admin: true,
-  },
+  // {
+  //   path: "/dashboard",
+  //   name: "Admin Dashboard",
+  //   icon: "dashboard",
+  //   component: Dashboard,
+  //   admin: true,
+  // },
   // {
   //   path: "/schoolInformation",
   //   // name: "Admin Dashboard",
@@ -258,10 +259,11 @@ var routes = [
   },
   {
     path: "/courseAdvisor/classCourses",
-    // name: "courses",
-    // icon: "menu_book",s
+    name: "Class Course",
+    icon: "menu_book",
     component: ClassCourses,
-    redirect: true,
+    admin: true,
+    // redirect: true,
   },
   {
     path: "/courseAdvisor",
@@ -482,6 +484,7 @@ var routes = [
     icon: "dashboard",
     component: DashboardStudent,
     admin: false,
+    redirect: true,
   },
   {
     path: "/student-profile-update",
@@ -503,6 +506,7 @@ var routes = [
     icon: "account_circle",
     component: StudentProfile,
     admin: false,
+    redirect: true,
   },
   {
     path: "/studentresult",
