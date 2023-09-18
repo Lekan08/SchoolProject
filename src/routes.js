@@ -70,6 +70,9 @@ import ResultAdd from "views/Admin/result/add";
 import ResultMultiple from "views/Admin/result/multiple";
 import GradingUpdate from "views/Admin/grading/update";
 import College from "views/Admin/college";
+import StudentResult from "views/Student/student-Result";
+import SeeResult from "views/Student/student-Result/seeResult";
+import Transcript from "views/Student/student-Result/transcript";
 import CollegeUpdate from "views/Admin/college/update";
 
 import CompleteResetPassword from "views/authentication/complete-resetPassword";
@@ -500,6 +503,25 @@ var routes = [
     icon: "account_circle",
     component: StudentProfile,
     admin: false,
+  },
+  {
+    path: "/studentresult",
+    name: " Result",
+    icon: "how_to_reg",
+    component: StudentResult,
+    admin: false,
+  },
+  {
+    path: "/studentseeResult",
+    name: "Student Result",
+    icon: "how_to_reg",
+    component: SeeResult,
+  },
+  {
+    path: "/studenttranscript",
+    name: "Student Transcript",
+    icon: "how_to_reg",
+    component: Transcript,
   },
 ];
 export default routes;
