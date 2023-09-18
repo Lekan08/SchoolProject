@@ -65,6 +65,9 @@ import CourseAdvisorUpdate from "views/Admin/courseAdvisor/update";
 import ClassCourses from "views/Admin/courseAdvisor/classCourses";
 import Grading from "views/Admin/grading";
 import Result from "views/Admin/result";
+import ResultUpdate from "views/Admin/result/update";
+import ResultAdd from "views/Admin/result/add";
+import ResultMultiple from "views/Admin/result/multiple";
 import GradingUpdate from "views/Admin/grading/update";
 import College from "views/Admin/college";
 import CollegeUpdate from "views/Admin/college/update";
@@ -288,6 +291,27 @@ var routes = [
     admin: true,
   },
   {
+    path: "/result/update",
+    name: "Result Update",
+    icon: "menu_book",
+    component: ResultUpdate,
+    // admin: true,
+  },
+  {
+    path: "/result/add",
+    name: "Result Add",
+    icon: "menu_book",
+    component: ResultAdd,
+    // admin: true,
+  },
+  {
+    path: "/result/multiple",
+    name: "Result Multiple",
+    icon: "menu_book",
+    component: ResultMultiple,
+    // admin: true,
+  },
+  {
     path: "/grading/update",
     name: "Grading Update",
     // icon: "school",
@@ -429,13 +453,13 @@ var routes = [
     redirect: "true",
     admin: true,
   },
-  {
-    path: "/result",
-    name: "Result",
-    icon: "menu_book",
-    component: Result,
-    admin: true,
-  },
+  // {
+  //   path: "/result",
+  //   name: "Result",
+  //   icon: "menu_book",
+  //   component: Result,
+  //   admin: true,
+  // },
   {
     path: "/college",
     name: "College",

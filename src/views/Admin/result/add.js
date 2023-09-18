@@ -16,7 +16,7 @@ import withReactContent from "sweetalert2-react-content";
 import "../Css.css";
 import { School } from "@mui/icons-material";
 
-export default function Result() {
+export default function ResultAdd() {
   const [open, setOpen] = React.useState(false);
   const handleClose = () => {
     setOpen(false);
@@ -32,8 +32,33 @@ export default function Result() {
   const [level, setLevel] = useState([]);
   const [levelx, setLevelx] = useState("");
   const [sessionx, setSessionx] = useState("");
+  // const [mySession, setSession] = useState([]);
   const [course, setCourse] = useState([]);
   const [coursex, setCoursex] = useState("");
+
+  const mySession = [
+    { value: "2019/2020", key: 1 },
+    { value: "2020/2021", key: 2 },
+    { value: "2021/2022", key: 3 },
+    { value: "2022/2023", key: 4 },
+    { value: "2023/2024", key: 5 },
+    { value: "2024/2025", key: 6 },
+    { value: "2025/2026", key: 7 },
+    { value: "2026/2027", key: 8 },
+    { value: "2027/2028", key: 9 },
+    { value: "2028/2029", key: 10 },
+    { value: "2029/2030", key: 11 },
+    { value: "2030/2031", key: 12 },
+    { value: "2031/2032", key: 13 },
+    { value: "2032/2033", key: 14 },
+    { value: "2033/2034", key: 15 },
+    { value: "2034/2035", key: 16 },
+    { value: "2035/2036", key: 17 },
+    { value: "2036/2037", key: 18 },
+    { value: "2037/2038", key: 19 },
+    { value: "2038/2039", key: 20 },
+    { value: "2039/2040", key: 21 },
+  ];
 
   useEffect(() => {
     setOpened(true);
@@ -250,7 +275,8 @@ export default function Result() {
             icon: "success",
             text: result.message,
           }).then(() => {
-            window.location.reload();
+            // window.location.reload();
+            Navigate("/result");
           });
         } else {
           Swal.fire({
@@ -273,7 +299,7 @@ export default function Result() {
   return (
     <div className="content">
       <Paper elevation={8}>
-        <Card>
+        <Card mx={2}>
           <Button
             tag="label"
             className="data1"
@@ -284,188 +310,135 @@ export default function Result() {
               marginRight: "auto",
               marginLeft: "auto",
               // height: "50px",
-              // fontFamily: "Roboto",
               marginTop: "20px",
             }}
           >
             <Typography
               style={{ color: "white", fontSize: "1.5rem" }}
               variant="h5"
-              className="headz"
+              className="head"
             >
               Result
             </Typography>
           </Button>
-          <div
-            className="row-res"
-            style={{
-              // height: "100vh",
-              margin: "4vw",
-              display: "grid",
-              gridTemplateColumns: "30vw 30vw",
-              gridColumnGap: "5vw",
-              marginRight: "auto",
-              marginLeft: "auto",
-              alignItems: "center",
-              justifyContent: "center",
-              zIndex: 100,
-              gridGap: "10vw",
-            }}
-          >
-            <Paper
-              elevation={8}
-              // className="signbox"
-              className="resizer2"
+          <CardBody>
+            <Row>
+              <Col md="6" className="pl-md-1">
+                <FormGroup>
+                  <label>Matric Number</label>
+                  <Form.Select
+                    style={{ marginBottom: "20px" }}
+                    value={matNumerx || ""}
+                    aria-label="Default select example"
+                    onChange={(e) => setMatNumerx(e.target.value)}
+                  >
+                    <option value="">--Matric Number--</option>
+                    {matNumer.map((apic) => (
+                      <option key={apic.id} value={apic.matricNumber}>
+                        {apic.matricNumber}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </FormGroup>
+              </Col>
+              <Col className="pl-md-1" md="6">
+                <FormGroup>
+                  <label>Score</label>
+                  <Input
+                    onChange={(e) => {
+                      setScore(e.target.value);
+                    }}
+                    placeholder="Score"
+                    type="text"
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
+            <Row>
+              {" "}
+              <Col md="6" className="pl-md-1">
+                <FormGroup>
+                  <label>Level</label>
+                  <Form.Select
+                    style={{ marginBottom: "20px" }}
+                    value={levelx || ""}
+                    aria-label="Default select example"
+                    onChange={(e) => setLevelx(e.target.value)}
+                  >
+                    <option value="">--Level--</option>
+                    {level.map((apic) => (
+                      <option key={apic.id} value={apic.id}>
+                        {apic.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </FormGroup>
+              </Col>
+              {/* <Col className="pl-md-1" md="6">
+                <FormGroup>
+                  <label>Session</label>
+                  <Input
+                    onChange={(e) => {
+                      setSession(e.target.value);
+                    }}
+                    placeholder="Session"
+                    type="text"
+                  />
+                </FormGroup>
+              </Col> */}
+              <Col md="6" className="pl-md-1">
+                <FormGroup>
+                  <label>Session</label>
+                  <Form.Select
+                    style={{ marginBottom: "20px" }}
+                    value={sessionx || ""}
+                    aria-label="Default select example"
+                    onChange={(e) => setSessionx(e.target.value)}
+                  >
+                    <option value="">--Session--</option>
+                    {mySession.map((apic) => (
+                      <option key={apic.key} value={apic.value}>
+                        {apic.value}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </FormGroup>
+              </Col>
+              <Col md="6" className="pl-md-1">
+                <FormGroup>
+                  <label>Course</label>
+                  <Form.Select
+                    style={{ marginBottom: "20px" }}
+                    value={coursex || ""}
+                    aria-label="Default select example"
+                    onChange={(e) => setCoursex(e.target.value)}
+                  >
+                    <option value="">--Course--</option>
+                    {course.map((apic) => (
+                      <option key={apic.id} value={apic.id}>
+                        {apic.courseCode}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </FormGroup>
+              </Col>
+            </Row>
+            <Button
+              variant="gradient"
               style={{
-                textAlign: "center",
-                zIndex: 100,
-                borderRadius: 500,
-              }}
-            >
-              <div
-                // lg="5"
-                className="col-res"
-                style={{
-                  marginRight: "auto",
-                  cursor: "pointer",
-                  lineHeight: "4rem",
-                  marginLeft: "auto",
-                }}
-                onClick={() => Navigate("/result/add")}
-              >
-                Add Result
-              </div>
-            </Paper>
-            <Paper
-              elevation={8}
-              // className="signbox"
-              className="resizer2"
-              style={{
-                zIndex: 100,
-                borderRadius: 500,
-                textAlign: "center",
-              }}
-            >
-              <div
-                className="col-res"
-                // lg="5"
-                style={{
-                  cursor: "pointer",
-                  marginRight: "auto",
-                  lineHeight: "4rem",
-                  marginLeft: "auto",
-                }}
-                onClick={() => Navigate("/result/multiple")}
-              >
-                Add multiple result (CSV)
-              </div>
-            </Paper>
-          </div>
-          {/* <div
-          className="row-res"
-          style={{
-            // height: "100vh",
-            margin: "4vw",
-            display: "grid",
-            gridTemplateColumns: "30vw 30vw",
-            gridColumnGap: "5vw",
-            marginRight: "auto",
-            marginLeft: "33%",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 100,
-            gridGap: "10vw",
-          }}
-        >
-          <Paper
-            elevation={8}
-            // className="signbox"
-            className="resizer2"
-            style={{
-              textAlign: "center",
-              zIndex: 100,
-              borderRadius: 500,
-            }}
-          >
-            <div
-              // lg="5"
-              className="col-res"
-              style={{
-                marginRight: "auto",
-                cursor: "pointer",
-                lineHeight: "4rem",
-                justifyContent: "center",
                 marginLeft: "auto",
+                marginRight: "auto",
+                display: "flex",
+                marginTop: "20px",
               }}
-              onClick={() => Navigate("/courses/classCourses")}
+              color="info"
+              onClick={() => handleAdd()}
             >
-              Add class course
-            </div>
-          </Paper>
-        </div> */}
+              Add Result
+            </Button>
+          </CardBody>
         </Card>
       </Paper>
-      <br />
-      <DataTable
-        data={{
-          columns: [
-            { Header: "Matric Number", accessor: "matricNumber" },
-            { Header: "Level", accessor: "levelName" },
-            // { Header: "Department ", accessor: "departmentName" },
-            { Header: "Course", accessor: "courseCode" },
-            { Header: "Score", accessor: "score" },
-            { Header: "Session", accessor: "session" },
-            {
-              Header: "options",
-              accessor: "id",
-              renderCell: (cell) => (
-                <Dropdown style={{ position: "absolute" }}>
-                  <Dropdown.Toggle
-                    style={{ width: "5rem", height: "30px", padding: 0 }}
-                    variant="info"
-                    size="lg"
-                  >
-                    <Settings
-                      sx={{
-                        textAlign: "center",
-                        fontSize: "18px",
-                      }}
-                    />
-                  </Dropdown.Toggle>
-
-                  <Dropdown.Menu>
-                    {/* <Dropdown.Item
-                      style={{ fontweight: "bold", color: "black" }}
-                      onClick={() =>
-                        Navigate(
-                          `/courseAdvisor/classCourses?id=${cell.row.id}`
-                        )
-                      }
-                    >
-                      Class Course
-                    </Dropdown.Item> */}
-                    <Dropdown.Item
-                      style={{ fontweight: "bold", color: "black" }}
-                      onClick={() =>
-                        Navigate(`/result/update?id=${cell.row.id}`)
-                      }
-                    >
-                      Update
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      style={{ fontweight: "bold", color: "black" }}
-                      onClick={() => handleDelete(cell.row.id)}
-                    >
-                      Delete
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-              ),
-            },
-          ],
-          rows: items,
-        }}
-      />
       <Backdrop
         sx={{ color: "white", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={opened}

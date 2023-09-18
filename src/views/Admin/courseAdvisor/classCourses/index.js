@@ -421,7 +421,7 @@ export default function ClassCourses() {
         // setDepart(result);
         // setCoursex(newCompul);
         // setCompulsory(result);
-        if (result !== []) {
+        if (result.length) {
           // setItems(result);
           fetch(
             `${process.env.REACT_APP_SCHPROJECT_URL}/courseAdvisers/getByIds/${IDs}`,
