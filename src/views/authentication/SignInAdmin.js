@@ -94,10 +94,10 @@ function SignInAdmin() {
         setOpened(false);
         console.log(result);
         if (result.status === "SUCCESS") {
-          Navigate("/dashboard");
+          Navigate("/schools");
           // localStorage.setItem("user", result.data);
-          localStorage.setItem("user", JSON.stringify(result.data));
-          localStorage.setItem("user1", JSON.stringify(result.data));
+          localStorage.setItem("user", JSON.stringify(result.data[0]));
+          localStorage.setItem("user1", JSON.stringify(result.data[0]));
         } else {
           Swal.fire({
             title: result.status,

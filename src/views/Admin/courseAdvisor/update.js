@@ -28,7 +28,7 @@ export default function CourseAdvisorUpdate() {
   const MySwal = withReactContent(Swal);
   const { allGHeaders: miHeaders } = GHeaders();
   const [faculties, setFaculties] = useState([]);
-  const [facultyx, setFaculty] = useState("");
+  // const [facultyx, setFaculty] = useState("");
   const [items, setItems] = useState("");
   const [showOtherFac, setShowOtherFac] = useState(false);
   const [otherProgFac, setOtherProgFac] = useState("");
@@ -38,6 +38,8 @@ export default function CourseAdvisorUpdate() {
   const [levelx, setLevelx] = useState("");
   const [levelss, setLevelsss] = useState([]);
   const [staff, setStaff] = useState("");
+  const [fac, setFac] = useState([]);
+  const [facultyx, setFaculty] = useState("");
   //   const { allPHeaders: myHeaders } = PHeaders();
   //   const { allGHeaders: miHeaders } = GHeaders();
   //   const queryString = window.location.search;
@@ -139,6 +141,7 @@ export default function CourseAdvisorUpdate() {
         setHeadOfDepart(result[0].depID);
         setLevelx(result[0].levelID);
         setStaff(result[0].staffID);
+        setFaculty(result[0].facultyID);
         setItems(result);
       })
       .catch((error) => {
@@ -194,6 +197,7 @@ export default function CourseAdvisorUpdate() {
       levelID: levelx,
       staffID: staff,
       schoolID: userData.schoolID,
+      facultyID: facultyx,
       // collegeID: userData.schoolID,
       // facultyID: facultyx,
     });
@@ -361,6 +365,35 @@ export default function CourseAdvisorUpdate() {
       });
   }, []);
 
+  useEffect(() => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/faculties/gets/${schID}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setFac(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  }, []);
+
   return (
     <div className="content">
       <Card mx={2}>
@@ -426,6 +459,24 @@ export default function CourseAdvisorUpdate() {
                   {getAllStaff.map((apic) => (
                     <option key={apic.id} value={apic.id}>
                       {apic.firstName} {apic.lastName}
+                    </option>
+                  ))}
+                </Form.Select>
+              </FormGroup>
+            </Col>{" "}
+            <Col md="6" className="pl-md-1">
+              <FormGroup>
+                <label>Faculty</label>
+                <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  value={facultyx || ""}
+                  aria-label="Default select example"
+                  onChange={(e) => setFaculty(e.target.value)}
+                >
+                  <option value="">--Faculty--</option>
+                  {fac.map((apic) => (
+                    <option key={apic.id} value={apic.id}>
+                      {apic.name}
                     </option>
                   ))}
                 </Form.Select>
