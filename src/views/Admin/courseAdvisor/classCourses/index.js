@@ -124,14 +124,17 @@ export default function ClassCourses() {
         });
       });
   };
+  console.log(items);
 
   const handleAdd = (value) => {
     const userInfo = JSON.parse(localStorage.getItem("user"));
     console.log(userInfo);
     const schID = userInfo.schoolID;
+    const courseAdv = userInfo.courseAdviserID;
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const idx = urlParams.get("id");
+    console.log(items);
 
     const raw = JSON.stringify([
       {
@@ -139,8 +142,8 @@ export default function ClassCourses() {
         depID: items[0].depID,
         levelID: items[0].levelID,
         courseID: value,
-        courseAdviserID: idx,
-        facultyID: items[0].facultyID,
+        courseAdviserID: courseAdv,
+        // facultyID: items[0].facultyID,
         session: sessionx,
 
         // schoolID: schID,
@@ -195,6 +198,7 @@ export default function ClassCourses() {
       });
   };
   const handleUNCheck = (value) => {
+    console.log(value);
     const requestOptions = {
       method: "DELETE",
       headers: miHeaders,
@@ -401,6 +405,7 @@ export default function ClassCourses() {
     const idx = urlParams.get("id");
     console.log(idx);
     const headers = miHeaders;
+    // setItems
 
     fetch(
       `${process.env.REACT_APP_SCHPROJECT_URL}/courses/getByDepID/${value}`,
@@ -423,6 +428,7 @@ export default function ClassCourses() {
         // setCompulsory(result);
         if (result.length) {
           // setItems(result);
+        console.log("result");
           fetch(
             `${process.env.REACT_APP_SCHPROJECT_URL}/courseAdvisers/getByIds/${IDs}`,
             {
@@ -436,6 +442,7 @@ export default function ClassCourses() {
             })
             .then((resultl) => {
               setOpened(false);
+            setItems(resultl);
               console.log(resultl);
               const userInfo = JSON.parse(localStorage.getItem("user2"));
               console.log(userInfo);
@@ -476,16 +483,17 @@ export default function ClassCourses() {
                       setShow(true);
                     }
                     result.map((val) => {
-                      // console.log(val);
+                      console.log(val);
+                      console.log(compdep);
                       let comp = compdep.filter(
                         (valx) => valx.courseID === val.id
                       );
-                      // console.log(val);
+                      console.log(comp);
                       if (comp.length) {
                         // console.log(comp);
                         return null;
                       } else {
-                        // console.log(comp);
+                        console.log("comp");
                         newCompul.push(val);
                       }
                     });
@@ -502,7 +510,7 @@ export default function ClassCourses() {
                       text: error.message,
                     });
                   });
-              }
+                }
             })
             .catch((error) => {
               setOpened(false);
@@ -512,6 +520,10 @@ export default function ClassCourses() {
                 text: error.message,
               });
             });
+        } else {
+          setCompulsory([]);
+          console.log("workss");
+          setCoursex([]);
         }
       })
       .catch((error) => {
@@ -622,6 +634,7 @@ export default function ClassCourses() {
     } else {
       updatedList.splice(checked.indexOf(event.target.value), 1);
     }
+    console.log(checked);
     console.log(event.target.value);
     console.log(event.target.checked);
     setChecked(updatedList);
