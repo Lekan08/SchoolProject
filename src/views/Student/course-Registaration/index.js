@@ -312,8 +312,9 @@ function CourseRegistartion() {
       .then((result) => {
         setOpened(false);
         console.log(result);
-        if (result !== []) {
+        if (result.length) {
           // setShow(true);
+          console.log("aerplane");
           setCompulsory(result);
           const userInfo = JSON.parse(localStorage.getItem("user2"));
           console.log(userInfo);
@@ -352,7 +353,7 @@ function CourseRegistartion() {
               });
               console.log(newCompul);
               // setCoursex(newCompul);
-              if (resultr !== []) {
+              if (resultr.length) {
                 const userInfo = JSON.parse(localStorage.getItem("user2"));
                 console.log(userInfo);
                 const student = userInfo.id;
@@ -379,7 +380,7 @@ function CourseRegistartion() {
                         (valx) => valx.id === val.courseID
                       );
                       console.log(comp);
-                      if (comp !== []) {
+                      if (comp.length) {
                         console.log("comp");
                         console.log(val);
                         newCompulx.push(val);
@@ -448,15 +449,38 @@ function CourseRegistartion() {
 
   //   const userInfo = JSON.parse(localStorage.getItem("user2"));
   //   console.log(userInfo);
-  //   const schID = userInfo.schoolID;
+  //   const matricNum = userInfo.matricNumber;
+  //   // const
   //   const queryString = window.location.search;
   //   const urlParams = new URLSearchParams(queryString);
   //   const idx = urlParams.get("id");
 
-  //   const headers = miHeaders;
-  //   fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/courses/gets/${schID}`, {
-  //     headers,
-  //   })
+  //   // const headers = miHeaders;
+  //   const raw = JSON.stringify({
+  //       schoolID: "string",
+  //       courseID: "string",
+  //       matricNumber: matricNum,
+  //       score: "string",
+  //       levelID: "string",
+  //       session: "string",
+  //       createdBy: 0,
+  //       createdTime: 0,
+  //       schoolName: "string",
+  //       courseName: "string",
+  //       courseCode: "string",
+  //       levelName: "string",
+  //     });
+  //   console.log(raw);
+  //   const requestOptions = {
+  //     method: "POST",
+  //     headers: miHeaders,
+  //     body: raw,
+  //     // redirect: "follow",
+  //   };
+  //   fetch(
+  //     `${process.env.REACT_APP_SCHPROJECT_URL}/result/get/{matricNum}`,
+  //     requestOptions
+  //   )
   //     .then(async (res) => {
   //       const aToken = res.headers.get("token-1");
   //       localStorage.setItem("rexxdex", aToken);
@@ -465,7 +489,7 @@ function CourseRegistartion() {
   //     .then((result) => {
   //       setOpened(false);
   //       console.log(result);
-  //       setCoursex(result);
+  //       // setCoursex(result);
   //     })
   //     .catch((error) => {
   //       setOpened(false);
@@ -555,7 +579,7 @@ function CourseRegistartion() {
         console.log(result);
         const every = [];
         console.log(compulsory);
-        if (result !== []) {
+        if (result.length) {
           // setItems(result);
           for (let i = 0; i < result.length; i++) {
             const selElec = elective.find((r) => r.courseID === result[i].id);
