@@ -1,31 +1,21 @@
 import React, { useState, useEffect } from "react";
-import Swal from "sweetalert2";
-import PhoneInput from "react-phone-input-2";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { Card } from "@mui/material";
+import GHeaders from "getHeader";
 import PHeaders from "postHeader";
-import DataTable from "examples/TableList";
+import { CardBody, Input, Button, Row, Col, FormGroup } from "reactstrap";
 import { Settings } from "@mui/icons-material";
 import { Dropdown, Form } from "react-bootstrap";
-import Navigate from "useNavigate";
-import GHeaders from "getHeader";
 import Backdrop from "@mui/material/Backdrop";
+import DataTable from "examples/TableList";
+import Navigate from "useNavigate";
 import CircularProgress from "@mui/material/CircularProgress";
-import { AccountCircleSharp, School } from "@mui/icons-material";
-import { Card, TextField, Typography } from "@mui/material";
-import {
-  Button,
-  FormGroup,
-  Input,
-  Row,
-  Col,
-  CardBody,
-  CardHeader,
-  CardTitle,
-  Table,
-  //   Card,
-} from "reactstrap";
-// import { Form } from "react-bootstrap";
+import Swal from "sweetalert2";
+import { Typography, Paper } from "@mui/material";
 
-export default function SeeResult() {
+function SeeResult() {
+  const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
   const [opened, setOpened] = useState(false);
   const [phonex, setPhonex] = useState(0);
   const [dob, setDob] = useState("");
@@ -37,111 +27,92 @@ export default function SeeResult() {
   const [departments, setDepartments] = useState([]);
   const [faculty, setFaculty] = useState("");
   const [department, setDepartment] = useState("");
+  const [schoolName, setSchoolName] = useState("");
   const [sex, setSex] = useState("");
+  const [oName, setOName] = useState("");
   const [email, setEmail] = useState("");
+  const [sessionx, setSessionx] = useState("");
   const [items, setItems] = useState({});
   const [viewres, setViewres] = useState([]);
-  const { allPHeaders: myHeaders } = PHeaders();
-  const { allGHeaders: miHeaders } = GHeaders();
-
-  // useEffect(() => {
-  //   setOpened(true);
-  //   const userInfo = JSON.parse(localStorage.getItem("user"));
-  //   const idx = userInfo.id;
-  //   // console.log(idx);
-  //   const headers = miHeaders;
-  //   fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/students/getByIds/${idx}`, {
-  //     headers,
-  //   })
-  //     .then(async (res) => {
-  //       const aToken = res.headers.get("token-1");
-  //       localStorage.setItem("rexxdex", aToken);
-  //       return res.json();
-  //     })
-  //     .then((result) => {
-  //       const dateOfBirth = Number(result[0].dateOfBirth);
-  //       const day = () => {
-  //         let day = new Date(dateOfBirth).getDate();
-  //         if (String(day).length === 1) return `0${day}`;
-  //         return day;
-  //       };
-  //       const month = () => {
-  //         let day = new Date(dateOfBirth).getMonth() + 1;
-  //         if (String(day).length === 1) return `0${day}`;
-  //         return day;
-  //       };
-  //       setOpened(false);
-  //       console.log(result);
-  //       setFname(result[0].firstName);
-  //       setLname(result[0].lastName);
-  //       setSex(result[0].sex);
-  //       setType(String(result[0].studentType));
-  //       setEmail(result[0].email);
-  //       setMatric(result[0].matricNumber);
-  //       setDob(`${new Date(dateOfBirth).getFullYear()}-${month()}-${day()}`);
-  //       setPhonex(`+${result[0].phoneNumber}`);
-  //       setFaculty(result[0].facultyName);
-  //       setDepartment(result[0].departmentName);
-  //       setItems(result[0]);
-  //     })
-  //     .catch((error) => {
-  //       setOpened(false);
-  //       Swal.fire({
-  //         title: error.status,
-  //         icon: "error",
-  //         text: error.message,
-  //       });
-  //     });
-  // }, []);
-
-  // useEffect(() => {
-  //   setOpened(true);
-  //   const userInfo = JSON.parse(localStorage.getItem("user2"));
-  //   console.log(userInfo);
-  //   // const queryString = window.location.search;
-  //   // const urlParams = new URLSearchParams(queryString);
-  //   // const idx = urlParams.get("id");
-  //   const idx = userInfo.id;
-  //   const headers = miHeaders;
-  //   fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/result/getByIds/${idx}`, {
-  //     headers,
-  //   })
-  //     .then(async (res) => {
-  //       // const aToken = res.headers.get("token-1");
-  //       // localStorage.setItem("rexxdex", aToken);
-  //       return res.json();
-  //     })
-  //     .then((result) => {
-  //       setOpened(false);
-  //       console.log(result);
-  //       console.log("Kpurkish");
-  //       //   setScore(result[0].score);
-  //       //   setLevelx(result[0].levelName);
-  //       //   setSession(result[0].session);
-  //       //   setCoursex(result[0].courseID);
-  //       //   setMatNumerx(result[0].matricNumber);
-  //       //   setUpdate(result[0]);
-  //     })
-  //     .catch((error) => {
-  //       setOpened(false);
-  //       Swal.fire({
-  //         title: error.status,
-  //         icon: "error",
-  //         text: error.message,
-  //       });
-  //     });
-  // }, []);
+  const [elective, setElective] = useState([]);
 
   useEffect(() => {
     setOpened(true);
-    const userInfo = JSON.parse(localStorage.getItem("user"));
-    console.log(userInfo);
-    // const schID = userInfo.schoolID;
-    const headers = miHeaders;
+    const userInfo = JSON.parse(localStorage.getItem("user2"));
     const idx = userInfo.id;
-    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/result/getByIds/${idx}`, {
+    // console.log(idx);
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/students/getByIds/${idx}`, {
       headers,
     })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        // setStudentId(result[0]);
+        setFname(result[0].firstName);
+        setLname(result[0].lastName);
+        setMatric(result[0].matricNumber);
+        setPhonex(`+${result[0].phoneNumber}`);
+        setFaculty(result[0].facultyName);
+        setDepartment(result[0].departmentName);
+        setSchoolName(result[0].schoolName);
+        setItems(result[0]);
+        setSex(result[0].sex);
+        setEmail(result[0].email);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  }, []);
+
+  useEffect(() => {
+    setOpened(true);
+
+    const userInfo = JSON.parse(localStorage.getItem("user2"));
+    console.log(userInfo);
+    const matricNum = userInfo.matricNumber;
+    const SchID = userInfo.schoolID;
+    // const
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const idx = urlParams.get("id");
+
+    // const headers = miHeaders;
+    const raw = JSON.stringify({
+      schoolID: SchID,
+      courseID: "string",
+      matricNumber: matricNum,
+      score: 0,
+      levelID: "string",
+      session: "string",
+      createdBy: 0,
+      createdTime: 0,
+      schoolName: "string",
+      courseName: "string",
+      courseCode: "string",
+      levelName: "string",
+    });
+    console.log(raw);
+    const requestOptions = {
+      method: "POST",
+      headers: miHeaders,
+      body: raw,
+      // redirect: "follow",
+    };
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/result/getAllForStudent/{schoolID}/{matricNumber}`,
+      requestOptions
+    )
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -161,126 +132,90 @@ export default function SeeResult() {
         });
       });
   }, []);
-
-  useEffect(() => {
-    setOpened(true);
-    const userInfo = JSON.parse(localStorage.getItem("user"));
-    console.log(userInfo);
-    const schID = userInfo.schoolID;
-    const headers = miHeaders;
-    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/result/gets/${schID}`, {
-      headers,
-    })
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        setOpened(false);
-        console.log(result);
-        setItems(result);
-      })
-      .catch((error) => {
-        setOpened(false);
-        Swal.fire({
-          title: error.status,
-          icon: "error",
-          text: error.message,
-        });
-      });
-  }, []);
-
   return (
     <div className="content">
       <Card mx={2}>
         <CardBody>
-          {/* <CardHeader> */}
-          <h5
-            className="card-category"
-            style={{
-              textTransform: "uppercase",
-              fontSize: 20,
-              fontWeight: "bold",
+          <CardBody>
+            <Typography
+              className="card-category"
+              style={{
+                textTransform: "uppercase",
+                fontSize: 30,
+                fontWeight: "bold",
+                textAlign: "center",
+                color: "#7D7C7C",
+              }}
+            >
+              University of {schoolName}, benin, nigeria
+            </Typography>
+            <Typography
+              className="card-category"
+              style={{
+                textTransform: "uppercase",
+                fontSize: 20,
+                fontWeight: "bold",
+                textAlign: "center",
+                color: "#F99417",
+              }}
+            >
+              {department}
+            </Typography>{" "}
+            <Typography
+              className="card-category"
+              style={{
+                textTransform: "uppercase",
+                fontSize: 15,
+                fontWeight: "bold",
+                textAlign: "center",
+                color: "#7D7C7C",
+              }}
+            >
+              {" "}
+              {faculty}
+            </Typography>
+            <Row>
+              <Col md="10" className="pl-md-1">
+                <Typography
+                  className="card-category"
+                  style={{
+                    textTransform: "capitalize",
+                    fontSize: 17,
+                    color: "#5C5470",
+                  }}
+                >
+                  {fname} {lname}
+                </Typography>{" "}
+              </Col>
+              <Col md="2" className="pl-md-1">
+                <Typography
+                  className="card-category"
+                  style={{
+                    textTransform: "capitalize",
+                    fontSize: 17,
+                    color: "#5C5470",
+                  }}
+                >
+                  {matric}
+                </Typography>
+              </Col>
+            </Row>
+          </CardBody>
+          <DataTable
+            data={{
+              columns: [
+                { Header: "Course Name", accessor: "courseName" },
+                { Header: "Course Code", accessor: "courseCode" },
+                { Header: "Course Unit", accessor: "courseUnit" },
+                { Header: "Level", accessor: "levelName" },
+                { Header: "Score", accessor: "score" },
+                { Header: "Grade", accessor: "grade" },
+              ],
+              rows: viewres,
             }}
-          >
-            University Of benin
-          </h5>{" "}
-          <h5
-            className="card-category"
-            style={{
-              textTransform: "capitalize",
-              fontSize: 25,
-            }}
-          >
-            {fname} {lname}
-          </h5>
-          {/* </CardHeader> */}
+          />
         </CardBody>
-
-        <br />
-        <DataTable
-          data={{
-            columns: [
-              { Header: "Course", accessor: "matricNumber" },
-              { Header: "Unit", accessor: "levelName" },
-              // { Header: "Department ", accessor: "departmentName" },
-              { Header: "Course", accessor: "courseCode" },
-              { Header: "Score", accessor: "score" },
-              { Header: "Session", accessor: "session" },
-              {
-                Header: "options",
-                accessor: "id",
-                renderCell: (cell) => (
-                  <Dropdown style={{ position: "absolute" }}>
-                    <Dropdown.Toggle
-                      style={{ width: "5rem", height: "30px", padding: 0 }}
-                      variant="info"
-                      size="lg"
-                    >
-                      <Settings
-                        sx={{
-                          textAlign: "center",
-                          fontSize: "18px",
-                        }}
-                      />
-                    </Dropdown.Toggle>
-
-                    <Dropdown.Menu>
-                      {/* <Dropdown.Item
-                      style={{ fontweight: "bold", color: "black" }}
-                      onClick={() =>
-                        Navigate(
-                          `/courseAdvisor/classCourses?id=${cell.row.id}`
-                        )
-                      }
-                    >
-                      Class Course
-                    </Dropdown.Item> */}
-                      <Dropdown.Item
-                        style={{ fontweight: "bold", color: "black" }}
-                        onClick={() =>
-                          Navigate(`/result/update?id=${cell.row.id}`)
-                        }
-                      >
-                        Update
-                      </Dropdown.Item>
-                      <Dropdown.Item
-                        style={{ fontweight: "bold", color: "black" }}
-                        //   onClick={() => handleDelete(cell.row.id)}
-                      >
-                        Delete
-                      </Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
-                ),
-              },
-            ],
-            rows: items,
-          }}
-        />
       </Card>
-
       <Backdrop
         sx={{ color: "white", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={opened}
@@ -290,3 +225,4 @@ export default function SeeResult() {
     </div>
   );
 }
+export default SeeResult;
