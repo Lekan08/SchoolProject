@@ -10,12 +10,14 @@ import "react-phone-input-2/lib/style.css";
 import MenuItem from "@mui/material/MenuItem";
 // import FormControl from '@mui/material/FormControl';
 import Select from "@mui/material/Select";
-import Form from "react-bootstrap/Form";
+// import Form from "react-bootstrap/Form";
+import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import "./index.css";
 import { Box } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { Container, FloatingLabel, Row, Col } from "react-bootstrap";
+import Link from "@mui/material/Link";
 // import AllCountriesAndStates from "../../../countries-states-master/countries";
 import AllCountriesAndStates from "../../countries-states-master/countries";
 import DatePicker from "react-datepicker";
@@ -41,6 +43,7 @@ function SignUpAdmin() {
   const [firstNamex, setFirstName] = useState("");
   const [lastNamex, setLastName] = useState("");
   const [emailx, setEmail] = useState("");
+  const [othernamex, setOtherName] = useState("");
 
   const [namex, setName] = useState("");
   // const [opened, setOpened] = useState(false);
@@ -196,11 +199,13 @@ function SignUpAdmin() {
         })
         .then((result) => {
           console.log(result);
+          console.log("schoolAddSuccesfull");
           if (result.status === "SUCCESS") {
             const allResult = result.data;
             const raw2 = JSON.stringify({
               firstName: firstNamex,
               lastName: lastNamex,
+              otherName: othernamex,
               email: emailx,
               phoneNumber: phonex,
               sex: sexx,
@@ -237,6 +242,7 @@ function SignUpAdmin() {
               })
               .then((resultx) => {
                 console.log(resultx);
+                console.log("StaffADDSuccesful");
                 setOpened(false);
                 if (resultx.status === "SUCCESS") {
                   // localStorage.setItem("admin4", result.data);
@@ -263,26 +269,28 @@ function SignUpAdmin() {
                       localStorage.setItem("rexxdex1", aToken);
                       return res.json();
                     })
-                    .then((result) => {
+                    .then((resultz) => {
                       setOpened(false);
-                      if (result.status === "SUCCESS") {
+                      if (resultz.status === "SUCCESS") {
+                        console.log(resultz);
+                        console.log("succes");
                         //   localStorage.setItem("admin", result.data);
                         MySwal.fire({
-                          title: result.status,
+                          title: resultz.status,
                           type: "success",
-                          text: result.message,
+                          text: resultz.message,
                         }).then(() => {
                           localStorage.setItem(
                             "user",
-                            JSON.stringify(result.data)
+                            JSON.stringify(resultz.data)
                           );
-                          Navigate("/dashboard");
+                          Navigate("/sign-in");
                         });
                       } else {
                         MySwal.fire({
-                          title: result.status,
+                          title: resultz.status,
                           type: "error",
-                          text: result.message,
+                          text: resultz.message,
                         });
                       }
                     })
@@ -384,336 +392,16 @@ function SignUpAdmin() {
   };
 
   return (
-    // <>
-    //   <div className="bubble">
-    //     <Row
-    //       className="signbox"
-    //       style={{
-    //         marginRight: "auto",
-    //         marginLeft: "auto",
-    //         paddingLeft: "2vw",
-    //         marginTop: "10vh",
-    //         width: "40vw",
-    //       }}
-    //     >
-    //       {/* <Col md="12"> */}
-    //       <Card
-    //         // className="signbox"
-    //         className="resizer"
-    //       >
-    //         <CardHeader></CardHeader>
-    //         <CardBody>
-    //           <Row>
-    //             <Col
-    //               lg="11"
-    //               style={{
-    //                 marginRight: "auto",
-    //                 marginLeft: "auto",
-    //                 paddingTop: 8,
-    //                 paddingBottom: 10,
-    //               }}
-    //             >
-    //               <img
-    //                 src={logo}
-    //                 alt="companylogo"
-    //                 style={{
-    //                   width: "5vw",
-    //                   borderRadius: "10px",
-    //                   marginLeft: "auto",
-    //                   marginRight: "auto",
-    //                   display: "flex",
-    //                 }}
-    //               />
-    //               <div className="font-icon-detail">
-    //                 <p
-    //                   style={{
-    //                     marginTop: 0,
-    //                     cursor: "pointer",
-    //                     color: "#5e72e4",
-    //                     letterSpacing: "0.4vh",
-    //                     fontSize: "0.9rem",
-    //                     textAlign: "center",
-    //                     paddingBottom: "2.5vh",
-    //                     // textShadow: "2px 2px 4px #000000",
-    //                     fontFamily: "Comic Sans MS",
-    //                   }}
-    //                 >
-    //                   Sign Up.
-    //                 </p>
-    //                 <div style={{ padding: 10, lineHeight: "7vh" }}>
-    //                   <TextField
-    //                     id="outlined-required"
-    //                     label="UserName"
-    //                     value={userName}
-    //                     onChange={(e) => setUserName(e.target.value)}
-    //                     sx={{
-    //                       input: {
-    //                         // color: "white",
-    //                         width: "15rem",
-    //                         fontSize: "0.8em",
-    //                         height: "1vh",
-    //                       },
-    //                     }}
-    //                   />
-    //                   {/* </div>
-    //                 <br /> */}
-    //                   {/* <div style={{ padding: 10, lineHeight: "7vh" }}>
-    //                   <TextField
-    //                     id="outlined-required"
-    //                     label="Last Name"
-    //                     onChange={(e) => setUsername(e.target.value)}
-    //                     sx={{
-    //                       input: {
-    //                         // color: "white",
-    //                         width: "15rem",
-    //                         fontSize: "0.8em",
-    //                         height: "1vh",
-    //                       },
-    //                     }}
-    //                   />
-    //                 </div>
-    //                 <div style={{ padding: 10, lineHeight: "7vh" }}>
-    //                   <TextField
-    //                     id="outlined-required"
-    //                     label="Email"
-    //                     onChange={(e) => setUsername(e.target.value)}
-    //                     sx={{
-    //                       input: {
-    //                         // color: "white",
-    //                         width: "15rem",
-    //                         fontSize: "0.8em",
-    //                         height: "1vh",
-    //                       },
-    //                     }}
-    //                   />
-    //                 </div>
-    //                 <div>
-    //                   <div className="col-sm-8">
-    //                     <Typography
-    //                       variant="button"
-    //                       fontWeight="regular"
-    //                       color="text"
-    //                     >
-    //                       Phone Number
-    //                     </Typography>
-    //                     <PhoneInput
-    //                       value={phonex}
-    //                       alignItems={"center"}
-    //                       inputStyle={{ width: "80%" }}
-    //                       buttonStyle={{}}
-    //                       onChange={setPhone}
-    //                     />
-    //                   </div>
-    //                 </div>
-    //                 <div style={{ padding: 10, lineHeight: "7vh" }}>
-    //                   <InputLabel id="demo-simple-select-label">Sex</InputLabel>
-    //                   <Select
-    //                     labelId="demo-simple-select-label"
-    //                     id="demo-simple-select"
-    //                     value={age}
-    //                     label="Age"
-    //                     onChange={handleChange}
-    //                     style={{ width: "80%" }}
-    //                   >
-    //                     <MenuItem value={"Male"}>Male</MenuItem>
-    //                     <MenuItem value={"Female"}>Female</MenuItem>
-    //                     {/* <MenuItem value={30}>Thirty</MenuItem>
-    //                   </Select>
-    //                 </div> */}
-    //                   {/* <div>
-    //                   <TextField
-    //                     id="datetime-local"
-    //                     label="Start Time *"
-    //                     type="datetime-local"
-    //                     InputLabelProps={{
-    //                       shrink: true,
-    //                     }}
-    //                     value={startTimexx}
-    //                     onChange={(e) => setStartTime(e.target.value)}
-    //                     // onInput={(e) => handleTime(e.target.value)}
-    //                   /> */}
-    //                   {/* </div> */}
-    //                   <br />
-    //                 </div>
-    //                 {/* <div style={{ padding: 10, lineHeight: "7vh" }}>
-    //                   <TextField
-    //                     type={passwordShown ? "text" : "password"}
-    //                     label="Password"
-    //                     // value={passwordx || ""}
-    //                     // onKeyUp={(e) => s(e.target.value)}
-    //                     onChange={(e) => setPassword(e.target.value)}
-    //                     variant="standard"
-    //                     fullWidth
-    //                   />
-    //                   <Typography
-    //                     variant="button"
-    //                     fontSize="60%"
-    //                     align="right"
-    //                     onClick={togglePassword}
-    //                     mx={0}
-    //                     color="info"
-    //                   >
-    //                     show password
-    //                   </Typography>
-    //                 </div> */}
-    //                 {/* <Container> */}
-
-    //                 <div style={{ padding: 10, lineHeight: "7vh" }}>
-    //                   {/* <div className="col-sm-6">
-    //                     <Box mb={2}>
-    //                       <TextField
-    //                         type={passwordShown ? "text" : "password"}
-    //                         label="Password"
-    //                         id="outlined-required"
-    //                         // value={passwordx || ''}
-    //                         // onKeyUp={(e) => handleOnPasswordKeys(e.target.value)}
-    //                         onChange={(e) => setPassword(e.target.value)}
-    //                         variant="standard"
-    //                         fullWidth
-    //                       />
-    //                     </Box>
-    //                   </div> */}
-    //                   <TextField
-    //                     id="outlined-required"
-    //                     type={passwordShown ? "text" : "password"}
-    //                     label="Password"
-    //                     value={passwordx}
-    //                     onChange={(e) => setPassword(e.target.value)}
-    //                     sx={{
-    //                       input: {
-    //                         // color: "white",
-    //                         width: "15rem",
-    //                         fontSize: "0.8em",
-    //                         height: "1vh",
-    //                       },
-    //                     }}
-    //                   />
-    //                 </div>
-    //                 <div style={{ padding: 10, lineHeight: "7vh" }}>
-    //                   <FormControl
-    //                     sx={{ m: 1, width: "17rem" }}
-    //                     variant="outlined"
-    //                   >
-    //                     <InputLabel htmlFor="outlined-adornment-password">
-    //                       Confirm Password
-    //                     </InputLabel>
-    //                     <OutlinedInput
-    //                       type={passwordShown ? "text" : "password"}
-    //                       // label="Password"
-    //                       // value={passwordx}
-    //                       value={confirmPassword}
-    //                       onChange={(e) => setConfirmPassword(e.target.value)}
-    //                       id="outlined-adornment-password"
-    //                       // type={showPassword ? "text" : "password"}
-    //                       sx={{
-    //                         input: {
-    //                           // color: "white",
-    //                           height: "1vh",
-    //                           fontSize: "0.8em",
-    //                         },
-    //                       }}
-    //                       endAdornment={
-    //                         <InputAdornment position="end">
-    //                           <IconButton
-    //                             aria-label="toggle password visibility"
-    //                             onClick={() => togglePassword()}
-    //                             edge="end"
-    //                           >
-    //                             {showPassword ? (
-    //                               <VisibilityOff />
-    //                             ) : (
-    //                               <Visibility />
-    //                             )}
-    //                           </IconButton>
-    //                         </InputAdornment>
-    //                       }
-    //                       label="Password"
-    //                     />
-    //                   </FormControl>
-    //                 </div>
-    //                 {/* </Container> */}
-    //                 {/* <Box mb={2}>
-    //                   {/* <Container>
-    //                   <div className="row">
-    //                     <div className="col-sm-12">
-    //                       <TextField
-    //                         type={passwordShown ? "text" : "password"}
-    //                         label="Retype Password"
-    //                         // value={retypePasswordx || ''}
-    //                         // onKeyUp={(e) => handleOnRTPasswordKeys(e.target.value)}
-    //                         // onChange={(e) => setRetypePassword(e.target.value)}
-    //                         variant="standard"
-    //                         fullWidth
-    //                       />
-    //                     </div>
-
-    //                   </div> */}
-    //                 {/* </Container> */}
-    //                 {/* </Box> */}
-    //                 <Box mb={1} mt={-1} textAlign="center">
-    //                   Don't have an account? &nbsp;
-    //                   <Typography
-    //                     component={Link}
-    //                     // to="/authentication/sign-up-staff"
-    //                     onClick={() => Navigate("/sign-in-admin")}
-    //                     variant="button"
-    //                     color="primary"
-    //                     fontWeight="medium"
-    //                     id="forgotpassword"
-    //                     size="small"
-    //                   >
-    //                     Sign In
-    //                   </Typography>
-    //                 </Box>
-    //                 <button
-    //                   type="submit"
-    //                   className="btn btn-custom btn-xs"
-    //                   style={{
-    //                     fontSize: "80%",
-    //                     marginBottom: "5%",
-    //                     marginTop: "4%",
-    //                   }}
-    //                   onClick={handleClick}
-    //                 >
-    //                   Sign UP
-    //                 </button>
-    //                 {/* <Box mb={1} mt={-1} textAlign="center">
-    //                   <Typography
-    //                     component={Link}
-    //                     // to="/authentication/resetpassword"
-    //                     // onClick={() => Navigate("/reset-password")}
-    //                     variant="button"
-    //                     color="primary"
-    //                     fontWeight="medium"
-    //                     id="forgotpassword"
-    //                     size="small"
-    //                   >
-    //                     FORGOT PASSWORD?
-    //                   </Typography>
-    //                 </Box> */}
-    //               </div>
-    //             </Col>
-    //           </Row>
-    //         </CardBody>
-    //       </Card>
-    //       {/* </Col> */}
-    //     </Row>
-    //     <Backdrop
-    //       sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-    //       open={opened}
-    //     >
-    //       <CircularProgress sx={{ color: "white" }} />
-    //     </Backdrop>
-    //   </div>
-    // </>
-    <div className="form-wrapper">
+    <><h4 style={{ marginBottom: "150px" }}></h4><div className="form-wrapper">
+      {/* <br /> */}
       <Form noValidate validated={validated}>
-        <h2 style={{ marginBottom: "15px", textAlign: "center" }}>
-          School Information
-        </h2>
+
         <Container fluid>
+          <h2 style={{ textAlign: "center" }}>
+            School Information
+          </h2>
           <Row>
-            <Col sm={6} style={{ marginBottom: "10px" }}>
+            <Col sm={6}>
               <Form.Group>
                 <FloatingLabel controlId="firstnamLabel" label="Name of School">
                   <Form.Control
@@ -721,8 +409,7 @@ function SignUpAdmin() {
                     value={namex}
                     onChange={(e) => setName(e.target.value)}
                     // placeholder="First name"
-                    required
-                  />
+                    required />
                 </FloatingLabel>
                 <Form.Control.Feedback type="invalid">
                   Do not leave empty
@@ -740,8 +427,7 @@ function SignUpAdmin() {
                     value={headOfSch}
                     onChange={(e) => setHeadOfSch(e.target.value)}
                     // placeholder="First name"
-                    required
-                  />
+                    required />
                 </FloatingLabel>
                 <Form.Control.Feedback type="invalid">
                   Do not leave empty
@@ -811,8 +497,7 @@ function SignUpAdmin() {
                     value={streetx}
                     onChange={(e) => setStreet(e.target.value)}
                     // placeholder="First name"
-                    required
-                  />
+                    required />
                 </FloatingLabel>
                 <Form.Control.Feedback type="invalid">
                   Do not leave empty
@@ -827,8 +512,7 @@ function SignUpAdmin() {
                     value={cityx}
                     onChange={(e) => setCity(e.target.value)}
                     // placeholder="First name"
-                    required
-                  />
+                    required />
                 </FloatingLabel>
                 <Form.Control.Feedback type="invalid">
                   Do not leave empty
@@ -840,8 +524,8 @@ function SignUpAdmin() {
             <Col sm={6}>
               <Box mb={4}>
                 {/* <Typography variant="button" fontWeight="regular" color="text">
-                  School Type
-                </Typography> */}
+      School Type
+    </Typography> */}
                 <Form.Select
                   onChange={(e) => setSchoolType(e.target.value)}
                   value={schoolTypex || ""}
@@ -857,12 +541,12 @@ function SignUpAdmin() {
           </Row>
           {/* <br /> */}
           {/* <Box
-            component="span"
-            sx={{ p: 2, border: "1px dashed grey" }}
-            alignSelf={"center"}
-          >
-            <Button>Personal Information</Button>
-          </Box> */}
+      component="span"
+      sx={{ p: 2, border: "1px dashed grey" }}
+      alignSelf={"center"}
+    >
+      <Button>Personal Information</Button>
+    </Box> */}
           <h2 style={{ marginBottom: "15px", textAlign: "center" }}>
             Personal Information
           </h2>
@@ -876,8 +560,7 @@ function SignUpAdmin() {
                     value={firstNamex}
                     onChange={(e) => setFirstName(e.target.value)}
                     // placeholder="First name"
-                    required
-                  />
+                    required />
                 </FloatingLabel>
                 <Form.Control.Feedback type="invalid">
                   Do not leave empty
@@ -891,13 +574,27 @@ function SignUpAdmin() {
                   value={lastNamex}
                   onChange={(e) => setLastName(e.target.value)}
                   // placeholder="Last name"
-                  required
-                />
+                  required />
               </FloatingLabel>
             </Col>
           </Row>
 
           <Row>
+          <Col sm={6}>
+              <Form.Group>
+                <FloatingLabel controlId="firstnamLabel" label="Other Name">
+                  <Form.Control
+                    type="text"
+                    value={othernamex}
+                    onChange={(e) => setOtherName(e.target.value)}
+                    // placeholder="First name"
+                    required />
+                </FloatingLabel>
+                <Form.Control.Feedback type="invalid">
+                  Do not leave empty
+                </Form.Control.Feedback>
+              </Form.Group>
+            </Col>
             <Col>
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <FloatingLabel controlId="emailLabel" label="Enter email">
@@ -907,34 +604,19 @@ function SignUpAdmin() {
                     value={emailx}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
-                  />
+                    pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$" />
                 </FloatingLabel>
                 <Form.Text className="text-muted">
                   We'll (hopefully) never share your email with anyone else.
                 </Form.Text>
               </Form.Group>
             </Col>
-
-            <Col>
-              <Box mb={4}>
-                {/* <Typography variant="button" fontWeight="regular" color="text">
-                  School Type
-                </Typography> */}
-                <Form.Select
-                  onChange={(e) => setSex(e.target.value)}
-                  value={sexx || ""}
-                  aria-label="Default select example"
-                >
-                  <option>---Sex---</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                </Form.Select>
-              </Box>
-            </Col>
           </Row>
           <Row>
-            <Col>
+          
+          </Row>
+          <Row>
+            <Col sm={4}>
               <Typography variant="button" fontWeight="regular" color="text">
                 Phone Number
               </Typography>
@@ -942,10 +624,9 @@ function SignUpAdmin() {
                 value={phonex}
                 inputStyle={{ width: "100%" }}
                 buttonStyle={{}}
-                onChange={setPhone}
-              />
+                onChange={setPhone} />
             </Col>
-            <Col>
+            <Col sm={4}>
               <Typography
                 variant="button"
                 fontWeight="regular"
@@ -989,9 +670,32 @@ function SignUpAdmin() {
                     peekNextMonth
                     showMonthDropdown
                     showYearDropdown
-                    dropdownMode="select"
-                  />
+                    dropdownMode="select" />
                 </div>
+              </Box>
+            </Col>
+            <Col sm={4}>
+            <Typography
+                variant="button"
+                fontWeight="regular"
+                color="black"
+                mt={1}
+              >
+                Sex
+              </Typography>
+              <Box mb={4}>
+                {/* <Typography variant="button" fontWeight="regular" color="text">
+      School Type
+    </Typography> */}
+                <Form.Select
+                  onChange={(e) => setSex(e.target.value)}
+                  value={sexx || ""}
+                  aria-label="Default select example"
+                >
+                  <option>---Sex---</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </Form.Select>
               </Box>
             </Col>
           </Row>
@@ -1004,8 +708,7 @@ function SignUpAdmin() {
                   placeholder="Password"
                   required
                   pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
-                  onChange={(e) => handlePasswordChange(e.target.value)}
-                />
+                  onChange={(e) => handlePasswordChange(e.target.value)} />
               </FloatingLabel>
               <Form.Text className="text-muted">
                 Must be 8 characters long, contain a number, an uppercase letter
@@ -1022,8 +725,7 @@ function SignUpAdmin() {
                   placeholder="Confirmation"
                   value={confirmPassword}
                   required
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                />
+                  onChange={(e) => setConfirmPassword(e.target.value)} />
               </FloatingLabel>
               <p
                 style={{ color: "red", display: "none" }}
@@ -1034,12 +736,27 @@ function SignUpAdmin() {
             </Form.Group>
           </Row>
 
+          <Box mb={1} mt={-1} textAlign="center">
+                      Already have an account? &nbsp;
+                      <Typography
+                        component={Link}
+                        // to="/authentication/sign-up-staff"
+                        onClick={() => Navigate("/sign-in")}
+                        variant="button"
+                        color="primary"
+                        fontWeight="medium"
+                        id="forgotpassword"
+                        size="small"
+                      >
+                        Sign In
+                      </Typography>
+                    </Box>
           <Button variant="primary" onClick={handleSubmit}>
             Register
           </Button>
         </Container>
       </Form>
-    </div>
+    </div></>
   );
 }
 

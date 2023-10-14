@@ -156,11 +156,11 @@ export default function StudentMultiple() {
               variant="h5"
               className="headz"
             >
-              Add Students Using CSV
+              Add Multiple Students Using CSV
             </Typography>
           </Button>
           <br />
-          {/* <Typography mt={2}>
+          <Typography mt={2}>
             <u>Before Proceeding Please Read carefully:</u>
           </Typography>
           <Box p={3} mt={1}>
@@ -196,9 +196,9 @@ export default function StudentMultiple() {
               />
             </Typography>
           </Box>
-          <Button onClick={handleOpen2} variant="success">
+          {/* <Button onClick={handleOpen2} variant="success">
             Preview
-          </Button>
+          </Button> */}
           <Button onClick={handleUpload} color="success">
             Upload
           </Button>
@@ -224,7 +224,7 @@ export default function StudentMultiple() {
                 Close
               </Button>
             </Box>
-          </Modal> */}
+          </Modal>
         </CardBody>
       </Card>
       <Backdrop

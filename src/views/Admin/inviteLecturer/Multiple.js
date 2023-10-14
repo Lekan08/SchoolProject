@@ -25,6 +25,7 @@ import example from "./example.jpg";
 import DataTable from "examples/TableList";
 import Form from "react-bootstrap/Form";
 import GHeaders from "getHeader";
+import Navigate from "useNavigate";
 
 export default function InviteMultiple() {
   const style = {
@@ -67,21 +68,21 @@ export default function InviteMultiple() {
   const { allGHeaders: miHeaders } = GHeaders();
 
   const [opened, setOpened] = useState(false);
-  const changeHandler = (event) => {
-    Papa.parse(event.target.files[0], {
-      header: true,
-      skipEmptyLines: true,
-      complete(results) {
-        const obj = results.data.map((r) => ({
-          name: r.name,
-          state: r.state.charAt(0).toUpperCase() + r.state.slice(1),
-          country: r.country.charAt(0).toUpperCase() + r.country.slice(1),
-          descrip: r.description,
-        }));
-        setFile(obj);
-      },
-    });
-  };
+  // const changeHandler = (event) => {
+  //   Papa.parse(event.target.files[0], {
+  //     header: true,
+  //     skipEmptyLines: true,
+  //     complete(results) {
+  //       const obj = results.data.map((r) => ({
+  //         name: r.name,
+  //         state: r.state.charAt(0).toUpperCase() + r.state.slice(1),
+  //         country: r.country.charAt(0).toUpperCase() + r.country.slice(1),
+  //         descrip: r.description,
+  //       }));
+  //       setFile(obj);
+  //     },
+  //   });
+  // };
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user"));
     console.log(userData);
@@ -115,34 +116,81 @@ export default function InviteMultiple() {
       isMounted = false;
     };
   }, []);
+  const changeHandler = (event) => {
+    Papa.parse(event.target.files[0], {
+      header: true,
+      skipEmptyLines: true,
+      complete(results) {
+        const userData = JSON.parse(localStorage.getItem("user"));
+        console.log(userData);
+        const schoolID = userData.schoolID;
+        const roleID = "0";
+        const obj = results.data;
+        const objx = obj.map(
+          ({
+            firstName,
+            lastName,
+            email,
+            // eslint-disable-next-line arrow-body-style
+          }) => {
+            return {
+              firstName,
+              lastName,
+              email,
+            };
+          }
+        );
+        console.log(obj);
+        console.log(objx);
+
+        objx.forEach((element) => {
+          element.roleID = roleID;
+          element.schoolID = schoolID;
+        });
+        const objc = objx.map(
+          ({
+            rolleID,
+            schoolID,
+            firstName,
+            lastName,
+            email,
+            // eslint-disable-next-line arrow-body-style
+          }) => {
+            return {
+              firstName,
+              lastName,
+              email,
+              roleID,
+              schoolID,
+            };
+          }
+        );
+        const why = JSON.stringify(objc);
+        console.log(why);
+        setFile(why);
+      },
+    });
+  };
   const handleUpload = () => {
     setOpened(true);
     handleClose();
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
-      body: JSON.stringify(file),
+      body: file,
       redirect: "follow",
     };
-    fetch(`${process.env.REACT_APP_MAZA_URL}/locations/add`, requestOptions)
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/staffLogin/inviteMultiple`,
+      requestOptions
+    )
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
         return res.json();
       })
       .then((result) => {
-        if (result.message === "Expired Access") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Token Does Not Exist") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Unauthorized Access") {
-          navigate("/authentication/forbiddenPage");
-          window.location.reload();
-        }
+        console.log(result);
         setOpened(false);
         if (result.status === "SUCCESS") {
           Swal.fire({
@@ -150,7 +198,7 @@ export default function InviteMultiple() {
             icon: "success",
             text: result.message,
           }).then(() => {
-            window.location.reload();
+            Navigate(`/inviteLecturer`);
           });
         } else {
           Swal.fire({
@@ -191,11 +239,11 @@ export default function InviteMultiple() {
               variant="h5"
               className="headz"
             >
-              Invite Multiple Lecturer Through CSV
+              Invite Multiple Lecturers Through CSV
             </Typography>
           </Button>
           <br />
-          <Row>
+          {/* <Row>
             <Col>
               <Typography
                 variant="button"
@@ -212,15 +260,10 @@ export default function InviteMultiple() {
                   aria-label="Default select example"
                 >
                   <option>--Select Faculty--</option>
-                  {/* {faculty.map((apis) => (
-                    <option key={apis.id} value={apis.id}>
-                      {apis.name}
-                    </option>
-                  ))} */}
                 </Form.Select>
               </Box>
             </Col>
-          </Row>
+          </Row> */}
           <Typography mt={2}>
             <u>Before Proceeding Please Read carefully:</u>
           </Typography>
@@ -257,9 +300,9 @@ export default function InviteMultiple() {
               />
             </Typography>
           </Box>
-          <Button onClick={handleOpen2} variant="success">
+          {/* <Button onClick={handleOpen2} variant="success">
             Preview
-          </Button>
+          </Button> */}
           <Button onClick={handleUpload} color="success">
             Upload
           </Button>

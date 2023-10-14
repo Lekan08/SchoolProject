@@ -277,7 +277,7 @@ function SignInStudent() {
                       </Typography>
                     </Box>
                     <br />
-                    <Box mb={1} mt={-1} textAlign="center">
+                    {/* <Box mb={1} mt={-1} textAlign="center">
                       Don't have an account? &nbsp;
                       <Typography
                         component={Link}
@@ -291,7 +291,7 @@ function SignInStudent() {
                       >
                         Sign Up
                       </Typography>
-                    </Box>
+                    </Box> */}
                   </div>
                 </Col>
               </Row>

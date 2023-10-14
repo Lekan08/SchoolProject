@@ -292,7 +292,7 @@ export default function InviteLecturers() {
                 }}
                 onClick={() => Navigate("/inviteLecturer/multiple")}
               >
-                Add multiple Lecturers (CSV)
+                Add Multiple Lecturers (CSV)
               </div>
             </Paper>
           </div>
@@ -345,16 +345,14 @@ export default function InviteLecturers() {
                     >
                       Delete
                     </Dropdown.Item>
-                    {/* <Dropdown.Item
+                    <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}
                       onClick={() =>
-                        Navigate(
-                          `/customers/referral?id=${cell.row.id}&name=${cell.row.firstName} ${cell.row.lastName}`
-                        )
+                        Navigate(`/inviteLecturer/view?id=${cell.row.id}`)
                       }
                     >
-                      View Referrals
-                    </Dropdown.Item> */}
+                      View/Update
+                    </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
               ),

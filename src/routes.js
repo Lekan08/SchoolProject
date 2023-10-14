@@ -74,6 +74,7 @@ import StudentResult from "views/Student/student-Result";
 import SeeResult from "views/Student/student-Result/seeResult";
 import Transcript from "views/Student/student-Result/transcript";
 import CollegeUpdate from "views/Admin/college/update";
+import ViewLecturer from "views/Admin/inviteLecturer/view";
 // import ClassCourses from "views/Admin/courseAdvisor/classCourses";
 
 import CompleteResetPassword from "views/authentication/complete-resetPassword";
@@ -134,11 +135,11 @@ var routes = [
     admin: true,
   },
   {
-    path: "/complete-reset-password",
-    // name: "Admin Dashboard",
-    // icon: "dashboard",
-    component: CompleteResetPassword,
-    redirect: "true",
+    path: "/dashboard",
+    name: "Admin Dashboard",
+    icon: "dashboard",
+    component: Dashboard,
+    // redirect: "true",
     admin: true,
   },
   {
@@ -170,6 +171,14 @@ var routes = [
     name: "Invite Multiple Lecturers",
     // icon: "person_add",
     component: InviteMultiple,
+    redirect: "true",
+    admin: true,
+  },
+  {
+    path: "/inviteLecturer/view",
+    // name: "Invite Multiple Lecturers",
+    // icon: "person_add",
+    component: ViewLecturer,
     redirect: "true",
     admin: true,
   },
@@ -477,6 +486,14 @@ var routes = [
     component: CollegeUpdate,
     // admin: true,
     redirect: true,
+  },
+  {
+    path: "/complete-reset-password",
+    name: "Change Password",
+    icon: "password",
+    component: CompleteResetPassword,
+    // redirect: "true",
+    admin: true,
   },
   {
     path: "/dashboard-student",

@@ -15,11 +15,14 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React, { useEffect, useState } from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // react plugin used to create charts
 import { Line, Bar } from "react-chartjs-2";
+import SchoolIcon from "@mui/icons-material/School";
+import GroupsIcon from "@mui/icons-material/Groups";
+import { Doughnut } from "react-chartjs-2";
 
 // reactstrap components
 import {
@@ -50,20 +53,296 @@ import {
   chartExample4,
 } from "variables/charts.js";
 import { CustomNotification } from "views/Admin/notification/Notifications";
+import { Typography } from "@mui/material";
+import { object } from "prop-types";
+import GHeaders from "getHeader";
 
 function Dashboard(props) {
   const [firer, setFirer] = React.useState(false);
   const [bigChartData, setbigChartData] = React.useState("data1");
+  const [numTeacher, setNumTeacher] = useState("");
+  const [numStudent, setNumStudent] = useState("");
+  const [maleStudents, setMaleStudents] = useState("");
+  const [femaleStudents, setFemaleStudents] = useState("");
+  const [maleTeachers, setMaleTeachers] = useState("");
+  const [femaleTeachers, setFemaleTeachers] = useState("");
+
+  const { allGHeaders: miHeaders } = GHeaders();
   const setBgChartData = (name) => {
     setbigChartData(name);
   };
   const fire = () => {
     setFirer(true);
   };
+
+  useEffect(() => {
+    getTeachers();
+    getStudents();
+  });
+
+  const getTeachers = () => {
+    const headers = miHeaders;
+
+    const userData = JSON.parse(localStorage.getItem("user"));
+    console.log(userData);
+    const schId = userData.schoolID;
+
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/staffs/gets/${schId}`, {
+      headers,
+    })
+      .then(async (res) => {
+        // const aToken = res.headers.get("token-1");
+        // localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        console.log(result);
+        console.log(result);
+        var object = 0;
+        if (result.length) {
+          var arr = result;
+          for (let i = 0; i < arr.length; i++) {
+            // if (arr[i] instanceof object) {
+            object++;
+            // }
+          }
+        }
+        console.log(object);
+        const male = result.filter((val) => val.sex === "Male");
+        console.log(male);
+        var maleObject = 0;
+        for (let i = 0; i < male.length; i++) {
+          maleObject++;
+        }
+        console.log(maleObject);
+        const female = result.filter((val) => val.sex === "Female");
+        var femaleObject = 0;
+        for (let i = 0; i < female.length; i++) {
+          femaleObject++;
+        }
+        setFemaleTeachers(femaleObject);
+        setMaleTeachers(maleObject);
+        setNumTeacher(object);
+      });
+  };
+  const getStudents = () => {
+    const headers = miHeaders;
+
+    const userData = JSON.parse(localStorage.getItem("user"));
+    console.log(userData);
+    const schID = userData.schoolID;
+
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/students/gets/${schID}`, {
+      headers,
+    })
+      .then(async (res) => {
+        // const aToken = res.headers.get("token-1");
+        // localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        console.log(result);
+        console.log(result);
+        var object = 0;
+        if (result.length) {
+          var arr = result;
+          for (let i = 0; i < arr.length; i++) {
+            // if (arr[i] instanceof object) {
+            object++;
+            console.log(arr[i]);
+            // if (arr[i].sex === "Male") {
+
+            // }
+            // }
+          }
+        }
+        console.log("male");
+        const male = result.filter((val) => val.sex === "Male");
+        console.log(male);
+        var maleObject = 0;
+        for (let i = 0; i < male.length; i++) {
+          maleObject++;
+        }
+        const female = result.filter((val) => val.sex === "Female");
+        var femaleObject = 0;
+        for (let i = 0; i < female.length; i++) {
+          femaleObject++;
+        }
+        setFemaleStudents(femaleObject);
+        console.log(maleObject);
+        setMaleStudents(maleObject);
+        console.log(object);
+        setNumStudent(object);
+      });
+  };
+
+  const data = {
+    labels: ["Male Students", "Female Students"],
+    datasets: [
+      {
+        data: [Number(maleStudents), Number(femaleStudents)],
+        backgroundColor: ["#FF6384", "#36A2EB"],
+        hoverBackgroundColor: ["#FF6384", "#36A2EB"],
+      },
+    ],
+  };
+  const dataTeacher = {
+    labels: ["Male Teachers", "Female Teachers"],
+    datasets: [
+      {
+        data: [Number(maleTeachers), Number(femaleTeachers)],
+        backgroundColor: ["#FFCE56", "#db3d44"],
+        hoverBackgroundColor: ["#FFCE56", "#db3d44"],
+      },
+    ],
+  };
+
   return (
     <>
       <div className="content">
         <Row>
+          <Col lg="6">
+            <Card>
+              <div className="row">
+                <div
+                  className="col-sm-6"
+                  style={{ display: "flex", justifyContent: "center" }}
+                >
+                  <SchoolIcon
+                    sx={{
+                      // textAlign: "center",
+                      fontSize: "100px",
+                      fill: "#4caf50",
+                    }}
+                  />
+                </div>
+                <div
+                  className="col-sm-6"
+                  style={{ display: "flex", justifyContent: "center" }}
+                >
+                  <Typography
+                    variant="h6"
+                    paddingTop={"40px"}
+                    // justifyContent="center"
+                  >
+                    Students ({Number(numStudent)})
+                  </Typography>
+                  {/* <Typography variant="h4">500000</Typography> */}
+                </div>
+              </div>
+            </Card>
+          </Col>
+          <Col lg="6">
+            <Card>
+              <div className="row">
+                <div
+                  className="col-sm-6"
+                  style={{ display: "flex", justifyContent: "center" }}
+                >
+                  <GroupsIcon
+                    sx={{
+                      // textAlign: "center",
+                      fontSize: "100px",
+                      fill: "#0096FF",
+                    }}
+                  />
+                </div>
+                <div
+                  className="col-sm-6"
+                  style={{ display: "flex", justifyContent: "center" }}
+                >
+                  <Typography
+                    variant="h6"
+                    paddingTop={"40px"}
+                    // justifyContent="center"
+                  >
+                    Teachers ({Number(numTeacher)})
+                  </Typography>
+                  {/* <Typography variant="h4">5000</Typography> */}
+                </div>
+              </div>
+            </Card>
+          </Col>
+        </Row>
+        <Row>
+          <Col lg="6">
+            <Card>
+              <h4>Students</h4>
+              <Doughnut data={data} />
+            </Card>
+          </Col>
+          <Col lg="6">
+            <Card>
+              <h4>Teachers</h4>
+              <Doughnut data={dataTeacher} />
+            </Card>
+          </Col>
+        </Row>
+        <Row>
+          <Col lg="6">
+            <Card>
+              <div className="row">
+                <div
+                  className="col-sm-6"
+                  style={{ display: "flex", justifyContent: "center" }}
+                >
+                  <GroupsIcon
+                    sx={{
+                      // textAlign: "center",
+                      fontSize: "100px",
+                      fill: "#0096FF",
+                    }}
+                  />
+                </div>
+                <div
+                  className="col-sm-6"
+                  style={{ display: "flex", justifyContent: "center" }}
+                >
+                  <Typography
+                    variant="h6"
+                    paddingTop={"40px"}
+                    // justifyContent="center"
+                  >
+                    No Of Faculties (500)
+                  </Typography>
+                  {/* <Typography variant="h4">5000</Typography> */}
+                </div>
+              </div>
+            </Card>
+          </Col>
+          <Col lg="6">
+            <Card>
+              <div className="row">
+                <div
+                  className="col-sm-6"
+                  style={{ display: "flex", justifyContent: "center" }}
+                >
+                  <SchoolIcon
+                    sx={{
+                      // textAlign: "center",
+                      fontSize: "100px",
+                      fill: "#4caf50",
+                    }}
+                  />
+                </div>
+                <div
+                  className="col-sm-6"
+                  style={{ display: "flex", justifyContent: "center" }}
+                >
+                  <Typography
+                    variant="h6"
+                    paddingTop={"40px"}
+                    // justifyContent="center"
+                  >
+                    No Of Courses (700)
+                  </Typography>
+                  {/* <Typography variant="h4">500000</Typography> */}
+                </div>
+              </div>
+            </Card>
+          </Col>
+        </Row>
+        {/* <Row>
           <Col xs="12">
             <Card className="card-chart">
               <CardHeader>
@@ -536,7 +815,7 @@ function Dashboard(props) {
               </CardBody>
             </Card>
           </Col>
-        </Row>
+        </Row> */}
       </div>
     </>
   );

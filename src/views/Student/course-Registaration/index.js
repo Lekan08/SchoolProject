@@ -314,7 +314,6 @@ function CourseRegistartion() {
         console.log(result);
         if (result.length) {
           // setShow(true);
-          console.log("aerplane");
           setCompulsory(result);
           const userInfo = JSON.parse(localStorage.getItem("user2"));
           console.log(userInfo);
@@ -443,63 +442,6 @@ function CourseRegistartion() {
       });
   }, []);
   console.log(elective);
-
-  // useEffect(() => {
-  //   setOpened(true);
-
-  //   const userInfo = JSON.parse(localStorage.getItem("user2"));
-  //   console.log(userInfo);
-  //   const matricNum = userInfo.matricNumber;
-  //   // const
-  //   const queryString = window.location.search;
-  //   const urlParams = new URLSearchParams(queryString);
-  //   const idx = urlParams.get("id");
-
-  //   // const headers = miHeaders;
-  //   const raw = JSON.stringify({
-  //       schoolID: "string",
-  //       courseID: "string",
-  //       matricNumber: matricNum,
-  //       score: "string",
-  //       levelID: "string",
-  //       session: "string",
-  //       createdBy: 0,
-  //       createdTime: 0,
-  //       schoolName: "string",
-  //       courseName: "string",
-  //       courseCode: "string",
-  //       levelName: "string",
-  //     });
-  //   console.log(raw);
-  //   const requestOptions = {
-  //     method: "POST",
-  //     headers: miHeaders,
-  //     body: raw,
-  //     // redirect: "follow",
-  //   };
-  //   fetch(
-  //     `${process.env.REACT_APP_SCHPROJECT_URL}/result/get/{matricNum}`,
-  //     requestOptions
-  //   )
-  //     .then(async (res) => {
-  //       const aToken = res.headers.get("token-1");
-  //       localStorage.setItem("rexxdex", aToken);
-  //       return res.json();
-  //     })
-  //     .then((result) => {
-  //       setOpened(false);
-  //       console.log(result);
-  //       // setCoursex(result);
-  //     })
-  //     .catch((error) => {
-  //       setOpened(false);
-  //       Swal.fire({
-  //         title: error.status,
-  //         icon: "error",
-  //         text: error.message,
-  //       });
-  //     });
-  // }, []);
 
   const handleCheck = (event, inn) => {
     if (event.target.checked) {

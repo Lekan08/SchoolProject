@@ -135,7 +135,7 @@ function AdminNavbar(props) {
                 <DropdownMenu className="dropdown-navbar" right tag="ul">
                   <NavLink tag="li">
                     <DropdownItem className="nav-item">
-                      This is a school website 😀!
+                      This is a school Portal 😀!
                     </DropdownItem>
                   </NavLink>
                 </DropdownMenu>
@@ -156,6 +156,9 @@ function AdminNavbar(props) {
                 <DropdownMenu className="dropdown-navbar" right tag="ul">
                   <NavLink tag="li" onClick={() => Navigate("/schools")}>
                     <DropdownItem className="nav-item">Profile</DropdownItem>
+                  </NavLink>
+                  <NavLink tag="li" onClick={() => Navigate("/complete-reset-password")}>
+                    <DropdownItem className="nav-item">Change Password</DropdownItem>
                   </NavLink>
                   {/* <NavLink tag="li" onClick={() => Navigate("/settings")}>
                     <DropdownItem className="nav-item">Settings</DropdownItem>

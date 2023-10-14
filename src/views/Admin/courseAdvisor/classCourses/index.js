@@ -126,6 +126,38 @@ export default function ClassCourses() {
   };
   console.log(items);
 
+  useEffect(() => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    // if ()
+    // const data = JSON.parse({data: localStorage.getItem("resultData")});
+    // console.log(data);
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/levels/gets/${schID}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setLevelsss(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  }, []);
+
   const handleAdd = (value) => {
     const userInfo = JSON.parse(localStorage.getItem("user"));
     console.log(userInfo);
@@ -139,8 +171,8 @@ export default function ClassCourses() {
     const raw = JSON.stringify([
       {
         schoolID: schID,
-        depID: items[0].depID,
-        levelID: items[0].levelID,
+        depID: headOfDepart,
+        levelID: levelx,
         courseID: value,
         courseAdviserID: courseAdv,
         // facultyID: items[0].facultyID,
@@ -173,13 +205,16 @@ export default function ClassCourses() {
         setOpened(false);
         console.log(result);
         if (result.status === "SUCCESS") {
-          Swal.fire({
-            title: result.status,
-            icon: "success",
-            text: result.message,
-          }).then(() => {
+          // localStorage.setItem("resultData", JSON.stringify(result));
+          // setOpened(true);
+          // Swal.fire({
+          //   title: result.status,
+          //   icon: "success",
+          //   text: result.message,
+          // }).then(() => {
             window.location.reload();
-          });
+          // });
+          // setHeadOfDepart
         } else {
           Swal.fire({
             title: result.status,
@@ -426,104 +461,112 @@ export default function ClassCourses() {
         // setDepart(result);
         // setCoursex(newCompul);
         // setCompulsory(result);
-        if (result.length) {
-          // setItems(result);
-        console.log("result");
-          fetch(
-            `${process.env.REACT_APP_SCHPROJECT_URL}/courseAdvisers/getByIds/${IDs}`,
-            {
-              headers,
-            }
-          )
-            .then(async (res) => {
-              const aToken = res.headers.get("token-1");
-              localStorage.setItem("rexxdex", aToken);
-              return res.json();
-            })
-            .then((resultl) => {
-              setOpened(false);
-            setItems(resultl);
-              console.log(resultl);
-              const userInfo = JSON.parse(localStorage.getItem("user2"));
-              console.log(userInfo);
-              // if (result[0].staffID !== userInfo.id) {
-              //   Swal.fire({
-              //     title: "Access_Denied",
-              //     icon: "error",
-              //     text: "You are not the Course Advisor for this course",
-              //   }).then(() => {
-              //     Navigate("/courseAdvisor");
-              //   });
-              // }
-              if (resultl.length) {
-                // setItems(resultl);
-                const levelID = resultl[0].levelID;
-                const depID = resultl[0].depID;
-                fetch(
-                  `${process.env.REACT_APP_SCHPROJECT_URL}/classCourses/getForClass/${levelID}/${depID}`,
-                  {
-                    headers,
-                  }
-                )
-                  .then(async (res) => {
-                    const aToken = res.headers.get("token-1");
-                    localStorage.setItem("rexxdex", aToken);
-                    return res.json();
-                  })
-                  .then((resultc) => {
-                    setOpened(false);
-                    const newCompul = [];
-                    const compdep = resultc.filter(
-                      (val) => val.depID === value
-                    );
-
-                    console.log(compdep);
-                    if (resultc.length !== 0) {
-                      console.log(resultc);
-                      setShow(true);
-                    }
-                    result.map((val) => {
-                      console.log(val);
-                      console.log(compdep);
-                      let comp = compdep.filter(
-                        (valx) => valx.courseID === val.id
-                      );
-                      console.log(comp);
-                      if (comp.length) {
-                        // console.log(comp);
-                        return null;
-                      } else {
-                        console.log("comp");
-                        newCompul.push(val);
-                      }
-                    });
-                    setCompulsory(resultc);
-                    console.log(newCompul);
-                    setCoursex(newCompul);
-                    console.log(newCompul);
-                  })
-                  .catch((error) => {
-                    setOpened(false);
-                    Swal.fire({
-                      title: error.status,
-                      icon: "error",
-                      text: error.message,
-                    });
-                  });
-                }
-            })
-            .catch((error) => {
-              setOpened(false);
-              Swal.fire({
-                title: error.status,
-                icon: "error",
-                text: error.message,
-              });
-            });
+        if (IDs === "") {
+          Swal.fire({
+            title: "Cannot Perform Request",
+            icon: "error",
+            text: "You are not the Course Advisor to this department",
+          });
         } else {
-          setCompulsory([]);
-          console.log("workss");
-          setCoursex([]);
+          if (result.length) {
+            // setItems(result);
+            console.log("result");
+            fetch(
+              `${process.env.REACT_APP_SCHPROJECT_URL}/courseAdvisers/getByIds/${IDs}`,
+              {
+                headers,
+              }
+            )
+              .then(async (res) => {
+                const aToken = res.headers.get("token-1");
+                localStorage.setItem("rexxdex", aToken);
+                return res.json();
+              })
+              .then((resultl) => {
+                setOpened(false);
+                setItems(resultl);
+                console.log(resultl);
+                const userInfo = JSON.parse(localStorage.getItem("user2"));
+                console.log(userInfo);
+                // if (result[0].staffID !== userInfo.id) {
+                //   Swal.fire({
+                //     title: "Access_Denied",
+                //     icon: "error",
+                //     text: "You are not the Course Advisor for this course",
+                //   }).then(() => {
+                //     Navigate("/courseAdvisor");
+                //   });
+                // }
+                if (resultl.length) {
+                  // setItems(resultl);
+                  const levelID = resultl[0].levelID;
+                  const depID = resultl[0].depID;
+                  fetch(
+                    `${process.env.REACT_APP_SCHPROJECT_URL}/classCourses/getForClass/${levelID}/${depID}`,
+                    {
+                      headers,
+                    }
+                  )
+                    .then(async (res) => {
+                      const aToken = res.headers.get("token-1");
+                      localStorage.setItem("rexxdex", aToken);
+                      return res.json();
+                    })
+                    .then((resultc) => {
+                      setOpened(false);
+                      const newCompul = [];
+                      const compdep = resultc.filter(
+                        (val) => val.depID === value
+                      );
+
+                      console.log(compdep);
+                      if (resultc.length !== 0) {
+                        console.log(resultc);
+                        setShow(true);
+                      }
+                      result.map((val) => {
+                        console.log(val);
+                        console.log(compdep);
+                        let comp = compdep.filter(
+                          (valx) => valx.courseID === val.id
+                        );
+                        console.log(comp);
+                        if (comp.length) {
+                          // console.log(comp);
+                          return null;
+                        } else {
+                          console.log("comp");
+                          newCompul.push(val);
+                        }
+                      });
+                      setCompulsory(resultc);
+                      console.log(newCompul);
+                      setCoursex(newCompul);
+                      console.log(newCompul);
+                    })
+                    .catch((error) => {
+                      setOpened(false);
+                      Swal.fire({
+                        title: error.status,
+                        icon: "error",
+                        text: error.message,
+                      });
+                    });
+                }
+              })
+              .catch((error) => {
+                setOpened(false);
+                Swal.fire({
+                  title: error.status,
+                  icon: "error",
+                  text: error.message,
+                });
+              });
+          } else {
+            setCompulsory([]);
+            console.log("workss");
+            setCoursex([]);
+          }
         }
       })
       .catch((error) => {
@@ -766,7 +809,7 @@ export default function ClassCourses() {
           {/* </div> */}
           <CardBody>
             <Row>
-              <Col md="6" className="pl-md-1">
+              <Col md="4" className="pl-md-1">
                 <FormGroup>
                   <label>Session</label>
                   <Form.Select
@@ -800,7 +843,25 @@ export default function ClassCourses() {
                   </Form.Select>
                 </FormGroup>
               </Col>{" "}
-              <Col md="6" className="pl-md-1">
+              <Col md="4" className="pl-md-1">
+              <FormGroup>
+                  <label>Level</label>
+                  <Form.Select
+                    style={{ marginBottom: "20px" }}
+                    value={levelx || ""}
+                    aria-label="Default select example"
+                    onChange={(e) => setLevelx(e.target.value)}
+                  >
+                    <option value="">--Level--</option>
+                    {levelss.map((apic) => (
+                      <option key={apic.id} value={apic.id}>
+                        {apic.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </FormGroup>
+              </Col>{" "}
+              <Col md="4" className="pl-md-1">
                 <FormGroup>
                   <label>Department</label>
                   <Form.Select
