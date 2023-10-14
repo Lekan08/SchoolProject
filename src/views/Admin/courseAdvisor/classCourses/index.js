@@ -502,7 +502,7 @@ export default function ClassCourses() {
                   const levelID = resultl[0].levelID;
                   const depID = resultl[0].depID;
                   fetch(
-                    `${process.env.REACT_APP_SCHPROJECT_URL}/classCourses/getForClass/${levelID}/${depID}`,
+                    `${process.env.REACT_APP_SCHPROJECT_URL}/classCourses/getForClass/${levelx}/${value}`,
                     {
                       headers,
                     }
@@ -524,6 +524,7 @@ export default function ClassCourses() {
                         console.log(resultc);
                         setShow(true);
                       }
+                      console.log(resultc);
                       result.map((val) => {
                         console.log(val);
                         console.log(compdep);
