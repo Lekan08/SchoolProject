@@ -11,6 +11,7 @@ import DataTable from "examples/TableList";
 import Navigate from "useNavigate";
 import CircularProgress from "@mui/material/CircularProgress";
 import Swal from "sweetalert2";
+import { AccountCircleSharp, School } from "@mui/icons-material";
 import { Typography, Paper } from "@mui/material";
 
 function SeeResult() {
@@ -30,10 +31,12 @@ function SeeResult() {
   const [schoolName, setSchoolName] = useState("");
   const [sex, setSex] = useState("");
   const [oName, setOName] = useState("");
+  const [showNote, setShowNote] = useState(false);
   const [email, setEmail] = useState("");
   const [sessionx, setSessionx] = useState("");
   const [items, setItems] = useState({});
   const [viewres, setViewres] = useState([]);
+  const [viewresAll, setViewresAll] = useState([]);
   const [elective, setElective] = useState([]);
 
   useEffect(() => {
@@ -132,6 +135,91 @@ function SeeResult() {
         });
       });
   }, []);
+
+  const handleOnChange = (value) => {
+    setShowNote(true);
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user2"));
+    console.log(userInfo);
+    const matricNum = userInfo.matricNumber;
+    const SchID = userInfo.schoolID;
+    const idx = userInfo.id;
+    const ggg = userInfo.resultsList;
+    console.log(ggg);
+    console.log(idx);
+    const raw = JSON.stringify({
+      id: idx,
+      schoolID: SchID,
+      courseID: "string",
+      matricNumber: matricNum,
+      score: 0,
+      value: 0,
+      grade: "string",
+      levelID: "string",
+      session: value,
+      createdBy: 0,
+      createdTime: 0,
+      schoolName: "string",
+      courseName: "string",
+      courseCode: "string",
+      courseUnit: 0,
+      levelName: "string",
+    });
+    console.log(raw);
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      // redirect: "follow",
+    };
+
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/result/getAllForSessionForStudent/{schoolID}/{session}/{matricNumber}`,
+      requestOptions
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setViewresAll(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+
+  const mySession = [
+    { value: "2019/2020", key: 1 },
+    { value: "2020/2021", key: 2 },
+    { value: "2021/2022", key: 3 },
+    { value: "2022/2023", key: 4 },
+    { value: "2023/2024", key: 5 },
+    { value: "2024/2025", key: 6 },
+    { value: "2025/2026", key: 7 },
+    { value: "2026/2027", key: 8 },
+    { value: "2027/2028", key: 9 },
+    { value: "2028/2029", key: 10 },
+    { value: "2029/2030", key: 11 },
+    { value: "2030/2031", key: 12 },
+    { value: "2031/2032", key: 13 },
+    { value: "2032/2033", key: 14 },
+    { value: "2033/2034", key: 15 },
+    { value: "2034/2035", key: 16 },
+    { value: "2035/2036", key: 17 },
+    { value: "2036/2037", key: 18 },
+    { value: "2037/2038", key: 19 },
+    { value: "2038/2039", key: 20 },
+    { value: "2039/2040", key: 21 },
+  ];
   return (
     <div className="content">
       <Card mx={2}>
@@ -141,7 +229,7 @@ function SeeResult() {
               className="card-category"
               style={{
                 textTransform: "uppercase",
-                fontSize: 30,
+                fontSize: 25,
                 fontWeight: "bold",
                 textAlign: "center",
                 color: "#7D7C7C",
@@ -152,8 +240,7 @@ function SeeResult() {
             <Typography
               className="card-category"
               style={{
-                textTransform: "uppercase",
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: "bold",
                 textAlign: "center",
                 color: "#F99417",
@@ -167,37 +254,115 @@ function SeeResult() {
                 textTransform: "uppercase",
                 fontSize: 15,
                 fontWeight: "bold",
-                textAlign: "center",
                 color: "#7D7C7C",
+                textAlign: "center",
               }}
             >
               {" "}
               {faculty}
             </Typography>
+            {/* <Row>
+              <Col md="12" className="pl-md-1">
+                <School
+                  sx={{
+                    fontSize: 180,
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                    display: "flex",
+                  }}
+                />
+              </Col>
+            </Row> */}
             <Row>
-              <Col md="10" className="pl-md-1">
+              <Col md="9" className="pl-md-1">
                 <Typography
                   className="card-category"
                   style={{
-                    textTransform: "capitalize",
-                    fontSize: 17,
-                    color: "#5C5470",
+                    textTransform: "uppercase",
+                    fontSize: 13,
+                    fontWeight: "bold",
+                    color: "#7D7C7C",
                   }}
                 >
-                  {fname} {lname}
+                  Name: {fname} {lname}
                 </Typography>{" "}
               </Col>
-              <Col md="2" className="pl-md-1">
+              <Col md="3" className="pl-md-1">
                 <Typography
                   className="card-category"
                   style={{
                     textTransform: "capitalize",
-                    fontSize: 17,
-                    color: "#5C5470",
+                    fontSize: 13,
+                    fontWeight: "bold",
+                    color: "#7D7C7C",
                   }}
                 >
-                  {matric}
+                  Matric Number: {matric}
                 </Typography>
+              </Col>
+            </Row>{" "}
+            <Row>
+              <Col md="9" className="pl-md-1">
+                <Typography
+                  className="card-category"
+                  style={{
+                    textTransform: "uppercase",
+                    fontSize: 13,
+                    fontWeight: "bold",
+                    color: "#7D7C7C",
+                  }}
+                >
+                  Email Address: {email}
+                </Typography>{" "}
+              </Col>
+              <Col md="3" className="pl-md-1">
+                <Typography
+                  className="card-category"
+                  style={{
+                    textTransform: "capitalize",
+                    fontSize: 13,
+                    fontWeight: "bold",
+                    color: "#7D7C7C",
+                  }}
+                >
+                  Sex: {sex}
+                </Typography>
+              </Col>
+            </Row>{" "}
+            <Row>
+              <Col md="12" className="pl-md-1">
+                <FormGroup>
+                  <Form.Select
+                    style={{ marginBottom: "2px" }}
+                    value={sessionx || ""}
+                    aria-label="Default select example"
+                    onChange={(e) => handleOnChange(e.target.value)}
+                  >
+                    <option value="">Sessions</option>
+                    {mySession.map((apic) => (
+                      <option key={apic.key} value={apic.value}>
+                        {apic.value}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </FormGroup>
+                {showNote ? (
+                  <></>
+                ) : (
+                  <Typography
+                    className="card-category"
+                    style={{
+                      textTransform: "capitalize",
+                      fontSize: 11,
+                      // fontWeight: "bold",
+                      textAlign: "center",
+                      // color: "#BB2525",
+                      color: "red",
+                    }}
+                  >
+                    Please select a session{" "}
+                  </Typography>
+                )}
               </Col>
             </Row>
           </CardBody>
@@ -211,7 +376,7 @@ function SeeResult() {
                 { Header: "Score", accessor: "score" },
                 { Header: "Grade", accessor: "grade" },
               ],
-              rows: viewres,
+              rows: viewresAll,
             }}
           />
         </CardBody>
