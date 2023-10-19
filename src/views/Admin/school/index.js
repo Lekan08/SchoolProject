@@ -200,10 +200,10 @@ export default function School() {
           <Row style={{ marginTop: 20 }}>
             <Col md="6" className="pl-md-1">
               <FormGroup>
-                <label>Head</label>
+                <label>Admin</label>
                 <Input
                   // defaultValue={`${data11.lastName}`}
-                  placeholder="head"
+                  placeholder="Admin"
                   value={head}
                   //   onChange={() => console.log()}
                   type="text"

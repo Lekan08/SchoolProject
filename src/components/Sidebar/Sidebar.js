@@ -96,7 +96,7 @@ function Sidebar(props) {
       );
       logoText = (
         <a
-          href="/user-profile"
+          // href="/user-profile"
           className="simple-text logo-normal"
           // target="_blank"
           onClick={props.toggleSidebar}

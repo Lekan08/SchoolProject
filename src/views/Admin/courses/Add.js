@@ -37,7 +37,7 @@ export default function CourseAdd() {
   const [faculty, setFaculty] = useState("");
   const [department, setDepartment] = useState("");
 
-  console.log(faculties);
+  console.log(faculty);
   useEffect(() => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
@@ -57,7 +57,7 @@ export default function CourseAdd() {
         console.log(result);
         // const spec = result.map((r) => ({ value: r.id, label: r.name }));
         // setDob(spec);
-        setFaculties(result);
+        // setFaculties(result);
         const spec = result.map((r) => ({ value: r.id, label: r.name }));
 
         setFaculties(spec);
@@ -74,7 +74,7 @@ export default function CourseAdd() {
   const handleDepartment = (w) => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
-    console.log(userInfo);
+    console.log(w);
     const headers = miHeaders;
     fetch(
       `${process.env.REACT_APP_SCHPROJECT_URL}/departments/getByFacultyID/${w}`,
@@ -102,10 +102,12 @@ export default function CourseAdd() {
         });
       });
   };
+
   const handleAdd = () => {
     console.log(departments);
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
+    const unit = parseInt(unitx);
     const raw2 = JSON.stringify({
       name: fname,
       description: lname,
@@ -114,7 +116,7 @@ export default function CourseAdd() {
       depID: department,
       facultyID: faculty,
       courseCode: courseCodex,
-      unit: unitx,
+      unit: unit,
     });
     console.log(raw2);
     const requestOptions2 = {
@@ -164,6 +166,19 @@ export default function CourseAdd() {
         });
       });
   };
+  const handleChange2 = () => {
+    const unit = parseInt(unitx);
+    if (unit <= 6) {
+      handleAdd();
+    } else {
+      Swal.fire({
+        title: "Invalid_Parameters",
+        icon: "error",
+        text: "A course unit can't be more than (6)",
+      });
+    }
+  }
+
   return (
     <div className="content">
       <Card mx={2}>
@@ -296,6 +311,7 @@ export default function CourseAdd() {
               <label>Department</label>
               <Select
                 options={departments}
+                maxMenuHeight={80}
                 onChange={(e) => {
                   setDepartment(e.value);
                 }}
@@ -317,7 +333,7 @@ export default function CourseAdd() {
               marginTop: "20px",
             }}
             color="info"
-            onClick={() => handleAdd()}
+            onClick={() => handleChange2()}
           >
             Add Course
           </Button>

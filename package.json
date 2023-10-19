@@ -22,7 +22,7 @@
     "prop-types": "15.8.1",
     "react": ">=16.8.0",
     "react-bootstrap": "^2.7.0",
-    "react-chartjs-2": "3.0.4",
+    "react-chartjs-2": "^3.0.4",
     "react-datepicker": "^4.15.0",
     "react-dom": ">=16.8.0",
     "react-notification-alert": "0.0.13",

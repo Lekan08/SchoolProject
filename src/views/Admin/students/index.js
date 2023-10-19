@@ -218,7 +218,7 @@ export default function Students() {
                 }}
                 onClick={() => Navigate("/students/multiple")}
               >
-                Add multiple students (CSV)
+                Add Multiple Students (CSV)
               </div>
             </Paper>
           </div>

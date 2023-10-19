@@ -94,7 +94,7 @@ function SignInAdmin() {
         setOpened(false);
         console.log(result);
         if (result.status === "SUCCESS") {
-          Navigate("/schools");
+          Navigate("/dashboard");
           // localStorage.setItem("user", result.data);
           localStorage.setItem("user", JSON.stringify(result.data[0]));
           localStorage.setItem("user1", JSON.stringify(result.data[0]));
@@ -163,21 +163,21 @@ function SignInAdmin() {
                       display: "flex",
                     }}
                   />
-                  {/* <h1
+                  <h1
                     className="maza"
                     style={{
                       letterSpacing: "0.4vh",
                       fontSize: "1.1vw",
                       textAlign: "center",
-                      paddingTop: "2.5vh",
+                      paddingTop: "-2vh",
                       textShadow: "2px 2px 4px #000000",
                       fontFamily: "Comic Sans MS",
                     }}
                   >
-                    MAZA WAYS
-                  </h1> */}
+                    Admin
+                  </h1>
                   <div className="font-icon-detail">
-                    <p
+                    {/* <p
                       style={{
                         marginTop: 0,
                         cursor: "pointer",
@@ -190,8 +190,9 @@ function SignInAdmin() {
                         fontFamily: "Comic Sans MS",
                       }}
                     >
-                      Sign in, welcome.
-                    </p>
+                      Welcome
+                    </p> */}
+                    <Typography variant="h5" style={{ color: "#5e72e4", marginBottom: "5%" }}>Welcome</Typography>
                     <div style={{ padding: 5, lineHeight: "7vh" }}>
                       <TextField
                         id="outlined-required"
@@ -266,7 +267,7 @@ function SignInAdmin() {
                       <Typography
                         component={Link}
                         // to="/authentication/resetpassword"
-                        onClick={() => Navigate("/reset-password")}
+                        onClick={() => Navigate("/forgotAdmin-password")}
                         variant="button"
                         color="primary"
                         fontWeight="medium"
@@ -277,7 +278,7 @@ function SignInAdmin() {
                       </Typography>
                     </Box>
                     <br />
-                    <Box mb={1} mt={-1} textAlign="center">
+                    {/* <Box mb={1} mt={-1} textAlign="center">
                       Don't have an account? &nbsp;
                       <Typography
                         component={Link}
@@ -291,7 +292,7 @@ function SignInAdmin() {
                       >
                         Sign Up
                       </Typography>
-                    </Box>
+                    </Box> */}
                   </div>
                 </Col>
               </Row>

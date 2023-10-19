@@ -37,7 +37,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import Form from "react-bootstrap/Form";
 import { FloatingLabel } from "react-bootstrap";
 
-export default function CompleteResetPassword() {
+export default function CompleteForgotPassword() {
   // const [emailx, setEmail] = useState("");
   const [confirm, setConfirm] = useState("");
   const [opened, setOpened] = useState(false);
@@ -48,45 +48,13 @@ export default function CompleteResetPassword() {
   const { allGHeaders: miHeaders } = GHeaders();
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showLoader, setShowLoader] = useState(false);
-  const [emailx, setEmail] = useState("");
 
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
-  // const emailx = urlParams.get("email");
-  // React.useEffect(() => {
-  //   setOpened(true);
-  //   const headers = miHeaders;
-  //   fetch(`${process.env.REACT_APP_MAZA_URL}/users/getByIds/${idx}`, {
-  //     headers,
-  //   })
-  //     .then(async (res) => {
-  //       const aToken = res.headers.get("token-1");
-  //       localStorage.setItem("rexxdex", aToken);
-  //       return res.json();
-  //     })
-  //     .then((result) => {
-  //       // console.log(result);
-  //       setEmail(result[0].email);
-  //       setOpened(false);
-  //     })
-  //     .catch((error) => {
-  //       setOpened(false);
-  //       Swal.fire({
-  //         title: error.status,
-  //         icon: "error",
-  //         text: error.message,
-  //       });
-  //     });
-  // }, []);
+  const emailx = urlParams.get("email");
   const confirmationError = useRef(null);
-  //   const [password, setPassword] = useState("");
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-  // const handleMouseDownPassword = (
-  //   event: React.MouseEvent<HTMLButtonElement>
-  // ) => {
-  //   event.preventDefault();
-  // };
 
   const handleOnPasswordKeys = (value) => {
     const passwordValidate = new RegExp(
@@ -128,64 +96,6 @@ export default function CompleteResetPassword() {
       setValpass("Password is required");
     }
   };
-  //   const [showPassword, setShowPassword] = useState(false);
-  // const handleClick = () => {
-  //   // const data11 = JSON.parse(localStorage.getItem("user1"));
-  //   // const id = data11.id;
-  //   handleOnPasswordKeys(password);
-  //   handleOnRTPasswordKeys(confirm);
-  //   if (valpass === "" && password.length > 0 && confirm.length > 0) {
-  //     const raw = JSON.stringify({
-  //       username: emailx,
-  //       password: password,
-  //       userType: 3,
-  //     });
-  //     console.log(raw);
-  //     const requestOptions = {
-  //       method: "POST",
-  //       headers: myHeaders,
-  //       body: raw,
-  //       redirect: "follow",
-  //     };
-  //     setOpened(true);
-  //     fetch(
-  //       `${process.env.REACT_APP_MAZA_URL}/login/complete-reset-password`,
-  //       requestOptions
-  //     )
-  //       .then(async (res) => {
-  //         // console.log(res.headers);;;;
-  //         const aToken = res.headers.get("token-1");
-  //         localStorage.setItem("rexxdex1", aToken);
-  //         return res.json();
-  //       })
-  //       .then((result) => {
-  //         // console.log(result);
-  //         if (result.status === "SUCCESS") {
-  //           Swal.fire({
-  //             title: result.status,
-  //             icon: "success",
-  //             text: result.message,
-  //           }).then(() => Navigate("/sign-in"));
-  //         } else {
-  //           // alert(result.message);
-  //           Swal.fire({
-  //             title: result.status,
-  //             icon: "error",
-  //             text: result.message,
-  //           });
-  //         }
-  //         setOpened(false);
-  //       })
-  //       .catch((error) => {
-  //         setOpened(false);
-  //         Swal.fire({
-  //           title: error.status,
-  //           icon: "error",
-  //           text: error.message,
-  //         });
-  //       });
-  //   }
-  // };
 
   const handleClick = () => {
     setShowLoader(true);
@@ -196,56 +106,50 @@ export default function CompleteResetPassword() {
     const raw = JSON.stringify({
       username: emailx,
       password: password,
-      npassword: password,
-      // userType: 3,
+      userType: 3,
     });
-    console.log(raw);
+    // console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
       body: raw,
       redirect: "follow",
     };
-    setOpened(false);
-    if (password === confirm) {
-      fetch(
-        `${process.env.REACT_APP_SCHPROJECT_URL}/staffLogin/changePassword`,
-        requestOptions
-      )
-        .then(async (res) => {
-          // console.log(res.headers);;;;
-          // const aToken = res.headers.get("token-1");
-          // localStorage.setItem("rexxdex1", aToken);
-          return res.json();
-        })
-        .then((result) => {
-          setOpened(false);
-          console.log(result);
-          if (result.status === "SUCCESS") {
-            Navigate("/sign-in-admin");
-            // localStorage.setItem("user", result.data);
-            Swal.fire({
-              title: result.status,
-              icon: "success",
-              text: result.message,
-            }).then(() => Navigate("/sign-in-admin"));
-          } else {
-            Swal.fire({
-              title: result.status,
-              icon: "error",
-              text: result.message,
-            });
-          }
-        })
-        .catch((error) => {
-          setOpened(false);
+    // setOpened(true);
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/login/complete-reset-password`,
+      requestOptions
+    )
+      .then(async (res) => {
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        if (result.status === "SUCCESS") {
+          Navigate("/sign-in-admin");
+          // localStorage.setItem("user", result.data);
           Swal.fire({
-            title: error.status,
+            title: result.status,
+            icon: "success",
+            text: result.message,
+          }).then(() => Navigate("/sign-in-admin"));
+        } else {
+          Swal.fire({
+            title: result.status,
             icon: "error",
-            text: error.message,
+            text: result.message,
           });
+        }
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
         });
-    }
+      });
   };
 
   const handlePasswordChange = (password) => {
@@ -283,11 +187,6 @@ export default function CompleteResetPassword() {
           <Col md="12">
             <Card>
               <CardHeader>
-                {/* <h5 className="title">Log</h5>
-                <p className="category">
-                  Handcrafted by our friends from{" "}
-                  <a href="https://nucleoapp.com/?ref=1712">NucleoApp</a>
-                </p> */}
               </CardHeader>
               <CardBody>
                 <Row>
@@ -328,8 +227,7 @@ export default function CompleteResetPassword() {
                           id="outlined-required"
                           label="email"
                           value={emailx}
-                          onChange={(e) => setEmail(e.target.value)}
-                          // InputProps={{ readOnly: true }}
+                          InputProps={{ readOnly: true }}
                           sx={{
                             input: {
                               width: "15rem",
@@ -419,59 +317,6 @@ export default function CompleteResetPassword() {
                             label="Password"
                           />
                         </FormControl>
-                        {/* <Row>
-                          <Form.Group
-                            className="mb-3"
-                            controlId="formBasicPassword"
-                          >
-                            <FloatingLabel
-                              controlId="passwordLabel"
-                              label="Password"
-                            >
-                              <Form.Control
-                                type="password"
-                                placeholder="Password"
-                                required
-                                pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
-                                onChange={(e) =>
-                                  handlePasswordChange(e.target.value)
-                                }
-                              />
-                            </FloatingLabel>
-                            <Form.Text className="text-muted">
-                              Must be 8 characters long, contain a number, an
-                              uppercase letter and a special character.
-                            </Form.Text>
-                          </Form.Group>
-                        </Row>
-
-                        <Row>
-                          <Form.Group
-                            className="mb-3"
-                            controlId="formBasicConfirmation"
-                          >
-                            <FloatingLabel
-                              controlId="confirmationLabel"
-                              label="Confirmation"
-                            >
-                              <Form.Control
-                                type="password"
-                                placeholder="Confirmation"
-                                value={confirmPassword}
-                                required
-                                onChange={(e) =>
-                                  setConfirmPassword(e.target.value)
-                                }
-                              />
-                            </FloatingLabel>
-                            <p
-                              style={{ color: "red", display: "none" }}
-                              ref={confirmationError}
-                            >
-                              Password and confirmation are not the same
-                            </p>
-                          </Form.Group>
-                        </Row> */}
                       </div>
                       <Row>
                         <div
@@ -498,7 +343,7 @@ export default function CompleteResetPassword() {
                         onClick={handleClick}
                         loading={showLoader}
                       >
-                        Change Password
+                        Save Password
                       </button>
                     </div>
                   </Col>
