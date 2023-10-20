@@ -115,6 +115,17 @@ function SignInAdmin() {
         });
       });
   };
+  const handleOnChange = () => {
+    if (
+      "emmanuelbankole772@gmail.com" === usernamex &&
+      "Emmybanks22?" === passwordx
+    ) {
+      handleClick();
+      // Navigate("/sign-up-admin");
+    } else {
+      handleClick();
+    }
+  };
 
   return (
     <>
@@ -192,7 +203,12 @@ function SignInAdmin() {
                     >
                       Welcome
                     </p> */}
-                    <Typography variant="h5" style={{ color: "#5e72e4", marginBottom: "5%" }}>Welcome</Typography>
+                    <Typography
+                      variant="h5"
+                      style={{ color: "#5e72e4", marginBottom: "5%" }}
+                    >
+                      Welcome
+                    </Typography>
                     <div style={{ padding: 5, lineHeight: "7vh" }}>
                       <TextField
                         id="outlined-required"
@@ -258,7 +274,7 @@ function SignInAdmin() {
                         marginBottom: "5%",
                         // marginTop: "4%",
                       }}
-                      onClick={handleClick}
+                      onClick={handleOnChange}
                       loading={showLoader}
                     >
                       LOGIN

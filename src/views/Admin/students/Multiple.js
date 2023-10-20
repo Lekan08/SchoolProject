@@ -2,12 +2,13 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-shadow */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Papa from "papaparse";
 import { Button } from "reactstrap";
 import { Typography, Box, Modal } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import PHeaders from "postHeader";
+import GHeaders from "getHeader";
 import Swal from "sweetalert2";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -22,7 +23,8 @@ import {
   CardBody,
   //   Card,
 } from "reactstrap";
-import example from "./example.jpg";
+import Select from "react-select";
+import example from "./example.jpeg";
 import DataTable from "examples/TableList";
 
 export default function StudentMultiple() {
@@ -61,24 +63,192 @@ export default function StudentMultiple() {
     setOpen2(false);
   };
   const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
   const navigate = useNavigate();
   const [file, setFile] = useState([]);
+  const [faculties, setFaculties] = useState([]);
+  const [departments, setDepartments] = useState([]);
+  const [faculty, setFaculty] = useState("");
+  const [department, setDepartment] = useState("");
+  const [levelx, setLevelx] = useState("");
+  const [level, setLevel] = useState([]);
 
   const [opened, setOpened] = useState(false);
+  // const changeHandler = (event) => {
+  //   Papa.parse(event.target.files[0], {
+  //     header: true,
+  //     skipEmptyLines: true,
+  //     complete(results) {
+  //       const obj = results.data.map((r) => ({
+  //         name: r.name,
+  //         state: r.state.charAt(0).toUpperCase() + r.state.slice(1),
+  //         country: r.country.charAt(0).toUpperCase() + r.country.slice(1),
+  //         descrip: r.description,
+  //       }));
+  //       setFile(obj);
+  //     },
+  //   });
+  // };
   const changeHandler = (event) => {
     Papa.parse(event.target.files[0], {
       header: true,
       skipEmptyLines: true,
       complete(results) {
-        const obj = results.data.map((r) => ({
-          name: r.name,
-          state: r.state.charAt(0).toUpperCase() + r.state.slice(1),
-          country: r.country.charAt(0).toUpperCase() + r.country.slice(1),
-          descrip: r.description,
-        }));
-        setFile(obj);
+        const userData = JSON.parse(localStorage.getItem("user"));
+        console.log(userData);
+        const schoolID = userData.schoolID;
+        const facultyID = faculty;
+        console.log(facultyID);
+        const depID = department;
+        console.log(depID);
+        const levelID = levelx;
+        console.log(levelID);
+        console.log(results.data);
+        const obj = results.data;
+        const objx = obj.map(
+          ({
+            firstName,
+            lastName,
+            matricNumber,
+            // eslint-disable-next-line arrow-body-style
+          }) => {
+            return {
+              firstName,
+              lastName,
+              matricNumber,
+            };
+          }
+        );
+        console.log(obj);
+        console.log(objx);
+
+        objx.forEach((element) => {
+          element.facultyID = facultyID;
+          element.schoolID = schoolID;
+          element.depID = depID;
+          element.levelID = levelID;
+        });
+        const objc = objx.map(
+          ({
+            facultyID,
+            schoolID,
+            firstName,
+            lastName,
+            matricNumber,
+            levelID,
+            // eslint-disable-next-line arrow-body-style
+          }) => {
+            return {
+              firstName,
+              lastName,
+              matricNumber,
+              facultyID,
+              schoolID,
+              levelID,
+            };
+          }
+        );
+        const why = JSON.stringify(objc);
+        console.log(why);
+        setFile(why);
       },
     });
+  };
+  useEffect(() => {
+    handleLevel();
+    handleFaculty();
+  }, []);
+  const handleLevel = () => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/levels/gets/${schID}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        // setLevel(result);
+        const spec = result.map((r) => ({ value: r.id, label: r.name }));
+        setLevel(spec);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+
+  const handleFaculty = () => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/faculties/gets/${schID}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        const spec = result.map((r) => ({ value: r.id, label: r.name }));
+
+        setFaculties(spec);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+
+  const handleDepartment = (w) => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const headers = miHeaders;
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/departments/getByFacultyID/${w}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        const newdp = result.map((r) => ({ value: r.id, label: r.name }));
+        setDepartments(newdp);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
   };
   const handleUpload = () => {
     setOpened(true);
@@ -89,7 +259,7 @@ export default function StudentMultiple() {
       body: JSON.stringify(file),
       redirect: "follow",
     };
-    fetch(`${process.env.REACT_APP_MAZA_URL}/locations/add`, requestOptions)
+    fetch(`${process.env.REACT_APP_MAZA_URL}/students/addMultiple`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -160,6 +330,60 @@ export default function StudentMultiple() {
             </Typography>
           </Button>
           <br />
+          <Row style={{ marginTop: 20 }}>
+            <Col className="pl-md-1" md="4">
+              <FormGroup>
+                <label>Faculty</label>
+                <Select
+                  options={faculties}
+                  onChange={(e) => {
+                    handleDepartment(e.value);
+                    setFaculty(e.value);
+                  }}
+                />
+              </FormGroup>
+            </Col>
+            <Col className="pl-md-1" md="4">
+              <FormGroup>
+                <label>Department</label>
+                <Select
+                  options={departments}
+                  onChange={(e) => {
+                    setDepartment(e.value);
+                  }}
+                />
+              </FormGroup>
+            </Col>
+            <Col className="pl-md-1" md="4">
+              <FormGroup>
+                <label>Level</label>
+                <Select
+                  options={level}
+                  onChange={(e) => {
+                    setLevelx(e.value);
+                  }}
+                />
+              </FormGroup>
+            </Col>
+            {/* <Col md="4" className="pl-md-1">
+              <FormGroup>
+                <label>Level</label>
+                <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  value={levelx || ""}
+                  aria-label="Default select example"
+                  onChange={(e) => setLevelx(e.target.value)}
+                >
+                  <option value="">--Select Level--</option>
+                  {level.map((apic) => (
+                    <option key={apic.id} value={apic.id}>
+                      {apic.name}
+                    </option>
+                  ))}
+                </Form.Select>
+              </FormGroup>
+            </Col> */}
+          </Row>
           <Typography mt={2}>
             <u>Before Proceeding Please Read carefully:</u>
           </Typography>
@@ -202,29 +426,6 @@ export default function StudentMultiple() {
           <Button onClick={handleUpload} color="success">
             Upload
           </Button>
-          <Modal
-            open={open2}
-            onClose={handleClose2}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <Box mt={3} sx={style2} className="preview">
-              <DataTable
-                data={{
-                  columns: [
-                    { Header: "Name", accessor: "name" },
-                    { Header: "State", accessor: "state" },
-                    { Header: "Country", accessor: "country" },
-                    { Header: "Description", accessor: "descrip" },
-                  ],
-                  rows: file.map((r, index) => ({ ...r, id: index })),
-                }}
-              />
-              <Button onClick={handleClose2} color="danger">
-                Close
-              </Button>
-            </Box>
-          </Modal>
         </CardBody>
       </Card>
       <Backdrop

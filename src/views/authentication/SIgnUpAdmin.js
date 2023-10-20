@@ -58,6 +58,11 @@ function SignUpAdmin() {
   const [sexx, setSex] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   console.log(emailx);
+  const [schPhonex, setSchPhone] = useState("");
+  const [websitex, setWebsite] = useState("");
+  const [yearEstablishedx, setYearEstablished] = useState(new Date());
+  const [visionStatementx, setVisionStatement] = useState("");
+  const [missionStatementx, setMissionStatement] = useState("");
 
   const [validated, setValidated] = useState(false);
   // const [password, setPassword] = useState("");
@@ -177,6 +182,11 @@ function SignUpAdmin() {
         state: statex,
         country: countryx,
         schoolType: schoolTypex,
+        phoneNumber: schPhonex,
+        website: websitex,
+        yearEstablished: yearEstablishedx,
+        visionStatement: visionStatementx,
+        missionStatement: missionStatementx,
       });
       const requestOptions = {
         method: "POST",
@@ -392,371 +402,494 @@ function SignUpAdmin() {
   };
 
   return (
-    <><h4 style={{ marginBottom: "150px" }}></h4><div className="form-wrapper">
-      {/* <br /> */}
-      <Form noValidate validated={validated}>
-
-        <Container fluid>
-          <h2 style={{ textAlign: "center" }}>
-            School Information
-          </h2>
-          <Row>
-            <Col sm={6}>
-              <Form.Group>
-                <FloatingLabel controlId="firstnamLabel" label="Name of School">
-                  <Form.Control
-                    type="text"
-                    value={namex}
-                    onChange={(e) => setName(e.target.value)}
-                    // placeholder="First name"
-                    required />
-                </FloatingLabel>
-                <Form.Control.Feedback type="invalid">
-                  Do not leave empty
-                </Form.Control.Feedback>
-              </Form.Group>
-            </Col>
-            <Col sm={6} style={{ marginBottom: "10px" }}>
-              <Form.Group>
-                <FloatingLabel
-                  controlId="Head of school"
-                  label="Head of school name"
+    <>
+      <h4 style={{ marginBottom: "150px" }}></h4>
+      <div className="form-wrapper">
+        {/* <br /> */}
+        <Form noValidate validated={validated}>
+          <Container fluid>
+            <h2 style={{ textAlign: "center" }}>School Information</h2>
+            <Row>
+              <Col sm={6}>
+                <Form.Group>
+                  <FloatingLabel
+                    controlId="firstnamLabel"
+                    label="Name of School"
+                  >
+                    <Form.Control
+                      type="text"
+                      value={namex}
+                      onChange={(e) => setName(e.target.value)}
+                      // placeholder="First name"
+                      required
+                    />
+                  </FloatingLabel>
+                  <Form.Control.Feedback type="invalid">
+                    Do not leave empty
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </Col>
+              <Col sm={6} style={{ marginBottom: "10px" }}>
+                <Form.Group>
+                  <FloatingLabel
+                    controlId="Head of school"
+                    label="Head of school name"
+                  >
+                    <Form.Control
+                      type="text"
+                      value={headOfSch}
+                      onChange={(e) => setHeadOfSch(e.target.value)}
+                      // placeholder="First name"
+                      required
+                    />
+                  </FloatingLabel>
+                  <Form.Control.Feedback type="invalid">
+                    Do not leave empty
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Typography
+                  variant="button"
+                  fontWeight="regular"
+                  color="text"
+                  mt={2}
                 >
-                  <Form.Control
-                    type="text"
-                    value={headOfSch}
-                    onChange={(e) => setHeadOfSch(e.target.value)}
-                    // placeholder="First name"
-                    required />
-                </FloatingLabel>
-                <Form.Control.Feedback type="invalid">
-                  Do not leave empty
-                </Form.Control.Feedback>
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Typography
-                variant="button"
-                fontWeight="regular"
-                color="text"
-                mt={2}
-              >
-                Country
-              </Typography>
-              <Box textAlign="left">
-                <Form.Select
-                  value={countryx || ""}
-                  aria-label="Default select example"
-                  onChange={handleOnChangeRCCountry}
-                  required
+                  Country
+                </Typography>
+                <Box textAlign="left">
+                  <Form.Select
+                    value={countryx || ""}
+                    aria-label="Default select example"
+                    onChange={handleOnChangeRCCountry}
+                    required
+                  >
+                    <option>--Select Country--</option>
+                    {AlCountry.map((apic) => (
+                      <option key={apic.code3} value={apic.name}>
+                        {apic.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Box>
+              </Col>
+              <Col>
+                <Typography
+                  variant="button"
+                  fontWeight="regular"
+                  color="text"
+                  mt={2}
                 >
-                  <option>--Select Country--</option>
-                  {AlCountry.map((apic) => (
-                    <option key={apic.code3} value={apic.name}>
-                      {apic.name}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Box>
-            </Col>
-            <Col>
-              <Typography
-                variant="button"
-                fontWeight="regular"
-                color="text"
-                mt={2}
-              >
-                State
-              </Typography>
-              <Box textAlign="left">
-                <Form.Select
-                  value={statex || ""}
-                  aria-label="Default select example"
-                  onChange={handleOnChangeRCState}
-                  required
-                >
-                  <option>--Select State--</option>
-                  {allStates.map((apis) => (
-                    <option key={apis.code} value={apis.name}>
-                      {apis.name}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Box>
-            </Col>
-          </Row>
-          <br />
-          <Row>
-            <Col sm={6} style={{ marginBottom: "10px" }}>
-              <Form.Group>
-                <FloatingLabel controlId="Street" label="Street">
-                  <Form.Control
-                    type="text"
-                    value={streetx}
-                    onChange={(e) => setStreet(e.target.value)}
-                    // placeholder="First name"
-                    required />
-                </FloatingLabel>
-                <Form.Control.Feedback type="invalid">
-                  Do not leave empty
-                </Form.Control.Feedback>
-              </Form.Group>
-            </Col>
-            <Col sm={6} style={{ marginBottom: "10px" }}>
-              <Form.Group>
-                <FloatingLabel controlId="City" label="City">
-                  <Form.Control
-                    type="text"
-                    value={cityx}
-                    onChange={(e) => setCity(e.target.value)}
-                    // placeholder="First name"
-                    required />
-                </FloatingLabel>
-                <Form.Control.Feedback type="invalid">
-                  Do not leave empty
-                </Form.Control.Feedback>
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col sm={6}>
-              <Box mb={4}>
-                {/* <Typography variant="button" fontWeight="regular" color="text">
+                  State
+                </Typography>
+                <Box textAlign="left">
+                  <Form.Select
+                    value={statex || ""}
+                    aria-label="Default select example"
+                    onChange={handleOnChangeRCState}
+                    required
+                  >
+                    <option>--Select State--</option>
+                    {allStates.map((apis) => (
+                      <option key={apis.code} value={apis.name}>
+                        {apis.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Box>
+              </Col>
+            </Row>
+            <br />
+            <Row>
+              <Col sm={6} style={{ marginBottom: "10px" }}>
+                <Form.Group>
+                  <FloatingLabel controlId="Street" label="Street">
+                    <Form.Control
+                      type="text"
+                      value={streetx}
+                      onChange={(e) => setStreet(e.target.value)}
+                      // placeholder="First name"
+                      required
+                    />
+                  </FloatingLabel>
+                  <Form.Control.Feedback type="invalid">
+                    Do not leave empty
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </Col>
+              <Col sm={6} style={{ marginBottom: "10px" }}>
+                <Form.Group>
+                  <FloatingLabel controlId="City" label="City">
+                    <Form.Control
+                      type="text"
+                      value={cityx}
+                      onChange={(e) => setCity(e.target.value)}
+                      // placeholder="First name"
+                      required
+                    />
+                  </FloatingLabel>
+                  <Form.Control.Feedback type="invalid">
+                    Do not leave empty
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6}>
+                <Box mb={4}>
+                  {/* <Typography variant="button" fontWeight="regular" color="text">
       School Type
     </Typography> */}
-                <Form.Select
-                  onChange={(e) => setSchoolType(e.target.value)}
-                  value={schoolTypex || ""}
-                  aria-label="Default select example"
+                  <Form.Select
+                    onChange={(e) => setSchoolType(e.target.value)}
+                    value={schoolTypex || ""}
+                    aria-label="Default select example"
+                  >
+                    <option>---School Type---</option>
+                    <option value="0">University</option>
+                    <option value="1">Polytechnic</option>
+                    <option value="2">College of Education</option>
+                  </Form.Select>
+                </Box>
+              </Col>
+              <Col sm={6}>
+                <Typography variant="button" fontWeight="regular" color="text">
+                  Phone Number
+                </Typography>
+                <PhoneInput
+                  value={schPhonex}
+                  inputStyle={{ width: "100%" }}
+                  buttonStyle={{}}
+                  onChange={setSchPhone}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6} style={{ marginBottom: "10px" }}>
+                <Form.Group>
+                  <FloatingLabel controlId="Website" label="Website">
+                    <Form.Control
+                      type="text"
+                      value={websitex}
+                      onChange={(e) => setWebsite(e.target.value)}
+                      // placeholder="First name"
+                      required
+                    />
+                  </FloatingLabel>
+                  <Form.Control.Feedback type="invalid">
+                    Do not leave empty
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </Col>
+              <Col sm={6}>
+                <Typography
+                  variant="button"
+                  fontWeight="regular"
+                  color="black"
+                  mt={1}
                 >
-                  <option>---School Type---</option>
-                  <option value="0">University</option>
-                  <option value="1">Polytechnic</option>
-                  <option value="2">College of Education</option>
-                </Form.Select>
-              </Box>
-            </Col>
-          </Row>
-          {/* <br /> */}
-          {/* <Box
+                  Year Established
+                </Typography>
+                <Box mb={6} mt={1}>
+                  <div>
+                    <style>
+                      {`.date-picker input {
+                      width: 100%
+                 }`}
+                    </style>
+                    <DatePicker
+                      date={startDate}
+                      wrapperClassName="date-picker"
+                      placeholder="Select Birth Date"
+                      dateFormat="dd/MM/yyyy"
+                      confirmBtnText="Confirm"
+                      showCancelButton="true"
+                      customStyles={{
+                        placeholderText: {
+                          fontSize: 5,
+                        },
+                        dateIcon: {
+                          height: 0,
+                          width: 0,
+                        },
+                        dateText: {
+                          color: "#b3b4b5",
+                          fontSize: 16,
+                        },
+                        dateInput: {
+                          borderWidth: 0,
+                        },
+                      }}
+                      selected={yearEstablishedx}
+                      onChange={(date) => setYearEstablished(date)}
+                      peekNextMonth
+                      showMonthDropdown
+                      showYearDropdown
+                      dropdownMode="select"
+                    />
+                  </div>
+                </Box>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6} style={{ marginBottom: "10px" }}>
+                <Form.Group>
+                  <FloatingLabel controlId="visionStatement" label="Vision Statement">
+                    <Form.Control
+                      type="text"
+                      value={visionStatementx}
+                      onChange={(e) => setVisionStatement(e.target.value)}
+                      // placeholder="First name"
+                      required
+                    />
+                  </FloatingLabel>
+                  <Form.Control.Feedback type="invalid">
+                    Do not leave empty
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </Col>
+              <Col sm={6} style={{ marginBottom: "10px" }}>
+                <FloatingLabel controlId="misionstatement" label="Mision Statement">
+                  <Form.Control
+                    type="text"
+                    value={missionStatementx}
+                    onChange={(e) => setMissionStatement(e.target.value)}
+                    // placeholder="Last name"
+                    required
+                  />
+                </FloatingLabel>
+              </Col>
+            </Row>
+            {/* <br /> */}
+            {/* <Box
       component="span"
       sx={{ p: 2, border: "1px dashed grey" }}
       alignSelf={"center"}
     >
       <Button>Personal Information</Button>
     </Box> */}
-          <h2 style={{ marginBottom: "15px", textAlign: "center" }}>
-            Personal Information
-          </h2>
+            <h2 style={{ marginBottom: "15px", textAlign: "center" }}>
+              Personal Information
+            </h2>
 
-          <Row>
-            <Col sm={6} style={{ marginBottom: "10px" }}>
-              <Form.Group>
-                <FloatingLabel controlId="firstnamLabel" label="First name">
+            <Row>
+              <Col sm={6} style={{ marginBottom: "10px" }}>
+                <Form.Group>
+                  <FloatingLabel controlId="firstnamLabel" label="First name">
+                    <Form.Control
+                      type="text"
+                      value={firstNamex}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      // placeholder="First name"
+                      required
+                    />
+                  </FloatingLabel>
+                  <Form.Control.Feedback type="invalid">
+                    Do not leave empty
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </Col>
+              <Col sm={6} style={{ marginBottom: "10px" }}>
+                <FloatingLabel controlId="lastnameLabel" label="Last name">
                   <Form.Control
                     type="text"
-                    value={firstNamex}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    // placeholder="First name"
-                    required />
-                </FloatingLabel>
-                <Form.Control.Feedback type="invalid">
-                  Do not leave empty
-                </Form.Control.Feedback>
-              </Form.Group>
-            </Col>
-            <Col sm={6} style={{ marginBottom: "10px" }}>
-              <FloatingLabel controlId="lastnameLabel" label="Last name">
-                <Form.Control
-                  type="text"
-                  value={lastNamex}
-                  onChange={(e) => setLastName(e.target.value)}
-                  // placeholder="Last name"
-                  required />
-              </FloatingLabel>
-            </Col>
-          </Row>
-
-          <Row>
-          <Col sm={6}>
-              <Form.Group>
-                <FloatingLabel controlId="firstnamLabel" label="Other Name">
-                  <Form.Control
-                    type="text"
-                    value={othernamex}
-                    onChange={(e) => setOtherName(e.target.value)}
-                    // placeholder="First name"
-                    required />
-                </FloatingLabel>
-                <Form.Control.Feedback type="invalid">
-                  Do not leave empty
-                </Form.Control.Feedback>
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group className="mb-3" controlId="formBasicEmail">
-                <FloatingLabel controlId="emailLabel" label="Enter email">
-                  <Form.Control
-                    type="email"
-                    // placeholder="Enter email"
-                    value={emailx}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={lastNamex}
+                    onChange={(e) => setLastName(e.target.value)}
+                    // placeholder="Last name"
                     required
-                    pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$" />
+                  />
                 </FloatingLabel>
-                <Form.Text className="text-muted">
-                  We'll (hopefully) never share your email with anyone else.
-                </Form.Text>
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-          
-          </Row>
-          <Row>
-            <Col sm={4}>
-              <Typography variant="button" fontWeight="regular" color="text">
-                Phone Number
-              </Typography>
-              <PhoneInput
-                value={phonex}
-                inputStyle={{ width: "100%" }}
-                buttonStyle={{}}
-                onChange={setPhone} />
-            </Col>
-            <Col sm={4}>
-              <Typography
-                variant="button"
-                fontWeight="regular"
-                color="black"
-                mt={1}
-              >
-                Date Of Birth
-              </Typography>
-              <Box mb={6} mt={1}>
-                <div>
-                  <style>
-                    {`.date-picker input {
+              </Col>
+            </Row>
+
+            <Row>
+              <Col sm={6}>
+                <Form.Group>
+                  <FloatingLabel controlId="firstnamLabel" label="Other Name">
+                    <Form.Control
+                      type="text"
+                      value={othernamex}
+                      onChange={(e) => setOtherName(e.target.value)}
+                      // placeholder="First name"
+                      required
+                    />
+                  </FloatingLabel>
+                  <Form.Control.Feedback type="invalid">
+                    Do not leave empty
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="mb-3" controlId="formBasicEmail">
+                  <FloatingLabel controlId="emailLabel" label="Enter email">
+                    <Form.Control
+                      type="email"
+                      // placeholder="Enter email"
+                      value={emailx}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+                    />
+                  </FloatingLabel>
+                  <Form.Text className="text-muted">
+                    We'll (hopefully) never share your email with anyone else.
+                  </Form.Text>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row></Row>
+            <Row>
+              <Col sm={4}>
+                <Typography variant="button" fontWeight="regular" color="text">
+                  Phone Number
+                </Typography>
+                <PhoneInput
+                  value={phonex}
+                  inputStyle={{ width: "100%" }}
+                  buttonStyle={{}}
+                  onChange={setPhone}
+                />
+              </Col>
+              <Col sm={4}>
+                <Typography
+                  variant="button"
+                  fontWeight="regular"
+                  color="black"
+                  mt={1}
+                >
+                  Date Of Birth
+                </Typography>
+                <Box mb={6} mt={1}>
+                  <div>
+                    <style>
+                      {`.date-picker input {
                       width: 100%
                  }`}
-                  </style>
-                  <DatePicker
-                    date={startDate}
-                    wrapperClassName="date-picker"
-                    placeholder="Select Birth Date"
-                    dateFormat="dd/MM/yyyy"
-                    confirmBtnText="Confirm"
-                    showCancelButton="true"
-                    customStyles={{
-                      placeholderText: {
-                        fontSize: 5,
-                      },
-                      dateIcon: {
-                        height: 0,
-                        width: 0,
-                      },
-                      dateText: {
-                        color: "#b3b4b5",
-                        fontSize: 16,
-                      },
-                      dateInput: {
-                        borderWidth: 0,
-                      },
-                    }}
-                    selected={startDate}
-                    onChange={(date) => setStartDate(date)}
-                    peekNextMonth
-                    showMonthDropdown
-                    showYearDropdown
-                    dropdownMode="select" />
-                </div>
-              </Box>
-            </Col>
-            <Col sm={4}>
-            <Typography
-                variant="button"
-                fontWeight="regular"
-                color="black"
-                mt={1}
-              >
-                Sex
-              </Typography>
-              <Box mb={4}>
-                {/* <Typography variant="button" fontWeight="regular" color="text">
+                    </style>
+                    <DatePicker
+                      date={startDate}
+                      wrapperClassName="date-picker"
+                      placeholder="Select Birth Date"
+                      dateFormat="dd/MM/yyyy"
+                      confirmBtnText="Confirm"
+                      showCancelButton="true"
+                      customStyles={{
+                        placeholderText: {
+                          fontSize: 5,
+                        },
+                        dateIcon: {
+                          height: 0,
+                          width: 0,
+                        },
+                        dateText: {
+                          color: "#b3b4b5",
+                          fontSize: 16,
+                        },
+                        dateInput: {
+                          borderWidth: 0,
+                        },
+                      }}
+                      selected={startDate}
+                      onChange={(date) => setStartDate(date)}
+                      peekNextMonth
+                      showMonthDropdown
+                      showYearDropdown
+                      dropdownMode="select"
+                    />
+                  </div>
+                </Box>
+              </Col>
+              <Col sm={4}>
+                <Typography
+                  variant="button"
+                  fontWeight="regular"
+                  color="black"
+                  mt={1}
+                >
+                  Sex
+                </Typography>
+                <Box mb={4}>
+                  {/* <Typography variant="button" fontWeight="regular" color="text">
       School Type
     </Typography> */}
-                <Form.Select
-                  onChange={(e) => setSex(e.target.value)}
-                  value={sexx || ""}
-                  aria-label="Default select example"
+                  <Form.Select
+                    onChange={(e) => setSex(e.target.value)}
+                    value={sexx || ""}
+                    aria-label="Default select example"
+                  >
+                    <option>---Sex---</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                  </Form.Select>
+                </Box>
+              </Col>
+            </Row>
+
+            <Row>
+              <Form.Group className="mb-3" controlId="formBasicPassword">
+                <FloatingLabel controlId="passwordLabel" label="Password">
+                  <Form.Control
+                    type="password"
+                    placeholder="Password"
+                    required
+                    pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
+                    onChange={(e) => handlePasswordChange(e.target.value)}
+                  />
+                </FloatingLabel>
+                <Form.Text className="text-muted">
+                  Must be 8 characters long, contain a number, an uppercase
+                  letter and a special character.
+                </Form.Text>
+              </Form.Group>
+            </Row>
+
+            <Row>
+              <Form.Group className="mb-3" controlId="formBasicConfirmation">
+                <FloatingLabel
+                  controlId="confirmationLabel"
+                  label="Confirmation"
                 >
-                  <option>---Sex---</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                </Form.Select>
-              </Box>
-            </Col>
-          </Row>
+                  <Form.Control
+                    type="password"
+                    placeholder="Confirmation"
+                    value={confirmPassword}
+                    required
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                  />
+                </FloatingLabel>
+                <p
+                  style={{ color: "red", display: "none" }}
+                  ref={confirmationError}
+                >
+                  Password and confirmation are not the same
+                </p>
+              </Form.Group>
+            </Row>
 
-          <Row>
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <FloatingLabel controlId="passwordLabel" label="Password">
-                <Form.Control
-                  type="password"
-                  placeholder="Password"
-                  required
-                  pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
-                  onChange={(e) => handlePasswordChange(e.target.value)} />
-              </FloatingLabel>
-              <Form.Text className="text-muted">
-                Must be 8 characters long, contain a number, an uppercase letter
-                and a special character.
-              </Form.Text>
-            </Form.Group>
-          </Row>
-
-          <Row>
-            <Form.Group className="mb-3" controlId="formBasicConfirmation">
-              <FloatingLabel controlId="confirmationLabel" label="Confirmation">
-                <Form.Control
-                  type="password"
-                  placeholder="Confirmation"
-                  value={confirmPassword}
-                  required
-                  onChange={(e) => setConfirmPassword(e.target.value)} />
-              </FloatingLabel>
-              <p
-                style={{ color: "red", display: "none" }}
-                ref={confirmationError}
+            <Box mb={1} mt={-1} textAlign="center">
+              Already have an account? &nbsp;
+              <Typography
+                component={Link}
+                // to="/authentication/sign-up-staff"
+                onClick={() => Navigate("/sign-in")}
+                variant="button"
+                color="primary"
+                fontWeight="medium"
+                id="forgotpassword"
+                size="small"
               >
-                Password and confirmation are not the same
-              </p>
-            </Form.Group>
-          </Row>
-
-          <Box mb={1} mt={-1} textAlign="center">
-                      Already have an account? &nbsp;
-                      <Typography
-                        component={Link}
-                        // to="/authentication/sign-up-staff"
-                        onClick={() => Navigate("/sign-in")}
-                        variant="button"
-                        color="primary"
-                        fontWeight="medium"
-                        id="forgotpassword"
-                        size="small"
-                      >
-                        Sign In
-                      </Typography>
-                    </Box>
-          <Button variant="primary" onClick={handleSubmit}>
-            Register
-          </Button>
-        </Container>
-      </Form>
-    </div></>
+                Sign In
+              </Typography>
+            </Box>
+            <Button variant="primary" onClick={handleSubmit}>
+              Register
+            </Button>
+          </Container>
+        </Form>
+      </div>
+    </>
   );
 }
 

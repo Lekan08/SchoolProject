@@ -10,19 +10,29 @@ import { Form } from "react-bootstrap";
 import { Card } from "@mui/material";
 import { Button, FormGroup, Input, Row, Col, CardBody } from "reactstrap";
 import Navigate from "useNavigate";
+import { Box } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import { Box } from "@mui/material";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { FloatingLabel } from "react-bootstrap";
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
-export default function School() {
+export default function AdminProfile() {
   const [opened, setOpened] = useState(false);
-  const [name, setName] = useState("");
-  const [id, setId] = useState("");
-  const [email, setEmail] = useState("");
+  const [firstNamex, setFirstName] = useState("");
+  const [lastNamex, setLastName] = useState("");
+  const [otherNamex, setOtherName] = useState("");
+  const [emailx, setEmail] = useState("");
+  const [phonex, setPhone] = useState("");
+  const [facultyName, setFacultyName] = useState("");
+  const [department, setDepartment] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [sexx, setSex] = useState("");
+  const [headOfDepart, setHeadOfDepart] = useState("");
+  const [fac, setFac] = useState([]);
+  const [facultyx, setFaculty] = useState("");
+  const [depart, setDepart] = useState([]);
   const [head, setHead] = useState("");
   const [city, setCity] = useState("");
   const [street, setStreet] = useState("");
@@ -30,11 +40,6 @@ export default function School() {
   const [allStates, setAllStates] = useState([]);
   const [residentialStatex, setResidentialState] = useState("");
   const [residentialCountryx, setResidentialCountry] = useState("");
-  const [websitex, setWebsite] = useState("");
-  const [phonex, setPhone] = useState("");
-  const [yearEst, setYearEst] = useState(new Date());
-  const [visionStatementx, setVisionStatement] = useState("");
-  const [missionStatementx, setMissionStatement] = useState("");
 
   const handleOnChangeRCCountry = (e) => {
     console.log(type);
@@ -56,13 +61,16 @@ export default function School() {
   const [type, setType] = useState("");
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
+
   useEffect(() => {
     setOpened(true);
+    handleGetFac();
+    handleGetDepart();
     const idx = JSON.parse(localStorage.getItem("user"));
-    // console.log(idx);
+    console.log(idx);
     const headers = miHeaders;
     fetch(
-      `${process.env.REACT_APP_SCHPROJECT_URL}/schools/getByIds/${idx.schoolID}`,
+      `${process.env.REACT_APP_SCHPROJECT_URL}/staffs/getByIds/${idx.staffID}`,
       {
         headers,
       }
@@ -75,27 +83,20 @@ export default function School() {
       .then((result) => {
         setOpened(false);
         console.log(result);
-        setName(result[0].name);
+        setFirstName(result[0].firstName);
+        setLastName(result[0].lastName);
+        setOtherName(result[0].otherName);
         setEmail(result[0].email);
-        setHead(result[0].head);
-        setCity(result[0].city);
-        setId(result[0].id);
-        setStreet(result[0].street);
-        // setResidentialCountry(result[0].country);
-        const c = { target: { value: result[0].country } };
-        handleOnChangeRCCountry(c);
-        setType(String(result[0].schoolType));
-        // console.log(result);
-        setResidentialState(result[0].state);
-        setWebsite(result[0].website);
         setPhone(result[0].phoneNumber);
-        const date = parseInt(result[0].yearEstablished);
+        setFacultyName(result[0].facultyName);
+        setDepartment(result[0].depName);
+        // setFaculty(result[0].)
+        // setStartDate(result[0].dateOfBirth);
+        const date = parseInt(result[0].dateOfBirth);
         console.log(result[0].dateOfBirth);
         console.log(date);
-        // setStartDate(new Date(date));
-        setYearEst(new Date(date));
-        setVisionStatement(result[0].visionStatement);
-        setMissionStatement(result[0].missionStatement);
+        setStartDate(new Date(date));
+        setSex(result[0].sex);
       })
       .catch((error) => {
         setOpened(false);
@@ -111,24 +112,23 @@ export default function School() {
     // const data11 = JSON.parse(localStorage.getItem("user1"));
     // const id = data11.id;
     const id = JSON.parse(localStorage.getItem("user1"));
-
-    const yearEsta = new Date(yearEst).getTime();
+    const dob = new Date(startDate).getTime();
 
     const raw = JSON.stringify({
-      id: id.schoolID,
-      name: name,
-      email: email,
-      head: head,
-      city: city,
-      street: street,
-      state: residentialStatex,
-      country: residentialCountryx,
-      schoolType: Number(type),
+      id: id.id,
+      firstName: firstNamex,
+      lastName: lastNamex,
+      otherName: otherNamex,
+      email: emailx,
       phoneNumber: phonex,
-      website: websitex,
-      yearEstablished: yearEsta,
-      visionStatement: visionStatementx,
-      missionStatement: missionStatementx,
+      sex: sexx,
+      dateOfBirth: dob,
+      roleID: id.roleID,
+      schoolID: id.schoolID,
+      facultyID: facultyx,
+      depID: headOfDepart,
+      deleteFlag: id.deleteFlag,
+      lecturer: id.lecturer,
     });
     console.log(raw);
     const requestOptions = {
@@ -139,7 +139,7 @@ export default function School() {
     };
     setOpened(true);
     fetch(
-      `${process.env.REACT_APP_SCHPROJECT_URL}/schools/update`,
+      `${process.env.REACT_APP_SCHPROJECT_URL}/staffs/update`,
       requestOptions
     )
       .then(async (res) => {
@@ -186,11 +186,73 @@ export default function School() {
       });
   };
 
+  //   useEffect(() => {
+  const handleGetDepart = () => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/departments/gets/${schID}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setDepart(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+  //   }, []);
+
+  //   useEffect(() => {
+  const handleGetFac = () => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/faculties/gets/${schID}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setFac(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+  //   }, []);
+
   return (
     <div className="content">
       <Card mx={2}>
         <CardBody>
-          <LocationCity
+          <AccountBoxIcon
             sx={{
               fontSize: 230,
               marginLeft: "auto",
@@ -200,148 +262,98 @@ export default function School() {
           />
           <br />
           <Row>
-            <Col className="pl-md-1" md="6">
+            <Col className="pl-md-1" md="4">
               <FormGroup>
-                <label>School Name</label>
+                <label>First Name</label>
                 <Input
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => setFirstName(e.target.value)}
                   // defaultValue={`${data11.firstName}`}
                   placeholder="First Name"
-                  value={name}
+                  value={firstNamex}
                   //   disabled
                   type="text"
                 />
               </FormGroup>
             </Col>
-            <Col className="pl-md-1" md="6">
+            <Col className="pl-md-1" md="4">
+              <FormGroup>
+                <label>LastName</label>
+                <Input
+                  onChange={(e) => setLastName(e.target.value)}
+                  // defaultValue={`${data11.firstName}`}
+                  placeholder="Last Name"
+                  value={lastNamex}
+                  //   disabled
+                  type="text"
+                />
+              </FormGroup>
+            </Col>
+            <Col className="pl-md-1" md="4">
+              <FormGroup>
+                <label>Other Name</label>
+                <Input
+                  onChange={(e) => setOtherName(e.target.value)}
+                  // defaultValue={`${data11.firstName}`}
+                  placeholder="First Name"
+                  value={otherNamex}
+                  //   disabled
+                  type="text"
+                />
+              </FormGroup>
+            </Col>
+          </Row>
+          <Row>
+            <Col className="pl-md-1" md="4">
               <FormGroup>
                 <label htmlFor="exampleInputEmail1">Email address</label>
                 <Input
                   onChange={(e) => setEmail(e.target.value)}
-                  value={email}
+                  value={emailx}
                   // value=""
                   placeholder="School mail goes here"
                   type="email"
                 />
               </FormGroup>
             </Col>
-          </Row>
-          <Row style={{ marginTop: 20 }}>
-            <Col md="6" className="pl-md-1">
+            <Col md="4" className="pl-md-1">
               <FormGroup>
-                <label>Admin</label>
-                <Input
-                  // defaultValue={`${data11.lastName}`}
-                  placeholder="Admin"
-                  value={head}
-                  //   onChange={() => console.log()}
-                  type="text"
-                  onChange={(e) => setHead(e.target.value)}
-                  //   value={items[0]?.walletBalance}
-                  // disabled
-                />
-              </FormGroup>
-            </Col>{" "}
-            <Col md="6" className="pl-md-1">
-              <FormGroup>
-                <label>School Type</label>
+                <label>Department</label>
                 <Form.Select
                   style={{ marginBottom: "20px" }}
-                  value={type || ""}
+                  value={headOfDepart || ""}
                   aria-label="Default select example"
-                  onChange={(e) => setType(e.target.value)}
+                  onChange={(e) => setHeadOfDepart(e.target.value)}
                 >
-                  <option value="">--Select Type--</option>
-                  <option value="0">University</option>
-                  <option value="1">Polytechnic</option>
-                  <option value="2">College Of Education</option>
-                </Form.Select>
-              </FormGroup>
-            </Col>{" "}
-          </Row>
-          <Row>
-            <Col className="pl-md-1" md="4">
-              <FormGroup>
-                <label>Country</label>
-                <Form.Select
-                  style={{ marginBottom: "20px" }}
-                  value={residentialCountryx || ""}
-                  aria-label="Default select example"
-                  onChange={handleOnChangeRCCountry}
-                >
-                  <option value="">--Select Country--</option>
-                  {AlCountry.map((apic) => (
-                    <option key={apic.code3} value={apic.name}>
+                  <option value="">--Department--</option>
+                  {depart.map((apic) => (
+                    <option key={apic.id} value={apic.id}>
                       {apic.name}
                     </option>
                   ))}
                 </Form.Select>
               </FormGroup>
             </Col>
-            <Col className="pl-md-1" md="4">
+            <Col md="4" className="pl-md-1">
               <FormGroup>
-                <label>State</label>
+                <label>Faculty</label>
                 <Form.Select
-                  value={residentialStatex || ""}
+                  style={{ marginBottom: "20px" }}
+                  value={facultyx || ""}
                   aria-label="Default select example"
-                  onChange={handleOnChangeRCState}
+                  onChange={(e) => setFaculty(e.target.value)}
                 >
-                  <option>--Select State--</option>
-                  {allStates.map((apis) => (
-                    <option key={apis.code} value={apis.name}>
-                      {apis.name}
+                  <option value="">--Faculty--</option>
+                  {fac.map((apic) => (
+                    <option key={apic.id} value={apic.id}>
+                      {apic.name}
                     </option>
                   ))}
                 </Form.Select>
               </FormGroup>
             </Col>
-            <Col className="pl-md-1" md="4">
-              <FormGroup>
-                <label>City</label>
-                <Input
-                  // defaultValue={`${data11.city}`}
-                  onChange={(e) => setCity(e.target.value)}
-                  value={city}
-                  placeholder="City"
-                  type="text"
-                />
-              </FormGroup>
-            </Col>
           </Row>
           <Row>
-            <Col className="pl-md-1" md="6">
-              <FormGroup>
-                <label>Street</label>
-                <Input
-                  onChange={(e) => setStreet(e.target.value)}
-                  // defaultValue={`${data11.lastName}`}
-                  value={street}
-                  placeholder="street"
-                  //   onChange={() => console.log()}
-                  type="text"
-                  // value={String(items[0]?.verificationComment)}
-                  // disabled
-                />
-              </FormGroup>
-            </Col>
-            <Col className="pl-md-1" md="6">
-              <FormGroup>
-                <label>Website Url</label>
-                <Input
-                  onChange={(e) => setWebsite(e.target.value)}
-                  // defaultValue={`${data11.lastName}`}
-                  value={websitex}
-                  placeholder="website"
-                  //   onChange={() => console.log()}
-                  type="text"
-                  // value={String(items[0]?.verificationComment)}
-                  // disabled
-                />
-              </FormGroup>
-            </Col>
-          </Row>
-          <Row>
-            <Col sm={6}>
+            <Col sm={4}>
               <Typography variant="button" fontWeight="regular" color="text">
                 Phone Number
               </Typography>
@@ -352,25 +364,24 @@ export default function School() {
                 onChange={setPhone}
               />
             </Col>
-            <br />
-            <Col sm={6}>
+            <Col sm={4}>
               <Typography
                 variant="button"
                 fontWeight="regular"
                 color="black"
                 mt={1}
               >
-                Year Established
+                Date Of Birth
               </Typography>
-              <Box mb={4} mt={1}>
+              <Box mb={3} mt={1}>
                 <div>
                   <style>
                     {`.date-picker input {
-                      width: 180%
+                      width: 100%
                  }`}
                   </style>
                   <DatePicker
-                    date={yearEst}
+                    date={startDate}
                     wrapperClassName="date-picker"
                     placeholder="Select Birth Date"
                     dateFormat="dd/MM/yyyy"
@@ -392,8 +403,8 @@ export default function School() {
                         borderWidth: 0,
                       },
                     }}
-                    selected={yearEst}
-                    onChange={(date) => setYearEst(date)}
+                    selected={startDate}
+                    onChange={(date) => setStartDate(date)}
                     peekNextMonth
                     showMonthDropdown
                     showYearDropdown
@@ -402,40 +413,29 @@ export default function School() {
                 </div>
               </Box>
             </Col>
-          </Row>
-          <Row>
-            <Col sm={6} style={{ marginBottom: "10px" }}>
-              <Form.Group>
-                <FloatingLabel
-                  controlId="visionStatement"
-                  label="Vision Statement"
-                >
-                  <Form.Control
-                    type="text"
-                    value={visionStatementx}
-                    onChange={(e) => setVisionStatement(e.target.value)}
-                    // placeholder="First name"
-                    required
-                  />
-                </FloatingLabel>
-                <Form.Control.Feedback type="invalid">
-                  Do not leave empty
-                </Form.Control.Feedback>
-              </Form.Group>
-            </Col>
-            <Col sm={6} style={{ marginBottom: "10px" }}>
-              <FloatingLabel
-                controlId="misionstatement"
-                label="Mision Statement"
+            <Col sm={4}>
+              <Typography
+                variant="button"
+                fontWeight="regular"
+                color="black"
+                mt={1}
               >
-                <Form.Control
-                  type="text"
-                  value={missionStatementx}
-                  onChange={(e) => setMissionStatement(e.target.value)}
-                  // placeholder="Last name"
-                  required
-                />
-              </FloatingLabel>
+                Sex
+              </Typography>
+              <Box mb={4}>
+                {/* <Typography variant="button" fontWeight="regular" color="text">
+      School Type
+    </Typography> */}
+                <Form.Select
+                  onChange={(e) => setSex(e.target.value)}
+                  value={sexx || ""}
+                  aria-label="Default select example"
+                >
+                  <option>---Sex---</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </Form.Select>
+              </Box>
             </Col>
           </Row>
           <Button
@@ -449,7 +449,7 @@ export default function School() {
             color="info"
             onClick={() => handleAdd()}
           >
-            Update School Profile
+            Edit Profile
           </Button>
         </CardBody>
       </Card>

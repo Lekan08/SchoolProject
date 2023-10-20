@@ -78,6 +78,8 @@ import ViewLecturer from "views/Admin/inviteLecturer/view";
 // import ClassCourses from "views/Admin/courseAdvisor/classCourses";
 
 import CompleteResetPassword from "views/authentication/complete-resetPassword";
+import StudentChangePassword from "views/authentication/studentChangePassword";
+import AdminProfile from "views/Admin/adminProfile";
 
 var routes = [
   {
@@ -187,6 +189,13 @@ var routes = [
     name: "School Profile",
     icon: "location_city",
     component: Schools,
+    admin: true,
+  },
+  {
+    path: "/adminProfile",
+    name: "Admin Profile",
+    icon: "account_circle",
+    component: AdminProfile,
     admin: true,
   },
   {
