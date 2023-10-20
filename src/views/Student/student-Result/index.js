@@ -89,7 +89,7 @@ export default function StudentResult() {
                 }}
                 onClick={() => Navigate("/studentseeResult")}
               >
-                View Result
+                Result
               </div>
             </Paper>
             <Paper
@@ -113,7 +113,7 @@ export default function StudentResult() {
                 }}
                 onClick={() => Navigate("/studenttranscript")}
               >
-                View Transcript
+                Transcript
               </div>
             </Paper>
           </div>

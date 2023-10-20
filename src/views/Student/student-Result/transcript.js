@@ -12,6 +12,7 @@ import Navigate from "useNavigate";
 import CircularProgress from "@mui/material/CircularProgress";
 import Swal from "sweetalert2";
 import { Typography, Paper } from "@mui/material";
+import { AccountCircleSharp, School } from "@mui/icons-material";
 
 function Transcript() {
   const { allPHeaders: myHeaders } = PHeaders();
@@ -21,17 +22,27 @@ function Transcript() {
   const [dob, setDob] = useState("");
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
+  const [oname, setOname] = useState("");
   const [type, setType] = useState("");
   const [matric, setMatric] = useState("");
   const [faculties, setFaculties] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [faculty, setFaculty] = useState("");
+  const [cgpa, setCgpa] = useState("");
+  const [gpa, setGpa] = useState("");
   const [department, setDepartment] = useState("");
   const [schoolName, setSchoolName] = useState("");
   const [sex, setSex] = useState("");
   const [oName, setOName] = useState("");
   const [email, setEmail] = useState("");
+  const [schoolInfoCity, setSchoolInfoCity] = useState("");
+  const [schoolInfoStreet, setSchoolInfoStreet] = useState("");
+  const [schoolInfoState, setSchoolInfoState] = useState("");
+  const [schoolInfoCountry, setSchoolInfoCountry] = useState("");
+  const [schoolInfoEmail, setSchoolInfoEmail] = useState("");
+  const [schoolInfoWebsite, setSchoolInfoWebsite] = useState("");
   const [sessionx, setSessionx] = useState("");
+  const [showNote, setShowNote] = useState(false);
   const [items, setItems] = useState({});
   const [viewres, setViewres] = useState([]);
   const [elective, setElective] = useState([]);
@@ -56,6 +67,7 @@ function Transcript() {
         // setStudentId(result[0]);
         setFname(result[0].firstName);
         setLname(result[0].lastName);
+        setOname(result[0].otherName);
         setMatric(result[0].matricNumber);
         setPhonex(`+${result[0].phoneNumber}`);
         setFaculty(result[0].facultyName);
@@ -64,6 +76,42 @@ function Transcript() {
         setItems(result[0]);
         setSex(result[0].sex);
         setEmail(result[0].email);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  }, []);
+
+  useEffect(() => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user2"));
+    const idx = userInfo.id;
+    const schID = userInfo.schoolID;
+    // console.log(schID);
+    // console.log(userInfo);
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/schools/getByIds/${schID}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        // console.log(result);
+        setSchoolInfoStreet(result.street);
+        setSchoolInfoCity(result[0].city);
+        setSchoolInfoState(result[0].state);
+        setSchoolInfoCountry(result[0].country);
+        setSchoolInfoEmail(result[0].email);
+        setSchoolInfoWebsite(result[0].website);
       })
       .catch((error) => {
         setOpened(false);
@@ -139,6 +187,8 @@ function Transcript() {
   // }, []);
 
   const handleOnChange = (value) => {
+    setSessionx(value);
+    setShowNote(true);
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user2"));
     console.log(userInfo);
@@ -184,9 +234,21 @@ function Transcript() {
         return res.json();
       })
       .then((result) => {
-        setOpened(false);
-        console.log(result);
-        setViewres(result[0].resultsList);
+        if (result.length) {
+          setOpened(false);
+          console.log(result);
+          setViewres(result[0].resultsList);
+          setCgpa(result[0].overallGradePoints);
+          setGpa(result[0].gradePoints);
+        } else {
+          setOpened(false);
+          setViewres([]);
+          Swal.fire({
+            title: "Unavailable Transcript",
+            icon: "error",
+            // text: "error.message",
+          });
+        }
       })
       .catch((error) => {
         setOpened(false);
@@ -230,18 +292,19 @@ function Transcript() {
               className="card-category"
               style={{
                 textTransform: "uppercase",
-                fontSize: 30,
+                fontSize: 25,
                 fontWeight: "bold",
                 textAlign: "center",
                 color: "#7D7C7C",
               }}
             >
-              University of {schoolName}, benin, nigeria
+              University of {schoolName}
+              {/* {schoolInfoState} {schoolInfoCountry} */}
             </Typography>
             <Typography
               className="card-category"
               style={{
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: "bold",
                 textAlign: "center",
                 color: "#F99417",
@@ -255,79 +318,148 @@ function Transcript() {
                 textTransform: "uppercase",
                 fontSize: 15,
                 fontWeight: "bold",
-                textAlign: "center",
                 color: "#7D7C7C",
+                textAlign: "center",
               }}
             >
               {" "}
               {faculty}
             </Typography>
             <Row>
-              <Col md="10" className="pl-md-1">
+              <Col md="12" className="pl-md-1">
+                <School
+                  sx={{
+                    fontSize: 180,
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                    display: "flex",
+                  }}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col md="9" className="pl-md-1">
                 <Typography
                   className="card-category"
                   style={{
                     textTransform: "uppercase",
-                    fontSize: 15,
-                    color: "#5C5470",
+                    fontSize: 13,
+                    fontWeight: "bold",
+                    color: "#7D7C7C",
                   }}
                 >
-                  {fname} {lname}
+                  Name: {fname} {lname} {oname}
                 </Typography>{" "}
               </Col>
-              <Col md="2" className="pl-md-1">
+              <Col md="3" className="pl-md-1">
                 <Typography
                   className="card-category"
                   style={{
                     textTransform: "capitalize",
-                    fontSize: 15,
-                    color: "#5C5470",
+                    fontSize: 13,
+                    fontWeight: "bold",
+                    color: "#7D7C7C",
                   }}
                 >
-                  {matric}
+                  Matric Number: {matric}
                 </Typography>
               </Col>
             </Row>{" "}
-            <Typography
-              className="card-category"
-              style={{
-                textTransform: "capitalize",
-                fontSize: 15,
-                color: "#5C5470",
-              }}
-            >
-              {matric} Session
-            </Typography>{" "}
-            <Typography
-              className="card-category"
-              style={{
-                textTransform: "capitalize",
-                fontSize: 15,
-                color: "#5C5470",
-              }}
-            >
-              {matric} gmail
-            </Typography>{" "}
-            <Typography
-              className="card-category"
-              style={{
-                textTransform: "capitalize",
-                fontSize: 15,
-                color: "#5C5470",
-              }}
-            >
-              {matric} year of entry
-            </Typography>
+            <Row>
+              <Col md="9" className="pl-md-1">
+                <Typography
+                  className="card-category"
+                  style={{
+                    textTransform: "uppercase",
+                    fontSize: 13,
+                    fontWeight: "bold",
+                    color: "#7D7C7C",
+                  }}
+                >
+                  Email Address: {email}
+                </Typography>{" "}
+              </Col>
+              <Col md="3" className="pl-md-1">
+                <Typography
+                  className="card-category"
+                  style={{
+                    textTransform: "capitalize",
+                    fontSize: 13,
+                    fontWeight: "bold",
+                    color: "#7D7C7C",
+                  }}
+                >
+                  Sex: {sex}
+                </Typography>
+              </Col>
+            </Row>{" "}
+            {/* <Row>
+              <Col md="9" className="pl-md-1">
+                <Typography
+                  className="card-category"
+                  style={{
+                    textTransform: "uppercase",
+                    fontSize: 13,
+                    fontWeight: "bold",
+                    color: "#7D7C7C",
+                  }}
+                >
+                  Grade Point : {gpa}
+                </Typography>{" "}
+              </Col>
+              <Col md="3" className="pl-md-1">
+                <Typography
+                  className="card-category"
+                  style={{
+                    textTransform: "uppercase",
+                    fontSize: 13,
+                    fontWeight: "bold",
+                    color: "#7D7C7C",
+                  }}
+                >
+                  Overall Grade Point: {cgpa}
+                </Typography>{" "}
+              </Col>
+            </Row>{" "} */}
+            <Row>
+              <Col md="9" className="pl-md-1">
+                <Typography
+                  className="card-category"
+                  style={{
+                    textTransform: "uppercase",
+                    fontSize: 13,
+                    fontWeight: "bold",
+                    color: "#7D7C7C",
+                  }}
+                >
+                  School address : {schoolInfoStreet}, {schoolInfoCity},{" "}
+                  {schoolInfoState}, {schoolInfoCountry}.
+                </Typography>{" "}
+              </Col>
+              <Col md="3" className="pl-md-1">
+                <Typography
+                  className="card-category"
+                  style={{
+                    textTransform: "uppercase",
+                    fontSize: 13,
+                    fontWeight: "bold",
+                    color: "#7D7C7C",
+                  }}
+                >
+                  School email : {schoolInfoEmail}
+                </Typography>{" "}
+              </Col>
+            </Row>{" "}
             <Row>
               <Col md="12" className="pl-md-1">
                 <FormGroup>
                   <Form.Select
-                    style={{ marginBottom: "20px" }}
+                    style={{ marginBottom: "2px" }}
                     value={sessionx || ""}
                     aria-label="Default select example"
                     onChange={(e) => handleOnChange(e.target.value)}
                   >
-                    <option value="">--Sessions--</option>
+                    <option value="">Sessions</option>
                     {mySession.map((apic) => (
                       <option key={apic.key} value={apic.value}>
                         {apic.value}
@@ -335,49 +467,69 @@ function Transcript() {
                     ))}
                   </Form.Select>
                 </FormGroup>
+                {showNote ? (
+                  <></>
+                ) : (
+                  <Typography
+                    className="card-category"
+                    style={{
+                      textTransform: "capitalize",
+                      fontSize: 11,
+                      // fontWeight: "bold",
+                      textAlign: "center",
+                      // color: "#BB2525",
+                      color: "red",
+                    }}
+                  >
+                    Please select a session{" "}
+                  </Typography>
+                )}
+              </Col>
+            </Row>{" "}
+            <Row>
+              <Col md="9" className="pl-md-1">
                 <Typography
                   className="card-category"
                   style={{
                     textTransform: "uppercase",
-                    fontSize: 10,
+                    fontSize: 13,
                     fontWeight: "bold",
-                    textAlign: "center",
-                    color: "#BB2525",
+                    color: "#7D7C7C",
                   }}
                 >
-                  Please select a sessio you wat to show o your Transcript{" "}
+                  Grade Point : {gpa}
                 </Typography>{" "}
               </Col>
-            </Row>
+              <Col md="3" className="pl-md-1">
+                <Typography
+                  className="card-category"
+                  style={{
+                    textTransform: "uppercase",
+                    fontSize: 13,
+                    fontWeight: "bold",
+                    color: "#7D7C7C",
+                  }}
+                >
+                  Overall Grade Point: {cgpa}
+                </Typography>{" "}
+              </Col>
+            </Row>{" "}
           </CardBody>
           <DataTable
             data={{
               columns: [
                 { Header: "Course Name", accessor: "courseName" },
                 { Header: "Course Code", accessor: "courseCode" },
-                { Header: "Course Unit", accessor: "courseUnit" },
+                { Header: "Course Description", accessor: "courseDescription" },
+                { Header: "Course Unit", accessor: "courseUnits" },
                 { Header: "Level", accessor: "levelName" },
                 { Header: "Score", accessor: "score" },
-                { Header: "GPA", accessor: "gradePoints" },
-                { Header: "CGPA", accessor: "overallGradePoints" },
                 { Header: "Grade", accessor: "grade" },
               ],
 
               rows: viewres,
             }}
           />
-          <Typography
-            className="card-category"
-            style={{
-              textTransform: "uppercase",
-              fontSize: 10,
-              fontWeight: "bold",
-              textAlign: "center",
-              color: "#BB2525",
-            }}
-          >
-            This is an Offcifial Transcript actually
-          </Typography>{" "}
         </CardBody>
       </Card>
       <Backdrop
