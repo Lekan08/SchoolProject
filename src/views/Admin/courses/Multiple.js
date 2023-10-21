@@ -22,7 +22,8 @@ import {
   CardBody,
   //   Card,
 } from "reactstrap";
-import example from "./example.jpg";
+import Select from "react-select";
+import example from "./example.jpeg"
 import DataTable from "examples/TableList";
 import Form from "react-bootstrap/Form";
 
@@ -67,6 +68,8 @@ export default function CourseMultiple() {
   const [file, setFile] = useState([]);
   const [faculties, setFaculties] = useState([]);
   const [facultyx, setFaculty] = useState("");
+  const [department, setDepartment] = useState("");
+  const [departments, setDepartments] = useState([]);
 
   const [opened, setOpened] = useState(false);
   // const changeHandler = (event) => {
@@ -85,6 +88,38 @@ export default function CourseMultiple() {
   //   });
   // };
 
+  const handleDepartment = (w) => {
+    setFaculty(w);
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const headers = miHeaders;
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/departments/getByFacultyID/${w}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        const newdp = result.map((r) => ({ value: r.id, label: r.name }));
+        setDepartments(newdp);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+
   const userData = JSON.parse(localStorage.getItem("user"));
   console.log(userData);
   const changeHandler = (event) => {
@@ -96,18 +131,22 @@ export default function CourseMultiple() {
         console.log(userData);
         const schoolID = userData.schoolID;
         const facultyID = facultyx;
+        const depID = department;
+        console.log(depID);
         const obj = results.data;
         const objx = obj.map(
           ({
             name,
             description,
-            head,
+            courseCode,
+            unit,
             // eslint-disable-next-line arrow-body-style
           }) => {
             return {
               name,
               description,
-              head,
+              courseCode,
+              unit: Number(unit),
             };
           }
         );
@@ -117,22 +156,27 @@ export default function CourseMultiple() {
         objx.forEach((element) => {
           element.facultyID = facultyID;
           element.schoolID = schoolID;
+          element.depID = depID;
         });
         const objc = objx.map(
           ({
             facultyID,
             schoolID,
+            depID,
             name,
             description,
-            head,
+            courseCode,
+            unit,
             // eslint-disable-next-line arrow-body-style
           }) => {
             return {
               name,
               description,
-              head,
+              courseCode,
+              unit,
               facultyID,
               schoolID,
+              depID,
             };
           }
         );
@@ -152,7 +196,7 @@ export default function CourseMultiple() {
       redirect: "follow",
     };
     fetch(
-      `${process.env.REACT_APP_SCHPROJECT_URL}/departments/addMultiple`,
+      `${process.env.REACT_APP_SCHPROJECT_URL}/courses/addMultiple`,
       requestOptions
     )
       .then(async (res) => {
@@ -218,7 +262,8 @@ export default function CourseMultiple() {
       .then((result) => {
         setOpened(false);
         console.log(result);
-        setFaculties(result);
+        const spec = result.map((r) => ({ value: r.id, label: r.name }));
+        setFaculties(spec);
       })
       .catch((error) => {
         setOpened(false);
@@ -259,29 +304,56 @@ export default function CourseMultiple() {
             <div className="row">
               <div className="col-sm-6"> */}
           {/* <Container> */}
-          <Typography
-            variant="button"
-            fontWeight="regular"
-            fontSize="80%"
-            textAlign="center"
-            color="text"
-          >
-            Select Faculty
-          </Typography>
-          <br />
-          <Form.Select
-            style={{ marginBottom: "20px" }}
-            value={facultyx || ""}
-            aria-label="Default select example"
-            onChange={(e) => setFaculty(e.target.value)}
-          >
-            <option value="">--Select Faculty--</option>
-            {faculties.map((apic) => (
-              <option key={apic.id} value={apic.id}>
-                {apic.name}
-              </option>
-            ))}
-          </Form.Select>
+          <Row style={{ marginTop: 20 }}>
+            {/* <Col className="pl-md-1" md="6"> */}
+              {/* <Typography
+                variant="button"
+                fontWeight="regular"
+                fontSize="80%"
+                textAlign="center"
+                color="text"
+              >
+                Select Faculty
+              </Typography> */}
+              {/* <br />
+              <Form.Select
+                style={{ marginBottom: "20px" }}
+                value={facultyx || ""}
+                aria-label="Default select example"
+                onChange={(e) => handleDepartment(e.target.value)}
+              >
+                <option value="">--Select Faculty--</option>
+                {faculties.map((apic) => (
+                  <option key={apic.id} value={apic.id}>
+                    {apic.name}
+                  </option>
+                ))}
+              </Form.Select>
+            </Col> */}
+            <Col className="pl-md-1" md="6">
+              <FormGroup>
+                <label>Faculty</label>
+                <Select
+                  options={faculties}
+                  onChange={(e) => {
+                    handleDepartment(e.value);
+                    setFaculty(e.value);
+                  }}
+                />
+              </FormGroup>
+            </Col>
+            <Col className="pl-md-1" md="6">
+              <FormGroup>
+                <label>Department</label>
+                <Select
+                  options={departments}
+                  onChange={(e) => {
+                    setDepartment(e.value);
+                  }}
+                />
+              </FormGroup>
+            </Col>
+          </Row>
           {/* </Container> */}
           {/* </div>
             </div>

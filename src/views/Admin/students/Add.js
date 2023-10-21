@@ -109,11 +109,11 @@ export default function StudentAdd() {
       firstName: fname,
       lastName: lname,
       otherName: oName,
-      email: email,
-      phoneNumber: phonex,
-      sex: sex,
-      dateOfBirth: new Date(dob).getTime(),
-      schoolID: userInfo.schoolID,
+      // email: email,
+      // phoneNumber: phonex,
+      // sex: sex,
+      // dateOfBirth: new Date(dob).getTime(),
+      // schoolID: userInfo.schoolID,
       depID: department,
       facultyID: faculty,
       matricNumber: matric,
@@ -280,93 +280,22 @@ export default function StudentAdd() {
                   onChange={(e) => {
                     setLname(e.target.value);
                   }}
-                  // defaultValue={`${data11.lastName}`}
                   placeholder="Last Name"
-                  // onChange={() => console.log()}
                   type="text"
-                  //   value={items[0]?.lastName}
-                  // disabled
                 />
               </FormGroup>
             </Col>
             <Col className="pl-md-1" md="4">
               <FormGroup>
-                <label>Other Name</label>
+                <label>Other Name (optional)</label>
                 <Input
                   onChange={(e) => {
                     setOName(e.target.value);
                   }}
-                  // defaultValue={`${data11.lastName}`}
                   placeholder="Last Name"
-                  // onChange={() => console.log()}
                   type="text"
-                  //   value={items[0]?.lastName}
-                  // disabled
                 />
               </FormGroup>
-            </Col>
-          </Row>
-          {/* <Row style={{ marginTop: 20 }}> */}
-
-          {/* <Col md="5" className="pl-md-1">
-              <FormGroup>
-                <label>Student Type</label>
-                <Form.Select
-                  style={{ marginBottom: "20px" }}
-                  value={type || ""}
-                  aria-label="Default select example"
-                  onChange={(e) => setType(e.target.value)}
-                >
-                  <option value="">--Select Type--</option>
-                  <option value="0">Major</option>
-                  <option value="1">Minor</option>
-                </Form.Select>
-              </FormGroup>
-            </Col> */}
-          {/* </Row> */}
-          <Row style={{ marginTop: 20 }}>
-            <Col md="4" className="pl-md-1">
-              <FormGroup>
-                <label>Email</label>
-                <Input
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                  }}
-                  // defaultValue={`${data11.lastName}`}
-                  placeholder="Email"
-                  //   onChange={() => console.log()}
-                  type="text"
-                  //   value={items[0]?.email}
-                  // disabled
-                />
-              </FormGroup>
-            </Col>
-            <Col md="4" className="pl-md-1">
-              <FormGroup>
-                <label>Sex</label>
-                <Form.Select
-                  style={{ marginBottom: "20px" }}
-                  value={sex || ""}
-                  aria-label="Default select example"
-                  onChange={(e) => setSex(e.target.value)}
-                >
-                  <option value="">--Select Sex--</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                </Form.Select>
-              </FormGroup>
-            </Col>
-            <Col md="4" className="pl-md-1">
-              <label>Phone Number</label>
-              <PhoneInput
-                // value={phonex}
-                onChange={(val) => setPhonex(val)}
-                id="phone"
-                placeholder="+234 812 345 6789"
-                // value="+"
-                inputStyle={{ marginTop: "3.8%" }}
-                // onChange={setPhone}
-              />
             </Col>
           </Row>
           <Row style={{ marginTop: 20 }}>
@@ -380,25 +309,6 @@ export default function StudentAdd() {
                     setFaculty(e.value);
                   }}
                 />
-                {/* <label>Faculty</label>
-                <Form.Select
-                  style={{ marginBottom: "20px" }}
-                  // value={sex || ""}
-                  size="sm"
-                  aria-label="Default select example"
-                  onChange={(e) => {
-                    handleDepartment(e.target.value);
-                    setFaculty(e.target.value);
-                    console.log(e.target.key);
-                  }}
-                >
-                  <option value="">--Select Faculty--</option>
-                  {faculties.map((apic) => (
-                    <option key={apic.id} value={apic.id}>
-                      {apic.name}
-                    </option>
-                  ))}
-                </Form.Select> */}
               </FormGroup>
             </Col>
             <Col className="pl-md-1" md="4">
@@ -410,21 +320,6 @@ export default function StudentAdd() {
                     setDepartment(e.value);
                   }}
                 />
-                {/* <label>Department</label>
-                <Form.Select
-                  style={{ marginBottom: "20px" }}
-                  // value={sex || ""}
-                  size="sm"
-                  aria-label="Default select example"
-                  onChange={(e) => setDepartment(e.target.value)}
-                >
-                  <option value="">--Select Department--</option>
-                  {departments.map((apic) => (
-                    <option key={apic.id} value={apic.id}>
-                      {apic.name}
-                    </option>
-                  ))}
-                </Form.Select> */}
               </FormGroup>
             </Col>
             <Col className="pl-md-1" md="4">
@@ -437,26 +332,6 @@ export default function StudentAdd() {
           <Row style={{ marginTop: 20 }}>
             <Col md="4" className="pl-md-1">
               <FormGroup>
-                <label>Date Of Birth</label>
-                <br />
-                <TextField
-                  // id="datetime-local"
-                  // label="*"
-                  color="secondary"
-                  type="date"
-                  InputLabelProps={{
-                    shrink: true,
-                    width: "20px",
-                  }}
-                  size="small"
-                  value={dob}
-                  // disabled={disab}
-                  onChange={(e) => setDob(e.target.value)}
-                />
-              </FormGroup>
-            </Col>
-            <Col md="4" className="pl-md-1">
-              <FormGroup>
                 <label>Matric Number</label>
                 <Input
                   onChange={(e) => setMatric(e.target.value)}
@@ -464,13 +339,11 @@ export default function StudentAdd() {
                   placeholder="0000-0000-0000"
                   //   onChange={() => console.log()}
                   type="text"
-                  //   value={String(items[0]?.referralCode)}
-                  // disabled
                 />
-                <label style={{ color: "red", marginTop: 10 }}>
+                {/* <label style={{ color: "red", marginTop: 10 }}>
                   Password to the student's profile will be the first name /
                   matric number : {fname}/{matric}
-                </label>
+                </label> */}
               </FormGroup>
             </Col>
             <Col md="4" className="pl-md-1">

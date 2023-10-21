@@ -157,16 +157,16 @@ function AdminNavbar(props) {
                   <NavLink tag="li" onClick={() => Navigate("/schools")}>
                     <DropdownItem className="nav-item">Profile</DropdownItem>
                   </NavLink>
-                  <NavLink tag="li" onClick={() => Navigate("/complete-reset-password")}>
+                  {/* <NavLink tag="li" onClick={() => Navigate("/complete-reset-password")}>
                     <DropdownItem className="nav-item">Change Password</DropdownItem>
-                  </NavLink>
+                  </NavLink> */}
                   {/* <NavLink tag="li" onClick={() => Navigate("/settings")}>
                     <DropdownItem className="nav-item">Settings</DropdownItem>
                   </NavLink> */}
                   <DropdownItem divider tag="li" />
-                  <NavLink tag="li" onClick={() => Navigate("/sign-in")}>
+                  {/* <NavLink tag="li" onClick={() => Navigate("/sign-in")}>
                     <DropdownItem className="nav-item">Sign out</DropdownItem>
-                  </NavLink>
+                  </NavLink> */}
                 </DropdownMenu>
               </UncontrolledDropdown>
               <li className="separator d-lg-none" />

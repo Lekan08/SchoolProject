@@ -66,6 +66,8 @@ function Dashboard(props) {
   const [femaleStudents, setFemaleStudents] = useState("");
   const [maleTeachers, setMaleTeachers] = useState("");
   const [femaleTeachers, setFemaleTeachers] = useState("");
+  const [numOFFaculties, setNumOFFaculties] = useState("");
+  const [numOfCourses, setNumOfCourses] = useState("");
 
   const { allGHeaders: miHeaders } = GHeaders();
   const setBgChartData = (name) => {
@@ -78,6 +80,8 @@ function Dashboard(props) {
   useEffect(() => {
     getTeachers();
     getStudents();
+    getFaculties();
+    getCourses();
   });
 
   const getTeachers = () => {
@@ -173,6 +177,60 @@ function Dashboard(props) {
         setMaleStudents(maleObject);
         console.log(object);
         setNumStudent(object);
+      });
+  };
+  const getFaculties = () => {
+    const headers = miHeaders;
+
+    const userData = JSON.parse(localStorage.getItem("user"));
+    console.log(userData);
+    const schID = userData.schoolID;
+
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/faculties/gets/${schID}`, {
+      headers,
+    })
+      .then(async (res) => {
+        // const aToken = res.headers.get("token-1");
+        // localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        console.log(result);
+        if (result.length) {
+          var numOfFalc = 0;
+          for (let i = 0; i < result.length; i++) {
+            numOfFalc++;
+          }
+          console.log(numOfFalc);
+          setNumOFFaculties(numOfFalc)
+        }
+      });
+  };
+  const getCourses = () => {
+    const headers = miHeaders;
+
+    const userData = JSON.parse(localStorage.getItem("user"));
+    console.log(userData);
+    const schID = userData.schoolID;
+
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/courses/gets/${schID}`, {
+      headers,
+    })
+      .then(async (res) => {
+        // const aToken = res.headers.get("token-1");
+        // localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        console.log(result);
+        if (result.length) {
+          var numOfCou = 0;
+          for (let i = 0; i < result.length; i++) {
+            numOfCou++
+          }
+          console.log(numOfCou);
+          setNumOfCourses(numOfCou);
+        }
       });
   };
 
@@ -303,7 +361,7 @@ function Dashboard(props) {
                     paddingTop={"40px"}
                     // justifyContent="center"
                   >
-                    No Of Faculties (500)
+                    No Of Faculties ({Number(numOFFaculties)})
                   </Typography>
                   {/* <Typography variant="h4">5000</Typography> */}
                 </div>
@@ -334,7 +392,7 @@ function Dashboard(props) {
                     paddingTop={"40px"}
                     // justifyContent="center"
                   >
-                    No Of Courses (700)
+                    No Of Courses ({Number(numOfCourses)})
                   </Typography>
                   {/* <Typography variant="h4">500000</Typography> */}
                 </div>

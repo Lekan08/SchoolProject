@@ -144,12 +144,12 @@ export default function InviteMultiple() {
         console.log(objx);
 
         objx.forEach((element) => {
-          element.roleID = roleID;
+          // element.roleID = roleID;
           element.schoolID = schoolID;
         });
         const objc = objx.map(
           ({
-            rolleID,
+            // rolleID,
             schoolID,
             firstName,
             lastName,
@@ -160,7 +160,7 @@ export default function InviteMultiple() {
               firstName,
               lastName,
               email,
-              roleID,
+              // roleID,
               schoolID,
             };
           }

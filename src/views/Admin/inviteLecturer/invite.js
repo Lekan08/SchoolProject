@@ -72,6 +72,8 @@ export default function InviteLecturer() {
             title: result.status,
             icon: "success",
             text: result.message,
+          }).then(() => {
+            window.location.reload();
           });
         } else {
           Swal.fire({
@@ -210,7 +212,7 @@ export default function InviteLecturer() {
                   />
                 </FloatingLabel>
                 <Form.Text className="text-muted">
-                  We'll (hopefully) never share your email with anyone else.
+                  We'll never share your email with anyone else.
                 </Form.Text>
               </Form.Group>
             </Col>
