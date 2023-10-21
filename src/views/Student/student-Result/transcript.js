@@ -105,7 +105,7 @@ function Transcript() {
       })
       .then((result) => {
         setOpened(false);
-        // console.log(result);
+        console.log(result);
         setSchoolInfoStreet(result.street);
         setSchoolInfoCity(result[0].city);
         setSchoolInfoState(result[0].state);
@@ -244,7 +244,7 @@ function Transcript() {
           setOpened(false);
           setViewres([]);
           Swal.fire({
-            title: "Unavailable Transcript",
+            title: "TRANSCRIPT UNAVIALABLE ",
             icon: "error",
             // text: "error.message",
           });
@@ -298,7 +298,7 @@ function Transcript() {
                 color: "#7D7C7C",
               }}
             >
-              University of {schoolName}
+              University of {schoolName}, {schoolInfoState}, {schoolInfoCountry}
               {/* {schoolInfoState} {schoolInfoCountry} */}
             </Typography>
             <Typography
@@ -342,7 +342,7 @@ function Transcript() {
                 <Typography
                   className="card-category"
                   style={{
-                    textTransform: "uppercase",
+                    textTransform: "capitalize",
                     fontSize: 13,
                     fontWeight: "bold",
                     color: "#7D7C7C",
@@ -370,7 +370,7 @@ function Transcript() {
                 <Typography
                   className="card-category"
                   style={{
-                    textTransform: "uppercase",
+                    textTransform: "capitalize",
                     fontSize: 13,
                     fontWeight: "bold",
                     color: "#7D7C7C",
@@ -422,28 +422,15 @@ function Transcript() {
               </Col>
             </Row>{" "} */}
             <Row>
-              <Col md="9" className="pl-md-1">
+              <Col md="12" className="pl-md-1">
                 <Typography
                   className="card-category"
                   style={{
-                    textTransform: "uppercase",
+                    textTransform: "capitalize",
                     fontSize: 13,
                     fontWeight: "bold",
                     color: "#7D7C7C",
-                  }}
-                >
-                  School address : {schoolInfoStreet}, {schoolInfoCity},{" "}
-                  {schoolInfoState}, {schoolInfoCountry}.
-                </Typography>{" "}
-              </Col>
-              <Col md="3" className="pl-md-1">
-                <Typography
-                  className="card-category"
-                  style={{
-                    textTransform: "uppercase",
-                    fontSize: 13,
-                    fontWeight: "bold",
-                    color: "#7D7C7C",
+                    // textAlign: "center",
                   }}
                 >
                   School email : {schoolInfoEmail}

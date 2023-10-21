@@ -24,6 +24,8 @@ function SeeResult() {
   const [lname, setLname] = useState("");
   const [type, setType] = useState("");
   const [matric, setMatric] = useState("");
+  const [schoolInfoState, setSchoolInfoState] = useState("");
+  const [schoolInfoCountry, setSchoolInfoCountry] = useState("");
   const [faculties, setFaculties] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [faculty, setFaculty] = useState("");
@@ -137,6 +139,7 @@ function SeeResult() {
   }, []);
 
   const handleOnChange = (value) => {
+    setSessionx(value);
     setShowNote(true);
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user2"));
@@ -183,9 +186,19 @@ function SeeResult() {
         return res.json();
       })
       .then((result) => {
-        setOpened(false);
-        console.log(result);
-        setViewresAll(result);
+        if (result.length) {
+          setOpened(false);
+          console.log(result);
+          setViewresAll(result);
+        } else {
+          setOpened(false);
+          setViewresAll([]);
+          Swal.fire({
+            title: "RESULT  UNAVIALABLE ",
+            icon: "error",
+            // text: "error.message",
+          });
+        }
       })
       .catch((error) => {
         setOpened(false);
@@ -197,6 +210,41 @@ function SeeResult() {
       });
   };
 
+  useEffect(() => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user2"));
+    const idx = userInfo.id;
+    const schID = userInfo.schoolID;
+    // console.log(schID);
+    // console.log(userInfo);
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/schools/getByIds/${schID}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        // console.log(result);
+        // setSchoolInfoStreet(result.street);
+        // setSchoolInfoCity(result[0].city);
+        setSchoolInfoState(result[0].state);
+        setSchoolInfoCountry(result[0].country);
+        // setSchoolInfoEmail(result[0].email);
+        // setSchoolInfoWebsite(result[0].website);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  }, []);
   const mySession = [
     { value: "2019/2020", key: 1 },
     { value: "2020/2021", key: 2 },
@@ -235,7 +283,7 @@ function SeeResult() {
                 color: "#7D7C7C",
               }}
             >
-              University of {schoolName}, benin, nigeria
+              University of {schoolName}, {schoolInfoState}, {schoolInfoCountry}
             </Typography>
             <Typography
               className="card-category"
@@ -278,7 +326,7 @@ function SeeResult() {
                 <Typography
                   className="card-category"
                   style={{
-                    textTransform: "uppercase",
+                    textTransform: "capitalize",
                     fontSize: 13,
                     fontWeight: "bold",
                     color: "#7D7C7C",
@@ -306,7 +354,7 @@ function SeeResult() {
                 <Typography
                   className="card-category"
                   style={{
-                    textTransform: "uppercase",
+                    textTransform: "capitalize",
                     fontSize: 13,
                     fontWeight: "bold",
                     color: "#7D7C7C",
