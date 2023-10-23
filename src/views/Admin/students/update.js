@@ -32,9 +32,13 @@ export default function StudentUpdate() {
   const [department, setDepartment] = useState("");
   const [sex, setSex] = useState("");
   const [email, setEmail] = useState("");
+  const [oName, setOName] = useState("");
+
   const [items, setItems] = useState({});
+
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
+
   useEffect(() => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
@@ -121,6 +125,7 @@ export default function StudentUpdate() {
         console.log(result);
         setFname(result[0].firstName);
         setLname(result[0].lastName);
+        setOName(result[0].otherName);
         setSex(result[0].sex);
         setType(String(result[0].studentType));
         setEmail(result[0].email);
@@ -149,6 +154,7 @@ export default function StudentUpdate() {
       schoolName: items.schoolName,
       firstName: fname,
       lastName: lname,
+      otherName: oName,
       email: email,
       phoneNumber: phonex,
       sex: sex,
@@ -160,6 +166,21 @@ export default function StudentUpdate() {
       facultyName: items.facultyName,
       matricNumber: matric,
       studentType: Number(type),
+
+      // id: "string",
+      // firstName: "string",
+      // lastName: "string",
+      // email: "string",
+      // phoneNumber: "string",
+      // sex: "string",
+      // dateOfBirth: "string",
+      // schoolID: "string",
+      // facultyID: "string",
+      // depID: "string",
+      collegeID: "string",
+      levelID: "string",
+      matricNumber: "string",
+      deleteFlag: 0,
     });
     console.log(raw2);
     const requestOptions2 = {
@@ -221,7 +242,7 @@ export default function StudentUpdate() {
           />
           <br />
           <Row>
-            <Col className="pl-md-1" md="6">
+            <Col className="pl-md-1" md="4">
               <FormGroup>
                 <label>First Name</label>
                 <Input
@@ -235,7 +256,7 @@ export default function StudentUpdate() {
                 />
               </FormGroup>
             </Col>
-            <Col className="pl-md-1" md="6">
+            <Col className="pl-md-1" md="4">
               <FormGroup>
                 <label>Last Name</label>
                 <Input
@@ -251,23 +272,25 @@ export default function StudentUpdate() {
                 />
               </FormGroup>
             </Col>
-          </Row>
-          <Row style={{ marginTop: 20 }}>
-            <Col md="5" className="pl-md-1">
+            <Col className="pl-md-1" md="4">
               <FormGroup>
-                <label>Sex</label>
-                <Form.Select
-                  style={{ marginBottom: "20px" }}
-                  value={sex || ""}
-                  aria-label="Default select example"
-                  onChange={(e) => setSex(e.target.value)}
-                >
-                  <option value="">--Select Sex--</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                </Form.Select>
+                <label>Other Name</label>
+                <Input
+                  onChange={(e) => {
+                    setOName(e.target.value);
+                  }}
+                  // defaultValue={`${data11.lastName}`}
+                  placeholder="Other Name"
+                  // onChange={() => console.log()}
+                  type="text"
+                  value={oName}
+                  // disabled
+                />
               </FormGroup>
             </Col>
+          </Row>
+          <Row style={{ marginTop: 20 }}>
+            
             <Col md="5" className="pl-md-1">
               <FormGroup>
                 <label>Student Type</label>
@@ -285,7 +308,7 @@ export default function StudentUpdate() {
             </Col>
           </Row>
           <Row style={{ marginTop: 20 }}>
-            <Col md="6" className="pl-md-1">
+            <Col md="4" className="pl-md-1">
               <FormGroup>
                 <label>Email</label>
                 <Input
@@ -301,7 +324,22 @@ export default function StudentUpdate() {
                 />
               </FormGroup>
             </Col>
-            <Col md="6" className="pl-md-1">
+            <Col md="4" className="pl-md-1">
+              <FormGroup>
+                <label>Sex</label>
+                <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  value={sex || ""}
+                  aria-label="Default select example"
+                  onChange={(e) => setSex(e.target.value)}
+                >
+                  <option value="">--Select Sex--</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </Form.Select>
+              </FormGroup>
+            </Col>
+            <Col md="4" className="pl-md-1">
               <label>Phone Number</label>
               <PhoneInput
                 // value={phonex}

@@ -312,6 +312,27 @@ var routes = [
     admin: true,
   },
   {
+    path: "/college",
+    name: "College",
+    icon: "menu_book",
+    component: College,
+    admin: true,
+  },
+  {
+    path: "/faculties",
+    name: "faculties",
+    icon: "corporate_fare",
+    component: Faculties,
+    admin: true,
+  },
+  {
+    path: "/otherPrograms",
+    name: "Other Programs",
+    icon: "grading",
+    component: OtherPrograms,
+    admin: true,
+  },
+  {
     path: "/result/update",
     name: "Result Update",
     icon: "menu_book",
@@ -376,13 +397,6 @@ var routes = [
     redirect: true,
   },
   {
-    path: "/faculties",
-    name: "faculties",
-    icon: "corporate_fare",
-    component: Faculties,
-    admin: true,
-  },
-  {
     path: "/faculties/add",
     name: "Add faculty",
     icon: "school",
@@ -417,13 +431,6 @@ var routes = [
     component: LevelUpdate,
     // admin: true,
     redirect: true,
-  },
-  {
-    path: "/otherPrograms",
-    name: "Other Programs",
-    icon: "grading",
-    component: OtherPrograms,
-    admin: true,
   },
   {
     path: "/otherPrograms/update",
@@ -481,13 +488,6 @@ var routes = [
   //   component: Result,
   //   admin: true,
   // },
-  {
-    path: "/college",
-    name: "College",
-    icon: "menu_book",
-    component: College,
-    admin: true,
-  },
   {
     path: "/college/update",
     // name: "Level",
@@ -552,6 +552,14 @@ var routes = [
     name: "Student Transcript",
     icon: "how_to_reg",
     component: Transcript,
+  },
+  {
+    path: "/studentChangepassword",
+    name: "Change Password",
+    icon: "password",
+    component: StudentChangePassword,
+    // redirect: "true",
+    admin: false,
   },
 ];
 export default routes;

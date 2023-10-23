@@ -31,10 +31,19 @@ function CourseRegistartion() {
   const [checked, setChecked] = useState([]);
   const [sessionx, setSession] = useState("");
   const [elective, setElective] = useState([]);
+  const [showEmpty, setShowEmpty] = useState(false);
   //   const [faculties, setFaculties] = useState([]);
   //   const [departments, setDepartments] = useState([]);
 
   useEffect(() => {
+    handleGetStudents();
+    handleGetDepartments();
+    handleGetLevels();
+    handleGets();
+  }, []);
+
+  // useEffect(() => {
+  const handleGetStudents = () => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user2"));
     const idx = userInfo.id;
@@ -67,9 +76,11 @@ function CourseRegistartion() {
           text: error.message,
         });
       });
-  }, []);
+  };
+  // }, []);
 
-  useEffect(() => {
+  // useEffect(() => {
+  const handleGetDepartments = () => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user2"));
     console.log(userInfo);
@@ -96,9 +107,11 @@ function CourseRegistartion() {
           text: error.message,
         });
       });
-  }, []);
+  };
+  // }, []);
 
-  useEffect(() => {
+  // useEffect(() => {
+  const handleGetLevels = () => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user2"));
     console.log(userInfo);
@@ -125,7 +138,8 @@ function CourseRegistartion() {
           text: error.message,
         });
       });
-  }, []);
+  };
+  // }, []);
 
   console.log(levelx);
   console.log(headOfDepart);
@@ -178,13 +192,14 @@ function CourseRegistartion() {
         setOpened(false);
         console.log(result);
         if (result.status === "SUCCESS") {
-          Swal.fire({
-            title: result.status,
-            icon: "success",
-            text: result.message,
-          }).then(() => {
-            window.location.reload();
-          });
+          handleGets();
+          // Swal.fire({
+          //   title: result.status,
+          //   icon: "success",
+          //   text: result.message,
+          // }).then(() => {
+          //   window.location.reload();
+          // });
         } else {
           Swal.fire({
             title: result.status,
@@ -203,14 +218,15 @@ function CourseRegistartion() {
       });
   };
 
-  const handleRemove = (value) => {
+  const handleRemove = (value, inn) => {
+    console.log(value);
     const requestOptions = {
       method: "DELETE",
       headers: miHeaders,
     };
     setOpened(true);
     fetch(
-      `${process.env.REACT_APP_SCHPROJECT_URL}/courseRegistration/remove/${value}`,
+      `${process.env.REACT_APP_SCHPROJECT_URL}/courseRegistration/remove/${value.target.value}`,
       requestOptions
     )
       .then(async (res) => {
@@ -222,13 +238,16 @@ function CourseRegistartion() {
         setOpened(false);
         console.log(result);
         if (result.status === "SUCCESS") {
-          Swal.fire({
-            title: result.status,
-            icon: "success",
-            text: result.message,
-          }).then(() => {
-            window.location.reload();
-          });
+          handleGets();
+          // coursex[inn].checked = false;
+          // setCoursex(coursex);
+          // Swal.fire({
+          //   title: result.status,
+          //   icon: "success",
+          //   text: result.message,
+          // }).then(() => {
+          window.location.reload();
+          // });
         } else {
           Swal.fire({
             title: result.status,
@@ -291,7 +310,8 @@ function CourseRegistartion() {
       });
   };
 
-  useEffect(() => {
+  // useEffect(() => {
+  const handleGets = () => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user2"));
     console.log(userInfo);
@@ -311,6 +331,7 @@ function CourseRegistartion() {
       })
       .then((result) => {
         setOpened(false);
+        console.log("zerrydl");
         console.log(result);
         if (result.length) {
           // setShow(true);
@@ -400,7 +421,7 @@ function CourseRegistartion() {
                       let comp = resultrz.filter(
                         (valx) => valx.courseID === val.id
                       );
-                      console.log(val);
+                      // console.log(val);
                       if (comp.length) {
                         // console.log(comp);
                         return null;
@@ -440,7 +461,8 @@ function CourseRegistartion() {
           text: error.message,
         });
       });
-  }, []);
+  };
+  // }, []);
   console.log(elective);
 
   const handleCheck = (event, inn) => {
@@ -451,16 +473,19 @@ function CourseRegistartion() {
       // console.log(coursex);
       handleAdd(event.target.value);
       setCoursex(coursex);
+      console.log(coursex);
       // setOpened(false);
     } else {
       console.log("unchecked", "courseID:", event.target.value);
       setOpened(true);
       // setTimeout(() => setOpened(false), 500);
+      console.log(event);
       console.log("checked", "courseID:", event.target.value);
       coursex[inn].checked = false;
       console.log(coursex);
-      handleRemove(event.target.value);
-      setCoursex(coursex);
+      // handleRemove(event.target.value);
+      // setCoursex(coursex);
+      console.log(coursex);
       // setOpened(false);
     }
     // var updatedList = [...checked];
@@ -518,6 +543,7 @@ function CourseRegistartion() {
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         console.log(result);
         const every = [];
         console.log(compulsory);
@@ -536,9 +562,11 @@ function CourseRegistartion() {
             }
           }
 
+          setShowEmpty(false);
           setCoursex(every);
-          setOpened(false);
           console.log("eeeeeeeee", every);
+        } else {
+          setShowEmpty(true);
         }
       })
       .catch((error) => {
@@ -561,43 +589,7 @@ function CourseRegistartion() {
           <Card mx={2}>
             <CardBody>
               <Row>
-                <Col md="6" className="pl-md-1">
-                  <FormGroup>
-                    <label>Session</label>
-                    <Form.Select
-                      style={{ marginBottom: "20px" }}
-                      value={sessionx || ""}
-                      aria-label="Default select example"
-                      onChange={(e) => setSession(e.target.value)}
-                    >
-                      <option value="">--Sessions--</option>
-                      <option value="2019/2020">2019/2020</option>
-                      <option value="2020/2021">2020/2021</option>
-                      <option value="2021/2022">2021/2022</option>
-                      <option value="2022/2023">2022/2023</option>
-                      <option value="2023/2024">2023/2024</option>
-                      <option value="2024/2025">2024/2025</option>
-                      <option value="2025/2026">2025/2026</option>
-                      <option value="2026/2027">2026/2027</option>
-                      <option value="2027/2028">2027/2028</option>
-                      <option value="2028/2029">2028/2029</option>
-                      <option value="2029/2030">2029/2030</option>
-                      <option value="2030/2031">2030/2031</option>
-                      <option value="2031/2032">2031/2032</option>
-                      <option value="2032/2033">2032/2033</option>
-                      <option value="2033/2034">2033/2034</option>
-                      <option value="2034/2035">2034/2035</option>
-                      <option value="2035/2036">2035/2036</option>
-                      <option value="2036/2037">2036/2037</option>
-                      <option value="2037/2038">2037/2038</option>
-                      <option value="2037/2039">2037/2039</option>
-                      <option value="2039/2040">2039/2040</option>
-                    </Form.Select>
-                  </FormGroup>
-                </Col>{" "}
-              </Row>
-              <Row>
-                <Col md="4" className="pl-md-1">
+                {/* <Col md="4" className="pl-md-1">
                   <Button
                     tag="label"
                     className="data1"
@@ -635,12 +627,113 @@ function CourseRegistartion() {
                       </span>{" "}
                     </div>
                   ))}
-                </Col>
-                <Col md="3">
+                </Col> */}
+                {/* <Col md="3">
                   <></>
-                </Col>
-                <Col md="4" className="pl-md-1">
-                  <Button
+                </Col> */}
+                <Button
+                  tag="label"
+                  className="data1"
+                  color="secondary"
+                  style={{
+                    width: "45vw",
+                    fontSize: "15px",
+                    marginRight: "auto",
+                    marginLeft: "auto",
+                    // height: "50px",
+                    marginTop: "20px",
+                  }}
+                >
+                  <Typography
+                    style={{ color: "white", fontSize: "1.5rem" }}
+                    variant="h5"
+                    className="head"
+                  >
+                    Register Course
+                  </Typography>
+                </Button>
+                <br />
+                <Row>
+                  <Col md="6" className="pl-md-1">
+                    <FormGroup>
+                      <label>Session</label>
+                      <Form.Select
+                        style={{ marginBottom: "20px" }}
+                        value={sessionx || ""}
+                        aria-label="Default select example"
+                        onChange={(e) => setSession(e.target.value)}
+                      >
+                        <option value="">--Sessions--</option>
+                        <option value="2019/2020">2019/2020</option>
+                        <option value="2020/2021">2020/2021</option>
+                        <option value="2021/2022">2021/2022</option>
+                        <option value="2022/2023">2022/2023</option>
+                        <option value="2023/2024">2023/2024</option>
+                        <option value="2024/2025">2024/2025</option>
+                        <option value="2025/2026">2025/2026</option>
+                        <option value="2026/2027">2026/2027</option>
+                        <option value="2027/2028">2027/2028</option>
+                        <option value="2028/2029">2028/2029</option>
+                        <option value="2029/2030">2029/2030</option>
+                        <option value="2030/2031">2030/2031</option>
+                        <option value="2031/2032">2031/2032</option>
+                        <option value="2032/2033">2032/2033</option>
+                        <option value="2033/2034">2033/2034</option>
+                        <option value="2034/2035">2034/2035</option>
+                        <option value="2035/2036">2035/2036</option>
+                        <option value="2036/2037">2036/2037</option>
+                        <option value="2037/2038">2037/2038</option>
+                        <option value="2037/2039">2037/2039</option>
+                        <option value="2039/2040">2039/2040</option>
+                      </Form.Select>
+                    </FormGroup>
+                  </Col>{" "}
+                  <Col md="6" className="pl-md-1">
+                    <FormGroup>
+                      <label>Department</label>
+                      <Form.Select
+                        style={{ marginBottom: "20px" }}
+                        value={headOfDepart || ""}
+                        aria-label="Default select example"
+                        onChange={(e) => handleOnChange(e.target.value)}
+                      >
+                        <option value="">--Department--</option>
+                        {depart.map((apic) => (
+                          <option key={apic.id} value={apic.id}>
+                            {apic.name}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </FormGroup>
+                  </Col>{" "}
+                  {/* {showEmpty ? 
+                    
+                   : (
+                    <></>
+                  )} */}
+                  {showEmpty ? (
+                    <h4>No Course in this departments</h4>
+                  ) : (
+                    coursex.map((item, index) => (
+                      <div key={index}>
+                        <input
+                          value={item.courseID ? item.courseID : item.id}
+                          type="checkbox"
+                          onChange={(e) => handleCheck(e, index)}
+                          checked={item.checked ? true : false}
+                        />
+                        &nbsp;
+                        <span className={isChecked(item.name)}>
+                          {item.courseCode ? item.courseCode : item.courseCode}{" "}
+                          ({item.unit}
+                          {item.courseUnit} units)
+                        </span>{" "}
+                      </div>
+                    ))
+                  )}
+                </Row>
+                {/* <Col md="8" className="pl-md-1"> */}
+                {/* <Button
                     tag="label"
                     className="data1"
                     color="secondary"
@@ -660,40 +753,8 @@ function CourseRegistartion() {
                     >
                       Elective Course:
                     </Typography>
-                  </Button>
-                  <Col md="6" className="pl-md-1">
-                    <FormGroup>
-                      <label>Department</label>
-                      <Form.Select
-                        style={{ marginBottom: "20px" }}
-                        value={headOfDepart || ""}
-                        aria-label="Default select example"
-                        onChange={(e) => handleOnChange(e.target.value)}
-                      >
-                        <option value="">--Department--</option>
-                        {depart.map((apic) => (
-                          <option key={apic.id} value={apic.id}>
-                            {apic.name}
-                          </option>
-                        ))}
-                      </Form.Select>
-                    </FormGroup>
-                  </Col>{" "}
-                  {coursex.map((item, index) => (
-                    <div key={index}>
-                      <input
-                        value={item.courseID ? item.courseID : item.id}
-                        type="checkbox"
-                        onChange={(e) => handleCheck(e, index)}
-                        checked={item.checked ? true : false}
-                      />
-                      &nbsp;
-                      <span className={isChecked(item.name)}>
-                        {item.name ? item.name : item.courseName}
-                      </span>{" "}
-                    </div>
-                  ))}
-                  {/* {elective.map((item, index) => (
+                  </Button> */}
+                {/* {elective.map((item, index) => (
                     <div key={index}>
                       <input
                         value={item.id}
@@ -707,7 +768,7 @@ function CourseRegistartion() {
                       </span>{" "}
                     </div>
                   ))} */}
-                </Col>
+                {/* </Col> */}
                 {/* <Col md="2">
                   <></>
                 </Col> */}
@@ -731,7 +792,7 @@ function CourseRegistartion() {
                     variant="h5"
                     className="head"
                   >
-                    Total Course:
+                    Total Course
                   </Typography>
                 </Button>
                 <label style={{ color: "red", marginTop: 10 }}>
@@ -757,6 +818,7 @@ function CourseRegistartion() {
                     <input
                       value={item.id}
                       type="checkbox"
+                      onChange={(e) => handleRemove(e, index)}
                       // onChange={handleUnCheck}
                       checked={true}
                     />

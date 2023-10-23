@@ -68,6 +68,7 @@ function InvitedStaff() {
   const { allGHeaders: miHeaders } = GHeaders();
   const [departx, setDepart] = useState("");
   const [departments, setDepartments] = useState([]);
+  const [otherNamex, setOtherName] = useState("");
 
   const handleOnChangeRCCountry = (e) => {
     const filteredItems = AlCountry.filter(
@@ -157,6 +158,7 @@ function InvitedStaff() {
       const raw2 = JSON.stringify({
         firstName: firstNamex,
         lastName: lastNamex,
+        otherName: otherNamex,
         email: emailx,
         phoneNumber: phonex,
         sex: sexx,
@@ -309,18 +311,19 @@ function InvitedStaff() {
   return (
     <div className="form-wrapper">
       <Form noValidate validated={validated}>
-        <h2 style={{ marginBottom: "15px", textAlign: "center" }}>
-          School Information
-        </h2>
         <Container fluid>
+          <h2 style={{ marginBottom: "15px", textAlign: "center" }}>
+            Lecturer's Information
+          </h2>
+
           <Row>
-            <Col sm={6} style={{ marginBottom: "10px" }}>
+            <Col sm={4} style={{ marginBottom: "10px" }}>
               <Form.Group>
-                <FloatingLabel controlId="firstnamLabel" label="Name of School">
+                <FloatingLabel controlId="firstnamLabel" label="First name">
                   <Form.Control
                     type="text"
-                    value={namex}
-                    onChange={(e) => setName(e.target.value)}
+                    value={firstNamex}
+                    onChange={(e) => setFirstName(e.target.value)}
                     // placeholder="First name"
                     required
                   />
@@ -330,143 +333,52 @@ function InvitedStaff() {
                 </Form.Control.Feedback>
               </Form.Group>
             </Col>
-            <Col sm={6} style={{ marginBottom: "10px" }}>
-              <Form.Group>
-                <FloatingLabel
-                  controlId="Head of school"
-                  label="Head of school name"
-                >
-                  <Form.Control
-                    type="text"
-                    value={headOfSch}
-                    onChange={(e) => setHeadOfSch(e.target.value)}
-                    // placeholder="First name"
-                    required
-                  />
-                </FloatingLabel>
-                <Form.Control.Feedback type="invalid">
-                  Do not leave empty
-                </Form.Control.Feedback>
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Typography
-                variant="button"
-                fontWeight="regular"
-                color="text"
-                mt={2}
-              >
-                Country
-              </Typography>
-              <Box textAlign="left">
-                <Form.Select
-                  value={countryx || ""}
-                  aria-label="Default select example"
-                  onChange={handleOnChangeRCCountry}
+            <Col sm={4} style={{ marginBottom: "10px" }}>
+              <FloatingLabel controlId="lastnameLabel" label="Last name">
+                <Form.Control
+                  type="text"
+                  value={lastNamex}
+                  onChange={(e) => setLastName(e.target.value)}
+                  // placeholder="Last name"
                   required
-                >
-                  <option>--Select Country--</option>
-                  {AlCountry.map((apic) => (
-                    <option key={apic.code3} value={apic.name}>
-                      {apic.name}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Box>
+                />
+              </FloatingLabel>
             </Col>
-            <Col>
-              <Typography
-                variant="button"
-                fontWeight="regular"
-                color="text"
-                mt={2}
-              >
-                State
-              </Typography>
-              <Box textAlign="left">
-                <Form.Select
-                  value={statex || ""}
-                  aria-label="Default select example"
-                  onChange={handleOnChangeRCState}
+            <Col sm={4} style={{ marginBottom: "10px" }}>
+              <FloatingLabel controlId="othernameLabel" label="Other name">
+                <Form.Control
+                  type="text"
+                  value={otherNamex}
+                  onChange={(e) => setOtherName(e.target.value)}
+                  // placeholder="Last name"
                   required
-                >
-                  <option>--Select State--</option>
-                  {allStates.map((apis) => (
-                    <option key={apis.code} value={apis.name}>
-                      {apis.name}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Box>
+                />
+              </FloatingLabel>
             </Col>
           </Row>
           <br />
-          <Row>
-            <Col sm={6} style={{ marginBottom: "10px" }}>
-              <Form.Group>
-                <FloatingLabel controlId="Street" label="Street">
-                  <Form.Control
-                    type="text"
-                    value={streetx}
-                    onChange={(e) => setStreet(e.target.value)}
-                    // placeholder="First name"
-                    required
-                  />
-                </FloatingLabel>
-                <Form.Control.Feedback type="invalid">
-                  Do not leave empty
-                </Form.Control.Feedback>
-              </Form.Group>
-            </Col>
-            <Col sm={6} style={{ marginBottom: "10px" }}>
-              <Form.Group>
-                <FloatingLabel controlId="City" label="City">
-                  <Form.Control
-                    type="text"
-                    value={cityx}
-                    onChange={(e) => setCity(e.target.value)}
-                    // placeholder="First name"
-                    required
-                  />
-                </FloatingLabel>
-                <Form.Control.Feedback type="invalid">
-                  Do not leave empty
-                </Form.Control.Feedback>
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col sm={6}>
-              <Box mb={4}>
-                {/* <Typography variant="button" fontWeight="regular" color="text">
-                  School Type
-                </Typography> */}
-                <Form.Select
-                  onChange={(e) => setSchoolType(e.target.value)}
-                  value={schoolTypex || ""}
-                  aria-label="Default select example"
-                >
-                  <option>---School Type---</option>
-                  <option value="0">University</option>
-                  <option value="1">Polytechnic</option>
-                  <option value="2">College of Education</option>
-                </Form.Select>
-              </Box>
-            </Col>
-          </Row>
 
+          <Row>
+            <Col>
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <FloatingLabel controlId="emailLabel" label="Enter email">
+                  <Form.Control
+                    type="email"
+                    // placeholder="Enter email"
+                    value={emailx}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+                  />
+                </FloatingLabel>
+                <Form.Text className="text-muted">
+                  We'll never share your email with anyone else.
+                </Form.Text>
+              </Form.Group>
+            </Col>
+          </Row>
           <Row style={{ marginTop: 20 }}>
-            <Col
-              md="4"
-              className="pl-md-1"
-              style={{
-                justifyContent: "center",
-                marginLeft: "auto",
-                marginRight: "auto",
-              }}
-            >
+            <Col md="6" className="pl-md-3">
               <FormGroup>
                 <Form.Select
                   style={{ marginBottom: "20px" }}
@@ -483,15 +395,7 @@ function InvitedStaff() {
                 </Form.Select>
               </FormGroup>
             </Col>
-            <Col
-              md="4"
-              className="pl-md-1"
-              style={{
-                justifyContent: "center",
-                marginLeft: "auto",
-                marginRight: "auto",
-              }}
-            >
+            <Col md="6" className="pl-md-3">
               <FormGroup>
                 <Form.Select
                   style={{ marginBottom: "20px" }}
@@ -509,64 +413,31 @@ function InvitedStaff() {
               </FormGroup>
             </Col>
           </Row>
-          <h2 style={{ marginBottom: "15px", textAlign: "center" }}>
-            Personal Information
-          </h2>
-
           <Row>
-            <Col sm={6} style={{ marginBottom: "10px" }}>
-              <Form.Group>
-                <FloatingLabel controlId="firstnamLabel" label="First name">
-                  <Form.Control
-                    type="text"
-                    value={firstNamex}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    // placeholder="First name"
-                    required
-                  />
-                </FloatingLabel>
-                <Form.Control.Feedback type="invalid">
-                  Do not leave empty
-                </Form.Control.Feedback>
-              </Form.Group>
+            <Col sm={4}>
+              <Typography variant="button" fontWeight="regular" color="text">
+                Phone Number
+              </Typography>
+              <PhoneInput
+                value={phonex}
+                inputStyle={{ width: "100%" }}
+                buttonStyle={{}}
+                onChange={setPhone}
+              />
             </Col>
-            <Col sm={6} style={{ marginBottom: "10px" }}>
-              <FloatingLabel controlId="lastnameLabel" label="Last name">
-                <Form.Control
-                  type="text"
-                  value={lastNamex}
-                  onChange={(e) => setLastName(e.target.value)}
-                  // placeholder="Last name"
-                  required
-                />
-              </FloatingLabel>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col>
-              <Form.Group className="mb-3" controlId="formBasicEmail">
-                <FloatingLabel controlId="emailLabel" label="Enter email">
-                  <Form.Control
-                    type="email"
-                    // placeholder="Enter email"
-                    value={emailx}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
-                  />
-                </FloatingLabel>
-                <Form.Text className="text-muted">
-                  We'll (hopefully) never share your email with anyone else.
-                </Form.Text>
-              </Form.Group>
-            </Col>
-
-            <Col>
+            <Col sm={4}>
+              <Typography
+                variant="button"
+                fontWeight="regular"
+                color="black"
+                mt={1}
+              >
+                Sex
+              </Typography>
               <Box mb={4}>
                 {/* <Typography variant="button" fontWeight="regular" color="text">
-                  School Type
-                </Typography> */}
+      School Type
+    </Typography> */}
                 <Form.Select
                   onChange={(e) => setSex(e.target.value)}
                   value={sexx || ""}
@@ -578,20 +449,7 @@ function InvitedStaff() {
                 </Form.Select>
               </Box>
             </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Typography variant="button" fontWeight="regular" color="text">
-                Phone Number
-              </Typography>
-              <PhoneInput
-                value={phonex}
-                inputStyle={{ width: "100%" }}
-                buttonStyle={{}}
-                onChange={setPhone}
-              />
-            </Col>
-            <Col>
+            <Col sm={4}>
               <Typography
                 variant="button"
                 fontWeight="regular"
@@ -616,7 +474,7 @@ function InvitedStaff() {
                     showCancelButton="true"
                     customStyles={{
                       placeholderText: {
-                        fontSize: 5,
+                        fontSize: 16,
                       },
                       dateIcon: {
                         height: 0,

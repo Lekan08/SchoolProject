@@ -540,7 +540,7 @@ export default function CourseAdvisor() {
                   </Dropdown.Toggle>
 
                   <Dropdown.Menu>
-                    <Dropdown.Item
+                    {/* <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}
                       onClick={() =>
                         Navigate(
@@ -549,7 +549,7 @@ export default function CourseAdvisor() {
                       }
                     >
                       Class Course
-                    </Dropdown.Item>
+                    </Dropdown.Item> */}
                     <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}
                       onClick={() =>

@@ -15,7 +15,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React, { useEffect } from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 import Navigate from "useNavigate";
@@ -40,10 +40,13 @@ import {
   ModalHeader,
 } from "reactstrap";
 import { Paper } from "@mui/material";
+import routes from "routes";
+import { validateLocaleAndSetLanguage } from "typescript";
 
 function AdminNavbar(props) {
   const [collapseOpen, setcollapseOpen] = React.useState(false);
   const [modalSearch, setmodalSearch] = React.useState(false);
+  const [showProfile, setShowProfile] = React.useState(false);
   const [color, setcolor] = React.useState("navbar-transparent");
   React.useEffect(() => {
     window.addEventListener("resize", updateColor);
@@ -74,6 +77,25 @@ function AdminNavbar(props) {
     setmodalSearch(!modalSearch);
   };
   const si = window.location.pathname;
+  useEffect(() => {
+    handleOnGets();
+  }, []);
+  const handleOnGets = () => {
+    const route = routes;
+    const mapp = route.map((val) => {
+      if (val.admin === true) {
+        console.log("showw");
+        setShowProfile(true);
+      } else if (val.admin === false) {
+        console.log("students");
+        setShowProfile(false);
+      }
+    });
+    console.log(mapp);
+
+    console.log(route);
+  };
+
   return (
     <>
       <Navbar
@@ -154,9 +176,21 @@ function AdminNavbar(props) {
                   <p className="d-lg-none">Sign out</p>
                 </DropdownToggle>
                 <DropdownMenu className="dropdown-navbar" right tag="ul">
-                  <NavLink tag="li" onClick={() => Navigate("/schools")}>
-                    <DropdownItem className="nav-item">Profile</DropdownItem>
-                  </NavLink>
+                  {showProfile ? (
+                    <NavLink
+                      tag="li"
+                      onClick={() => Navigate("/student-profile-update")}
+                    >
+                      <DropdownItem className="nav-item">
+                        Student Profile
+                      </DropdownItem>
+                    </NavLink>
+                  ) : (
+                    <NavLink tag="li" onClick={() => Navigate("/adminProfile")}>
+                      <DropdownItem className="nav-item">Profile</DropdownItem>
+                    </NavLink>
+                  )}
+
                   {/* <NavLink tag="li" onClick={() => Navigate("/complete-reset-password")}>
                     <DropdownItem className="nav-item">Change Password</DropdownItem>
                   </NavLink> */}

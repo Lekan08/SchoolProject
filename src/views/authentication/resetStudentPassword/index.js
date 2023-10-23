@@ -51,8 +51,8 @@ function ResetStudentPassword() {
     myHeaders.append("Content-Type", "application/json");
 
     const raw = JSON.stringify({
-      email: emailx,
-      userType: 3,
+      username: emailx,
+      // userType: 3,
     });
     const requestOptions = {
       method: "POST",
@@ -62,7 +62,7 @@ function ResetStudentPassword() {
     };
     setOpened(true);
     fetch(
-      `${process.env.REACT_APP_SCHPROJECT_URL}/login/initiate-reset-password`,
+      `${process.env.REACT_APP_SCHPROJECT_URL}/studentLogin/forgotPassword`,
       requestOptions
     )
       .then(async (res) => {

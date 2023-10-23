@@ -41,6 +41,12 @@ export default function ClassCourses() {
   const [compulsory, setCompulsory] = useState([]);
   const [show, setShow] = useState(false);
   const [sessionx, setSession] = useState("");
+  const [showOtherFac, setShowOtherFac] = useState(false);
+  const [otherProgFac, setOtherProgFac] = useState("");
+  const [otherProgFaculties, setOtherProgFaculties] = useState([]);
+  const [otherProgram, setOtherProg] = useState("");
+  const [facultyx, setFaculty] = useState("");
+  const [faculties, setFaculties] = useState([]);
   // const [courseAdviserx, setCourseAdviserx] = useState([]);
 
   const style = {
@@ -55,6 +61,10 @@ export default function ClassCourses() {
     p: 4,
     textAlign: "center",
   };
+  useEffect(() => {
+    handleOtherProgram();
+    handleGetFaculties();
+  }, []);
 
   const handleUpdate = (val) => {
     console.log(val);
@@ -158,6 +168,103 @@ export default function ClassCourses() {
       });
   }, []);
 
+  // useEffect(() => {
+  const handleGetFaculties = () => {
+    const userData = JSON.parse(localStorage.getItem("user"));
+    console.log(userData);
+    const schId = userData.schoolID;
+    const headers = miHeaders;
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_SCH_URL}/faculties/gets/${schId}`, {
+      headers,
+    })
+      .then(async (res) => {
+        // const aToken = res.headers.get("token-1");
+        // localStorage.setItem("rexxdex", aToken);
+        // return res.json();
+        const result = await res.text();
+        // if (result === null || result === undefined || result === "") {
+        //   return {};
+        // }
+        return res.json();
+      })
+      .then((result) => {
+        console.log(result);
+        if (isMounted) {
+          console.log(result);
+          if (Object.keys(result).length !== 0) {
+            console.log("omo");
+            setFaculty(result);
+          }
+        }
+      });
+    // return () => {
+    //   isMounted = false;
+    // };
+  };
+  // }, []);
+  useEffect(() => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/faculties/gets/${schID}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setFaculties(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  }, []);
+  // useEffect(() => {
+  const handleOtherProgram = () => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/otherPrograms/gets/${schID}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setOtherProgFaculties(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+  // }, []);
+
   const handleAdd = (value) => {
     const userInfo = JSON.parse(localStorage.getItem("user"));
     console.log(userInfo);
@@ -212,7 +319,7 @@ export default function ClassCourses() {
           //   icon: "success",
           //   text: result.message,
           // }).then(() => {
-            window.location.reload();
+          window.location.reload();
           // });
           // setHeadOfDepart
         } else {
@@ -416,7 +523,7 @@ export default function ClassCourses() {
       .then((result) => {
         setOpened(false);
         console.log(result);
-        setDepart(result);
+        // setDepart(result);
       })
       .catch((error) => {
         setOpened(false);
@@ -428,9 +535,9 @@ export default function ClassCourses() {
       });
   }, []);
 
-  const handleOnChange = (value) => {
+  const handleOnChangeDepart = (value) => {
     console.log(value);
-    setHeadOfDepart(value);
+    setFaculty(value);
     const userInfo = JSON.parse(localStorage.getItem("user"));
     console.log(userInfo);
     const IDs = userInfo.courseAdviserID;
@@ -443,7 +550,7 @@ export default function ClassCourses() {
     // setItems
 
     fetch(
-      `${process.env.REACT_APP_SCHPROJECT_URL}/courses/getByDepID/${value}`,
+      `${process.env.REACT_APP_SCHPROJECT_URL}/departments/getByFacultyID/${value}`,
       {
         headers,
       }
@@ -456,119 +563,9 @@ export default function ClassCourses() {
       .then((result) => {
         setOpened(false);
         console.log(result);
-        // setCoursex(result);
+        setDepart(result);
         console.log(compulsory);
         // setDepart(result);
-        // setCoursex(newCompul);
-        // setCompulsory(result);
-        if (IDs === "") {
-          Swal.fire({
-            title: "Cannot Perform Request",
-            icon: "error",
-            text: "You are not the Course Advisor to this department",
-          });
-        } else {
-          if (result.length) {
-            // setItems(result);
-            console.log("result");
-            fetch(
-              `${process.env.REACT_APP_SCHPROJECT_URL}/courseAdvisers/getByIds/${IDs}`,
-              {
-                headers,
-              }
-            )
-              .then(async (res) => {
-                const aToken = res.headers.get("token-1");
-                localStorage.setItem("rexxdex", aToken);
-                return res.json();
-              })
-              .then((resultl) => {
-                setOpened(false);
-                setItems(resultl);
-                console.log(resultl);
-                const userInfo = JSON.parse(localStorage.getItem("user2"));
-                console.log(userInfo);
-                // if (result[0].staffID !== userInfo.id) {
-                //   Swal.fire({
-                //     title: "Access_Denied",
-                //     icon: "error",
-                //     text: "You are not the Course Advisor for this course",
-                //   }).then(() => {
-                //     Navigate("/courseAdvisor");
-                //   });
-                // }
-                if (resultl.length) {
-                  // setItems(resultl);
-                  const levelID = resultl[0].levelID;
-                  const depID = resultl[0].depID;
-                  fetch(
-                    `${process.env.REACT_APP_SCHPROJECT_URL}/classCourses/getForClass/${levelx}/${value}`,
-                    {
-                      headers,
-                    }
-                  )
-                    .then(async (res) => {
-                      const aToken = res.headers.get("token-1");
-                      localStorage.setItem("rexxdex", aToken);
-                      return res.json();
-                    })
-                    .then((resultc) => {
-                      setOpened(false);
-                      const newCompul = [];
-                      const compdep = resultc.filter(
-                        (val) => val.depID === value
-                      );
-
-                      console.log(compdep);
-                      if (resultc.length !== 0) {
-                        console.log(resultc);
-                        setShow(true);
-                      }
-                      console.log(resultc);
-                      result.map((val) => {
-                        console.log(val);
-                        console.log(compdep);
-                        let comp = compdep.filter(
-                          (valx) => valx.courseID === val.id
-                        );
-                        console.log(comp);
-                        if (comp.length) {
-                          // console.log(comp);
-                          return null;
-                        } else {
-                          console.log("comp");
-                          newCompul.push(val);
-                        }
-                      });
-                      setCompulsory(resultc);
-                      console.log(newCompul);
-                      setCoursex(newCompul);
-                      console.log(newCompul);
-                    })
-                    .catch((error) => {
-                      setOpened(false);
-                      Swal.fire({
-                        title: error.status,
-                        icon: "error",
-                        text: error.message,
-                      });
-                    });
-                }
-              })
-              .catch((error) => {
-                setOpened(false);
-                Swal.fire({
-                  title: error.status,
-                  icon: "error",
-                  text: error.message,
-                });
-              });
-          } else {
-            setCompulsory([]);
-            console.log("workss");
-            setCoursex([]);
-          }
-        }
       })
       .catch((error) => {
         setOpened(false);
@@ -695,6 +692,206 @@ export default function ClassCourses() {
     // setChecked(updatedList);
   };
   console.log(show);
+
+  // const  = (value) => {
+  //   setOtherProgFac(value);
+  //   const callClientType = value.toString();
+  //   if (callClientType === "1") {
+  //     setShowOtherFac(true);
+  //   } else if (callClientType === "2") {
+  //     setShowOtherFac(false);
+  //   }
+  // };
+  const handleOnChange4 = (value) => {
+    console.log(value);
+    // setHeadOfDepart(value);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const IDs = userInfo.courseAdviserID;
+    console.log(IDs);
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const idx = urlParams.get("id");
+    console.log(idx);
+    const headers = miHeaders;
+    // setItems
+
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/courses/getByDepID/${value}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setCoursex(result);
+        console.log(compulsory);
+        // setDepart(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+  const handleOnChange = () => {
+    // console.log(value);
+    // setFaculty(value);
+    // setHeadOfDepart(value);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const IDs = userInfo.courseAdviserID;
+    console.log(IDs);
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const idx = urlParams.get("id");
+    console.log(idx);
+    const headers = miHeaders;
+    // setItems
+
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/courses/getByDepID/${headOfDepart}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        // setDepart(result);
+        console.log(compulsory);
+        if (IDs === "") {
+          Swal.fire({
+            title: "Cannot Perform Request",
+            icon: "error",
+            text: "You are not the Course Advisor to this department",
+          });
+        } else {
+          if (result.length) {
+            // setItems(result);
+            console.log("result");
+            fetch(
+              `${process.env.REACT_APP_SCHPROJECT_URL}/courseAdvisers/getByIds/${IDs}`,
+              {
+                headers,
+              }
+            )
+              .then(async (res) => {
+                const aToken = res.headers.get("token-1");
+                localStorage.setItem("rexxdex", aToken);
+                return res.json();
+              })
+              .then((resultl) => {
+                setOpened(false);
+                // setItems(resultl);
+                console.log(resultl);
+                const userInfo = JSON.parse(localStorage.getItem("user2"));
+                console.log(userInfo);
+                // if (result[0].staffID !== userInfo.id) {
+                //   Swal.fire({
+                //     title: "Access_Denied",
+                //     icon: "error",
+                //     text: "You are not the Course Advisor for this course",
+                //   }).then(() => {
+                //     Navigate("/courseAdvisor");
+                //   });
+                // }
+                if (resultl.length) {
+                  // setItems(resultl);
+                  const levelID = resultl[0].levelID;
+                  const depID = resultl[0].depID;
+                  fetch(
+                    `${process.env.REACT_APP_SCHPROJECT_URL}/classCourses/getForClass/${levelx}/${headOfDepart}`,
+                    {
+                      headers,
+                    }
+                  )
+                    .then(async (res) => {
+                      const aToken = res.headers.get("token-1");
+                      localStorage.setItem("rexxdex", aToken);
+                      return res.json();
+                    })
+                    .then((resultc) => {
+                      setOpened(false);
+                      const newCompul = [];
+                      const compdep = resultc.filter(
+                        (val) => val.depID === headOfDepart
+                      );
+
+                      console.log(compdep);
+                      if (resultc.length !== 0) {
+                        console.log(resultc);
+                        setShow(true);
+                      }
+                      console.log(resultc);
+                      result.map((val) => {
+                        console.log(val);
+                        console.log(compdep);
+                        let comp = compdep.filter(
+                          (valx) => valx.courseID === val.id
+                        );
+                        console.log(comp);
+                        if (comp.length) {
+                          // console.log(comp);
+                          return null;
+                        } else {
+                          console.log("comp");
+                          newCompul.push(val);
+                        }
+                      });
+                      setCompulsory(resultc);
+                      console.log(newCompul);
+                      setCoursex(newCompul);
+                      console.log(newCompul);
+                    })
+                    .catch((error) => {
+                      setOpened(false);
+                      Swal.fire({
+                        title: error.status,
+                        icon: "error",
+                        text: error.message,
+                      });
+                    });
+                }
+              })
+              .catch((error) => {
+                setOpened(false);
+                Swal.fire({
+                  title: error.status,
+                  icon: "error",
+                  text: error.message,
+                });
+              });
+          } else {
+            setCompulsory([]);
+            console.log("workss");
+            setCoursex([]);
+          }
+        }
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
 
   // useEffect(() => {
   //   setOpened(true);
@@ -844,8 +1041,89 @@ export default function ClassCourses() {
                   </Form.Select>
                 </FormGroup>
               </Col>{" "}
-              <Col md="4" className="pl-md-1">
-              <FormGroup>
+              <Col
+                md="4"
+                className="pl-md-1"
+                style={{
+                  justifyContent: "center",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                }}
+              >
+                <FormGroup>
+                  <label>Other Program</label>
+                  {/* <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  value={facultyx || ""}
+                  aria-label="Default select example"
+                  onChange={(e) => handleOnChange(e.target.value)}
+                >
+                  <option value="1">Faculty</option>
+                  <option value="2">Other Program</option>
+                 </Form.Select> */}
+                  <Form.Select
+                    style={{ marginBottom: "20px" }}
+                    value={otherProgram || ""}
+                    aria-label="Default select example"
+                    onChange={(e) => setOtherProg(e.target.value)}
+                  >
+                    <option value="">--Select Other Program--</option>
+                    {otherProgFaculties.map((apic) => (
+                      <option key={apic.id} value={apic.id}>
+                        {apic.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </FormGroup>
+              </Col>
+              <Col
+                md="4"
+                className="pl-md-1"
+                style={{
+                  justifyContent: "center",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                }}
+              >
+                <FormGroup>
+                  <label>Faculty</label>
+                  <Form.Select
+                    style={{ marginBottom: "20px" }}
+                    value={facultyx || ""}
+                    aria-label="Default select example"
+                    onChange={(e) => handleOnChangeDepart(e.target.value)}
+                  >
+                    <option value="">--Select Faculty--</option>
+                    {faculties.map((apic) => (
+                      <option key={apic.id} value={apic.id}>
+                        {apic.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </FormGroup>
+              </Col>
+            </Row>
+            <Row>
+              <Col md="6" className="pl-md-1">
+                <FormGroup>
+                  <label>Department</label>
+                  <Form.Select
+                    style={{ marginBottom: "20px" }}
+                    value={headOfDepart || ""}
+                    aria-label="Default select example"
+                    onChange={(e) => setHeadOfDepart(e.target.value)}
+                  >
+                    <option value="">--Department--</option>
+                    {depart.map((apic) => (
+                      <option key={apic.id} value={apic.id}>
+                        {apic.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </FormGroup>
+              </Col>{" "}
+              <Col md="6" className="pl-md-1">
+                <FormGroup>
                   <label>Level</label>
                   <Form.Select
                     style={{ marginBottom: "20px" }}
@@ -862,25 +1140,20 @@ export default function ClassCourses() {
                   </Form.Select>
                 </FormGroup>
               </Col>{" "}
-              <Col md="4" className="pl-md-1">
-                <FormGroup>
-                  <label>Department</label>
-                  <Form.Select
-                    style={{ marginBottom: "20px" }}
-                    value={headOfDepart || ""}
-                    aria-label="Default select example"
-                    onChange={(e) => handleOnChange(e.target.value)}
-                  >
-                    <option value="">--Department--</option>
-                    {depart.map((apic) => (
-                      <option key={apic.id} value={apic.id}>
-                        {apic.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </FormGroup>
-              </Col>{" "}
             </Row>
+            <Button
+            variant="gradient"
+            style={{
+              marginLeft: "auto",
+              marginRight: "auto",
+              display: "flex",
+              marginTop: "20px",
+            }}
+            color="info"
+            onClick={() => handleOnChange()}
+          >
+            Get Courses
+          </Button>
             <div class="container">
               <div class="row">
                 <div class="col-sm">
@@ -897,7 +1170,7 @@ export default function ClassCourses() {
                       />
                       &nbsp;
                       <span className={isChecked(item.courseCode)}>
-                        {item.courseCode}
+                        {item.courseCode}  ({item.unit} units) - {item.name}
                       </span>
                     </div>
                   ))}
@@ -913,7 +1186,7 @@ export default function ClassCourses() {
                       />
                       &nbsp;
                       <span className={isChecked(item.courseName)}>
-                        {item.courseCode}
+                        {item.courseCode} (units) - {item.courseName}
                       </span>{" "}
                     </div>
                   ))}

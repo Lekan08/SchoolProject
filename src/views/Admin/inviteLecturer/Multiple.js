@@ -21,7 +21,7 @@ import {
   CardBody,
   //   Card,
 } from "reactstrap";
-import example from "./example.jpg";
+import example from "./example.jpeg";
 import DataTable from "examples/TableList";
 import Form from "react-bootstrap/Form";
 import GHeaders from "getHeader";
@@ -276,7 +276,7 @@ export default function InviteMultiple() {
               color="text"
             >
               In your excelsheet csv file, the first line or row must be exactly
-              the same as the words in the image below in row 1 A - D and having
+              the same as the words in the image below in row 1 A - C and having
               no spaces in them. Your details in each row should be
               corresponding to the information in the first row (header).
             </Typography>
@@ -306,7 +306,7 @@ export default function InviteMultiple() {
           <Button onClick={handleUpload} color="success">
             Upload
           </Button>
-          <Modal
+          {/* <Modal
             open={open2}
             onClose={handleClose2}
             aria-labelledby="modal-modal-title"
@@ -328,7 +328,7 @@ export default function InviteMultiple() {
                 Close
               </Button>
             </Box>
-          </Modal>
+          </Modal> */}
         </CardBody>
       </Card>
       <Backdrop
