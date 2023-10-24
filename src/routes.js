@@ -80,6 +80,7 @@ import ViewLecturer from "views/Admin/inviteLecturer/view";
 import CompleteResetPassword from "views/authentication/complete-resetPassword";
 import StudentChangePassword from "views/authentication/studentChangePassword";
 import AdminProfile from "views/Admin/adminProfile";
+import AdminChangePassword from "views/authentication/changePassword";
 
 var routes = [
   {
@@ -138,7 +139,7 @@ var routes = [
   },
   {
     path: "/dashboard",
-    name: "Admin Dashboard",
+    name: "Dashboard",
     icon: "dashboard",
     component: Dashboard,
     // redirect: "true",
@@ -193,7 +194,7 @@ var routes = [
   },
   {
     path: "/adminProfile",
-    name: "Admin Profile",
+    name: "User Profile",
     icon: "account_circle",
     component: AdminProfile,
     admin: true,
@@ -497,12 +498,28 @@ var routes = [
     redirect: true,
   },
   {
+    path: "/changepassword",
+    name: "Change Password",
+    icon: "password",
+    component: AdminChangePassword,
+    // redirect: "true",
+    admin: true,
+  },
+  // {
+  //   path: "/complete-reset-password",
+  //   name: "Change Password",
+  //   icon: "password",
+  //   component: CompleteResetPassword,
+  //   // redirect: "true",
+  //   admin: true,
+  // },
+  {
     path: "/complete-reset-password",
     name: "Change Password",
     icon: "password",
     component: CompleteResetPassword,
-    // redirect: "true",
     admin: true,
+    redirect: true,
   },
   {
     path: "/dashboard-student",
@@ -510,7 +527,7 @@ var routes = [
     icon: "dashboard",
     component: DashboardStudent,
     admin: false,
-    redirect: true,
+    // redirect: true,
   },
   {
     path: "/student-profile-update",

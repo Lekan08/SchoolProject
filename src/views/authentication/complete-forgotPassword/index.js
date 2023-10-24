@@ -106,7 +106,7 @@ export default function CompleteForgotPassword() {
     const raw = JSON.stringify({
       username: emailx,
       password: password,
-      userType: 3,
+      npassword: password,
     });
     // console.log(raw);
     const requestOptions = {
@@ -117,7 +117,7 @@ export default function CompleteForgotPassword() {
     };
     // setOpened(true);
     fetch(
-      `${process.env.REACT_APP_SCHPROJECT_URL}/login/complete-reset-password`,
+      `${process.env.REACT_APP_SCHPROJECT_URL}/staffLogin/completeForgotPassword`,
       requestOptions
     )
       .then(async (res) => {
@@ -186,8 +186,7 @@ export default function CompleteForgotPassword() {
         >
           <Col md="12">
             <Card>
-              <CardHeader>
-              </CardHeader>
+              <CardHeader></CardHeader>
               <CardBody>
                 <Row>
                   <Col

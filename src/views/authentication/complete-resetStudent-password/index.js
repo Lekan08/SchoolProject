@@ -112,7 +112,11 @@ export default function CompleteResetStudentPassword() {
     const raw = JSON.stringify({
       username: emailx,
       password: password,
-      userType: 3,
+      npassword: password,
+      // userType: 3,
+
+      // username: "string",
+      // password: "string",
     });
     // console.log(raw);
     const requestOptions = {
@@ -123,7 +127,7 @@ export default function CompleteResetStudentPassword() {
     };
     // setOpened(true);
     fetch(
-      `${process.env.REACT_APP_SCHPROJECT_URL}/login/complete-reset-password`,
+      `${process.env.REACT_APP_SCHPROJECT_URL}/studentLogin/completeForgotPassword`,
       requestOptions
     )
       .then(async (res) => {

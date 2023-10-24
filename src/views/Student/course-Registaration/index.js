@@ -145,8 +145,10 @@ function CourseRegistartion() {
   console.log(headOfDepart);
   const userInfo = JSON.parse(localStorage.getItem("user2"));
   const schID = userInfo.schoolID;
+  const schoolName = userInfo.schoolName;
+  const levelName = userInfo.levelName;
   console.log(schID);
-  console.log(studentId);
+  console.log(userInfo);
 
   const handleAdd = (value) => {
     const userInfo = JSON.parse(localStorage.getItem("user2"));
@@ -413,6 +415,11 @@ function CourseRegistartion() {
                     });
                     console.log(newCompulx);
                     setElective(newCompulx);
+
+                    // const combinedArray = newCompulx.courseUnit.concat(
+                    //   result.courseUnit
+                    // );
+                    // console.log(combinedArray);
                     const newCompulxx = [];
                     console.log(newCompulxx);
                     const newCompulz = [];
@@ -588,6 +595,30 @@ function CourseRegistartion() {
         <Paper elevation={8}>
           <Card mx={2}>
             <CardBody>
+              <Typography
+                className="card-category"
+                style={{
+                  textTransform: "uppercase",
+                  fontSize: 25,
+                  fontWeight: "bold",
+                  textAlign: "center",
+                  color: "#7D7C7C",
+                }}
+              >
+                University of {schoolName}
+              </Typography>
+              <Typography
+                className="card-category"
+                style={{
+                  // textTransform: "uppercase",
+                  // fontSize: 25,
+                  // fontWeight: "bold",
+                  textAlign: "center",
+                  color: "#7D7C7C",
+                }}
+              >
+                <h4> {levelName}Level</h4>
+              </Typography>
               <Row>
                 {/* <Col md="4" className="pl-md-1">
                   <Button
@@ -809,6 +840,7 @@ function CourseRegistartion() {
                     />
                     &nbsp;
                     <span className={isChecked(item.courseName)}>
+                      {item.courseCode} ({item.courseUnit} units) -{" "}
                       {item.courseName} (Compulsory)
                     </span>{" "}
                   </div>
@@ -824,11 +856,13 @@ function CourseRegistartion() {
                     />
                     &nbsp;
                     <span className={isChecked(item.courseName)}>
+                      {item.courseCode} ({item.courseUnit} units) -{" "}
                       {item.courseName}
                     </span>{" "}
                   </div>
                 ))}
               </Row>
+              <h4>Total units = </h4>
             </CardBody>
           </Card>
         </Paper>

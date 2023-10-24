@@ -239,7 +239,7 @@ export default function StudentChangePassword() {
                       <div style={{ padding: 10, lineHeight: "7vh" }}>
                         {/* <TextField
                           id="outlined-required"
-                          label="Old Password"
+                          label="ssword"
                           value={oPassword}
                           onChange={(e) => setOPassword(e.target.value)}
                           // InputProps={{ readOnly: true }}

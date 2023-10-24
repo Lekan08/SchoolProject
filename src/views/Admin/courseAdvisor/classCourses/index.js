@@ -1156,8 +1156,8 @@ export default function ClassCourses() {
           </Button>
             <div class="container">
               <div class="row">
-                <div class="col-sm">
                   <Typography variant="h5">Courses:</Typography> <br />
+                <div class="col-sm-6">
                   {checkList.map((item, index) => (
                     <div key={index}>
                       {/* <input value={item.id} type="checkbox" /> &nbsp;
@@ -1174,6 +1174,8 @@ export default function ClassCourses() {
                       </span>
                     </div>
                   ))}
+                  </div>
+                  <div className="col-sm-6">
                   {compulsory.map((item, index) => (
                     <div key={index}>
                       {/* <input value={item.id} type="checkbox" /> &nbsp;

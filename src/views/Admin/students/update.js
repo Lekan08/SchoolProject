@@ -33,6 +33,8 @@ export default function StudentUpdate() {
   const [sex, setSex] = useState("");
   const [email, setEmail] = useState("");
   const [oName, setOName] = useState("");
+  const [levelx, setLevelx] = useState("");
+  const [levelss, setLevelsss] = useState([]);
 
   const [items, setItems] = useState({});
 
@@ -40,6 +42,12 @@ export default function StudentUpdate() {
   const { allGHeaders: miHeaders } = GHeaders();
 
   useEffect(() => {
+    handleGetLevel();
+    handleGetFaculties();
+  }, []);
+
+  // useEffect(() => {
+  const handleGetFaculties = () => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
     const schID = userInfo.schoolID;
@@ -65,7 +73,8 @@ export default function StudentUpdate() {
           text: error.message,
         });
       });
-  }, []);
+  };
+  // }, []);
   const handleDepartment = (w) => {
     setOpened(true);
     const headers = miHeaders;
@@ -135,6 +144,7 @@ export default function StudentUpdate() {
         handleDepartment(result[0].facultyID);
         setFaculty(result[0].facultyID);
         setDepartment(result[0].depID);
+        setLevelx(result[0].levelID);
         setItems(result[0]);
       })
       .catch((error) => {
@@ -146,6 +156,39 @@ export default function StudentUpdate() {
         });
       });
   }, []);
+  // useEffect(() => {
+  const handleGetLevel = () => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    // if ()
+    // const data = JSON.parse({data: localStorage.getItem("resultData")});
+    // console.log(data);
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/levels/gets/${schID}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setLevelsss(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+  // }, []);
   const handleAdd = () => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
@@ -165,7 +208,9 @@ export default function StudentUpdate() {
       departmentName: items.departmentName,
       facultyName: items.facultyName,
       matricNumber: matric,
-      studentType: Number(type),
+      collegeID: "string",
+      levelID: levelx,
+      // studentType: Number(type),
 
       // id: "string",
       // firstName: "string",
@@ -177,10 +222,8 @@ export default function StudentUpdate() {
       // schoolID: "string",
       // facultyID: "string",
       // depID: "string",
-      collegeID: "string",
-      levelID: "string",
-      matricNumber: "string",
-      deleteFlag: 0,
+      // matricNumber: "string",
+      // deleteFlag: 0,
     });
     console.log(raw2);
     const requestOptions2 = {
@@ -286,24 +329,6 @@ export default function StudentUpdate() {
                   value={oName}
                   // disabled
                 />
-              </FormGroup>
-            </Col>
-          </Row>
-          <Row style={{ marginTop: 20 }}>
-            
-            <Col md="5" className="pl-md-1">
-              <FormGroup>
-                <label>Student Type</label>
-                <Form.Select
-                  style={{ marginBottom: "20px" }}
-                  value={type || ""}
-                  aria-label="Default select example"
-                  onChange={(e) => setType(e.target.value)}
-                >
-                  <option value="">--Select Type--</option>
-                  <option value="0">Major</option>
-                  <option value="1">Minor</option>
-                </Form.Select>
               </FormGroup>
             </Col>
           </Row>
@@ -432,7 +457,7 @@ export default function StudentUpdate() {
                 />
               </FormGroup>
             </Col>
-            <Col md="6" className="pl-md-1">
+            <Col md="4" className="pl-md-1">
               <FormGroup>
                 <label>Matric Number</label>
                 <Input
@@ -446,7 +471,42 @@ export default function StudentUpdate() {
                 />
               </FormGroup>
             </Col>
+            <Col md="4" className="pl-md-1">
+              <FormGroup>
+                <label>Level</label>
+                <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  value={levelx || ""}
+                  aria-label="Default select example"
+                  onChange={(e) => setLevelx(e.target.value)}
+                >
+                  <option value="">--Level--</option>
+                  {levelss.map((apic) => (
+                    <option key={apic.id} value={apic.id}>
+                      {apic.name}
+                    </option>
+                  ))}
+                </Form.Select>
+              </FormGroup>
+            </Col>{" "}
           </Row>
+          {/* <Row style={{ marginTop: 20 }}>
+            <Col md="5" className="pl-md-1">
+              <FormGroup>
+                <label>Student Type</label>
+                <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  value={type || ""}
+                  aria-label="Default select example"
+                  onChange={(e) => setType(e.target.value)}
+                >
+                  <option value="">--Select Type--</option>
+                  <option value="0">Major</option>
+                  <option value="1">Minor</option>
+                </Form.Select>
+              </FormGroup>
+            </Col>
+          </Row> */}
           <Button
             variant="gradient"
             style={{
