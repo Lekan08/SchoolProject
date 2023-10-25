@@ -168,7 +168,7 @@ export default function GradingUpdate() {
           <Row>
             <Col className="pl-md-1" md="6">
               <FormGroup>
-                <label>Value</label>
+                <label>Grade Point</label>
                 <Input
                   onChange={(e) => {
                     setValue(e.target.value);

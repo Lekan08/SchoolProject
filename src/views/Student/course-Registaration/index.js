@@ -32,6 +32,7 @@ function CourseRegistartion() {
   const [sessionx, setSession] = useState("");
   const [elective, setElective] = useState([]);
   const [showEmpty, setShowEmpty] = useState(false);
+  const [totalUnits, setTotalUnits] = useState([]);
   //   const [faculties, setFaculties] = useState([]);
   //   const [departments, setDepartments] = useState([]);
 
@@ -416,10 +417,9 @@ function CourseRegistartion() {
                     console.log(newCompulx);
                     setElective(newCompulx);
 
-                    // const combinedArray = newCompulx.courseUnit.concat(
-                    //   result.courseUnit
-                    // );
-                    // console.log(combinedArray);
+                    const combinedArray = newCompulx.concat(result);
+                    setTotalUnits(combinedArray);
+                    console.log(combinedArray);
                     const newCompulxx = [];
                     console.log(newCompulxx);
                     const newCompulz = [];
@@ -862,7 +862,16 @@ function CourseRegistartion() {
                   </div>
                 ))}
               </Row>
-              <h4>Total units = </h4>
+              {totalUnits.map((items) => {
+                // eslint-disable-next-line no-unused-expressions
+                const units = items.courseUnit;
+                console.log(units);
+                var array = units;
+
+                for (var i = 0, sum = 0; i < array.length; sum += array[i++]);
+                console.log(sum);
+                <h4>Total units = {units}</h4>;
+              })}
             </CardBody>
           </Card>
         </Paper>

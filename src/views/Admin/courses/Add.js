@@ -36,9 +36,18 @@ export default function CourseAdd() {
   const [departments, setDepartments] = useState([]);
   const [faculty, setFaculty] = useState("");
   const [department, setDepartment] = useState("");
+  const [otherProgFaculties, setOtherProgFaculties] = useState([]);
+  const [otherProgram, setOtherProg] = useState("");
 
   console.log(faculty);
+
   useEffect(() => {
+    handleGetFaculties();
+    handleGetOtherProgram();
+  }, [])
+
+  // useEffect(() => {
+  const handleGetFaculties = () => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
     // console.log(userInfo);
@@ -70,7 +79,8 @@ export default function CourseAdd() {
           text: error.message,
         });
       });
-  }, []);
+  };
+  // }, []);
   const handleDepartment = (w) => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
@@ -117,6 +127,7 @@ export default function CourseAdd() {
       facultyID: faculty,
       courseCode: courseCodex,
       unit: unit,
+      otherProgramsID: otherProgram,
     });
     console.log(raw2);
     const requestOptions2 = {
@@ -177,7 +188,38 @@ export default function CourseAdd() {
         text: "A course unit can't be more than (6)",
       });
     }
-  }
+  };
+  const handleGetOtherProgram = () => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/otherPrograms/gets/${schID}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setOtherProgFaculties(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
 
   return (
     <div className="content">
@@ -242,7 +284,7 @@ export default function CourseAdd() {
           <Row style={{ marginTop: 20 }}>
             <Col className="pl-md-1" md="8">
               <FormGroup>
-                <label>Description</label>
+                <label>Description (optional)</label>
                 <Input
                   onChange={(e) => {
                     setLname(e.target.value);
@@ -254,6 +296,32 @@ export default function CourseAdd() {
                   //   value={items[0]?.lastName}
                   // disabled
                 />
+              </FormGroup>
+            </Col>
+            <Col
+              md="4"
+              className="pl-md-1"
+              style={{
+                justifyContent: "center",
+                marginLeft: "auto",
+                marginRight: "auto",
+              }}
+            >
+              <FormGroup>
+                <label>Other Program</label>
+                <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  value={otherProgram || ""}
+                  aria-label="Default select example"
+                  onChange={(e) => setOtherProg(e.target.value)}
+                >
+                  <option value="">--Select Other Program--</option>
+                  {otherProgFaculties.map((apic) => (
+                    <option key={apic.id} value={apic.id}>
+                      {apic.name}
+                    </option>
+                  ))}
+                </Form.Select>
               </FormGroup>
             </Col>
           </Row>

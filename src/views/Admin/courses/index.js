@@ -305,14 +305,14 @@ export default function Courses() {
                   </Dropdown.Toggle>
 
                   <Dropdown.Menu>
-                    <Dropdown.Item
+                    {/* <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}
                       onClick={() => {
                         Navigate(`/courses/view?id=${cell.row.id}`);
                       }}
                     >
                       View
-                    </Dropdown.Item>
+                    </Dropdown.Item> */}
                     <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}
                       onClick={() =>

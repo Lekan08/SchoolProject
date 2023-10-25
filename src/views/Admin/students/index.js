@@ -285,7 +285,7 @@ export default function Students() {
                         Navigate(`/students/update?id=${cell.row.id}`)
                       }
                     >
-                      View/Update
+                      Update
                     </Dropdown.Item>
                     <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}
