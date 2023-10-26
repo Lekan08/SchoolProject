@@ -319,7 +319,8 @@ export default function ClassCourses() {
           //   icon: "success",
           //   text: result.message,
           // }).then(() => {
-          window.location.reload();
+          // window.location.reload();
+          handleOnChange();
           // });
           // setHeadOfDepart
         } else {
@@ -359,13 +360,14 @@ export default function ClassCourses() {
         setOpened(false);
         console.log(result);
         if (result.status === "SUCCESS") {
-          Swal.fire({
-            title: result.status,
-            icon: "success",
-            text: result.message,
-          }).then(() => {
-            window.location.reload();
-          });
+          // Swal.fire({
+          //   title: result.status,
+          //   icon: "success",
+          //   text: result.message,
+          // }).then(() => {
+          //   window.location.reload();
+          // });
+          handleOnChange();
         } else {
           Swal.fire({
             title: result.status,
@@ -744,7 +746,7 @@ export default function ClassCourses() {
       });
   };
   const handleOnChange = () => {
-    // console.log(value);
+    console.log("ben___D");
     // setFaculty(value);
     // setHeadOfDepart(value);
     const userInfo = JSON.parse(localStorage.getItem("user"));
@@ -1142,21 +1144,21 @@ export default function ClassCourses() {
               </Col>{" "}
             </Row>
             <Button
-            variant="gradient"
-            style={{
-              marginLeft: "auto",
-              marginRight: "auto",
-              display: "flex",
-              marginTop: "20px",
-            }}
-            color="info"
-            onClick={() => handleOnChange()}
-          >
-            Get Courses
-          </Button>
+              variant="gradient"
+              style={{
+                marginLeft: "auto",
+                marginRight: "auto",
+                display: "flex",
+                marginTop: "20px",
+              }}
+              color="info"
+              onClick={() => handleOnChange()}
+            >
+              Get Courses
+            </Button>
             <div class="container">
               <div class="row">
-                  <Typography variant="h5">Courses:</Typography> <br />
+                <Typography variant="h5">Courses:</Typography> <br />
                 <div class="col-sm-6">
                   {checkList.map((item, index) => (
                     <div key={index}>
@@ -1170,12 +1172,12 @@ export default function ClassCourses() {
                       />
                       &nbsp;
                       <span className={isChecked(item.courseCode)}>
-                        {item.courseCode}  ({item.unit} units) - {item.name}
+                        {item.courseCode} ({item.unit} units) - {item.name}
                       </span>
                     </div>
                   ))}
-                  </div>
-                  <div className="col-sm-6">
+                </div>
+                <div className="col-sm-6">
                   {compulsory.map((item, index) => (
                     <div key={index}>
                       {/* <input value={item.id} type="checkbox" /> &nbsp;

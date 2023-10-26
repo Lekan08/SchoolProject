@@ -22,6 +22,9 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import GHeaders from "getHeader";
 import { FormGroup } from "reactstrap";
+import { Card } from "@mui/material";
+import { Input, CardBody } from "reactstrap";
+// import Grid from "@material-ui/core/Grid";
 
 function InvitedStaff() {
   const Navigate = useNavigate();
@@ -308,83 +311,140 @@ function InvitedStaff() {
     // progressBar.current.style.backgroundColor = color;
   };
 
+  var cardStyle = {
+    display: "block",
+    width: "30vw",
+    transitionDuration: "0.3s",
+    height: "45vw",
+  };
+
   return (
-    <div className="form-wrapper">
-      <Form noValidate validated={validated}>
-        <Container fluid>
-          <h2 style={{ marginBottom: "15px", textAlign: "center" }}>
-            Lecturer's Information
-          </h2>
-
-          <Row>
-            <Col sm={4} style={{ marginBottom: "10px" }}>
-              <Form.Group>
-                <FloatingLabel controlId="firstnamLabel" label="First name">
-                  <Form.Control
-                    type="text"
-                    value={firstNamex}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    // placeholder="First name"
-                    required
-                  />
-                </FloatingLabel>
-                <Form.Control.Feedback type="invalid">
-                  Do not leave empty
-                </Form.Control.Feedback>
-              </Form.Group>
-            </Col>
-            <Col sm={4} style={{ marginBottom: "10px" }}>
-              <FloatingLabel controlId="lastnameLabel" label="Last name">
-                <Form.Control
-                  type="text"
-                  value={lastNamex}
-                  onChange={(e) => setLastName(e.target.value)}
-                  // placeholder="Last name"
-                  required
-                />
-              </FloatingLabel>
-            </Col>
-            <Col sm={4} style={{ marginBottom: "10px" }}>
-              <FloatingLabel controlId="othernameLabel" label="Other name">
-                <Form.Control
-                  type="text"
-                  value={otherNamex}
-                  onChange={(e) => setOtherName(e.target.value)}
-                  // placeholder="Last name"
-                  required
-                />
-              </FloatingLabel>
-            </Col>
-          </Row>
+    <div className="content">
+      <Card mx={6} style={cardStyle}>
+        <CardBody>
+          {/* <MenuBook
+            sx={{
+              fontSize: 230,
+              marginLeft: "auto",
+              marginRight: "auto",
+              display: "flex",
+            }}
+          /> */}
           <br />
-
           <Row>
-            <Col>
-              <Form.Group className="mb-3" controlId="formBasicEmail">
-                <FloatingLabel controlId="emailLabel" label="Enter email">
-                  <Form.Control
-                    type="email"
-                    // placeholder="Enter email"
-                    value={emailx}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
-                  />
-                </FloatingLabel>
-                <Form.Text className="text-muted">
-                  We'll never share your email with anyone else.
-                </Form.Text>
-              </Form.Group>
+            <Col className="pl-md-1" md="4">
+              <FormGroup>
+                <label>Course Name</label>
+                <Input
+                  onChange={(e) => {
+                    // setFname(e.target.value);
+                  }}
+                  // defaultValue={`${data11.firstName}`}
+                  placeholder="Name"
+                  //   value={firstName}
+                  //   disabled
+                  type="text"
+                />
+              </FormGroup>
+            </Col>
+            <Col className="pl-md-1" md="4">
+              <FormGroup>
+                <label>Course Code</label>
+                <Input
+                  onChange={(e) => {
+                    // setCourseCode(e.target.value);
+                  }}
+                  // defaultValue={`${data11.firstName}`}
+                  placeholder="Course Code"
+                  //   value={firstName}
+                  //   disabled
+                  type="text"
+                />
+              </FormGroup>
+            </Col>
+            <Col className="pl-md-1" md="4">
+              <FormGroup>
+                <label>Unit</label>
+                <Input
+                  onChange={(e) => {
+                    // setUnit(e.target.value);
+                  }}
+                  // defaultValue={`${data11.firstName}`}
+                  placeholder="Unit"
+                  //   value={firstName}
+                  //   disabled
+                  type="text"
+                />
+              </FormGroup>
             </Col>
           </Row>
           <Row style={{ marginTop: 20 }}>
-            <Col md="6" className="pl-md-3">
+            <Col className="pl-md-1" md="8">
               <FormGroup>
+                <label>Description (optional)</label>
+                {/* <Input
+                  onChange={(e) => {
+                    setLname(e.target.value);
+                  }}
+                  // defaultValue={`${data11.lastName}`}
+                  placeholder="Description"
+                  // onChange={() => console.log()}
+                  type="textarea"
+                  //   value={items[0]?.lastName}
+                  // disabled
+                /> */}
+              </FormGroup>
+            </Col>
+            <Col
+              md="4"
+              className="pl-md-1"
+              style={{
+                justifyContent: "center",
+                marginLeft: "auto",
+                marginRight: "auto",
+              }}
+            >
+              <FormGroup>
+                <label>Other Program</label>
                 <Form.Select
                   style={{ marginBottom: "20px" }}
-                  value={facultyx || ""}
+                  // value={otherProgram || ""}
+                  // aria-label="Default select example"
+                  // onChange={(e) => setOtherProg(e.target.value)}
+                >
+                  <option value="">--Select Other Program--</option>
+                  {/* {otherProgFaculties.map((apic) => (
+                    <option key={apic.id} value={apic.id}>
+                      {apic.name}
+                    </option>
+                  ))} */}
+                </Form.Select>
+              </FormGroup>
+            </Col>
+          </Row>
+          <Row style={{ marginTop: 20 }}>
+            <Col className="pl-md-1" md="4">
+              <label>Faculty</label>
+              <Select
+                options={faculties}
+                maxMenuHeight={80}
+                onChange={(e) => {
+                  // handleDepartment(e.value);
+                  setFaculty(e.value);
+                }}
+              />
+              {/* <FormGroup>
+                <label>Faculty</label>
+                <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  // value={sex || ""}
+                  size="sm"
                   aria-label="Default select example"
-                  onChange={(e) => setFaculty(e.target.value)}
+                  onChange={(e) => {
+                    handleDepartment(e.target.value);
+                    setFaculty(e.target.value);
+                    console.log(selected);
+                  }}
                 >
                   <option value="">--Select Faculty--</option>
                   {faculties.map((apic) => (
@@ -393,15 +453,17 @@ function InvitedStaff() {
                     </option>
                   ))}
                 </Form.Select>
-              </FormGroup>
+              </FormGroup> */}
             </Col>
-            <Col md="6" className="pl-md-3">
-              <FormGroup>
+            <Col className="pl-md-1" md="4">
+              {/* <FormGroup>
+                <label>Department</label>
                 <Form.Select
                   style={{ marginBottom: "20px" }}
-                  value={departx || ""}
+                  // value={sex || ""}
+                  size="sm"
                   aria-label="Default select example"
-                  onChange={(e) => setDepart(e.target.value)}
+                  onChange={(e) => setDepartment(e.target.value)}
                 >
                   <option value="">--Select Department--</option>
                   {departments.map((apic) => (
@@ -410,139 +472,56 @@ function InvitedStaff() {
                     </option>
                   ))}
                 </Form.Select>
+              </FormGroup> */}
+              <label>Department</label>
+              <Select
+                options={departments}
+                maxMenuHeight={80}
+                onChange={(e) => {
+                  // setDepartment(e.value);
+                }}
+              />
+            </Col>
+            <Col className="pl-md-1" md="4">
+              <FormGroup>
+                <label>College (optional) </label>
+                <Select />
               </FormGroup>
             </Col>
           </Row>
-          <Row>
-            <Col sm={4}>
-              <Typography variant="button" fontWeight="regular" color="text">
-                Phone Number
-              </Typography>
-              <PhoneInput
-                value={phonex}
-                inputStyle={{ width: "100%" }}
-                buttonStyle={{}}
-                onChange={setPhone}
-              />
-            </Col>
-            <Col sm={4}>
-              <Typography
-                variant="button"
-                fontWeight="regular"
-                color="black"
-                mt={1}
-              >
-                Sex
-              </Typography>
-              <Box mb={4}>
-                {/* <Typography variant="button" fontWeight="regular" color="text">
-      School Type
-    </Typography> */}
-                <Form.Select
-                  onChange={(e) => setSex(e.target.value)}
-                  value={sexx || ""}
-                  aria-label="Default select example"
-                >
-                  <option>---Sex---</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                </Form.Select>
-              </Box>
-            </Col>
-            <Col sm={4}>
-              <Typography
-                variant="button"
-                fontWeight="regular"
-                color="black"
-                mt={1}
-              >
-                Date Of Birth
-              </Typography>
-              <Box mb={6} mt={1}>
-                <div>
-                  <style>
-                    {`.date-picker input {
-                      width: 100%
-                 }`}
-                  </style>
-                  <DatePicker
-                    date={startDate}
-                    wrapperClassName="date-picker"
-                    placeholder="Select Birth Date"
-                    dateFormat="dd/MM/yyyy"
-                    confirmBtnText="Confirm"
-                    showCancelButton="true"
-                    customStyles={{
-                      placeholderText: {
-                        fontSize: 16,
-                      },
-                      dateIcon: {
-                        height: 0,
-                        width: 0,
-                      },
-                      dateText: {
-                        color: "#b3b4b5",
-                        fontSize: 16,
-                      },
-                      dateInput: {
-                        borderWidth: 0,
-                      },
-                    }}
-                    selected={startDate}
-                    onChange={(date) => setStartDate(date)}
-                    peekNextMonth
-                    showMonthDropdown
-                    showYearDropdown
-                    dropdownMode="select"
-                  />
-                </div>
-              </Box>
-            </Col>
-          </Row>
-
-          <Row>
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <FloatingLabel controlId="passwordLabel" label="Password">
-                <Form.Control
-                  type="password"
-                  placeholder="Password"
-                  required
-                  pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
-                  onChange={(e) => handlePasswordChange(e.target.value)}
-                />
-              </FloatingLabel>
-              <Form.Text className="text-muted">
-                Must be 8 characters long, contain a number, an uppercase letter
-                and a special character.
-              </Form.Text>
-            </Form.Group>
-          </Row>
-
-          <Row>
-            <Form.Group className="mb-3" controlId="formBasicConfirmation">
-              <FloatingLabel controlId="confirmationLabel" label="Confirmation">
-                <Form.Control
-                  type="password"
-                  placeholder="Confirmation"
-                  value={confirmPassword}
-                  required
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                />
-              </FloatingLabel>
-              <p
-                style={{ color: "red", display: "none" }}
-                ref={confirmationError}
-              >
-                Password and confirmation are not the same
-              </p>
-            </Form.Group>
-          </Row>
-
-          <Button variant="primary" onClick={handleSubmit}>
-            Register
+          <Button
+            variant="gradient"
+            style={{
+              marginLeft: "auto",
+              marginRight: "auto",
+              display: "flex",
+              marginTop: "20px",
+            }}
+            color="info"
+            // onClick={() => handleChange2()}
+          >
+            Add Course
           </Button>
-        </Container>
-      </Form>
+        </CardBody>
+      </Card>
+      {/* <Grid
+        container
+        spacing={0}
+        direction="column"
+        alignItems="center"
+        justify="center"
+        style={{ minHeight: "100vh" }}
+      >
+        <Grid item xs={3}>
+          <Card>// card content</Card>
+        </Grid>
+      </Grid> */}
+      {/* <Backdrop
+        sx={{ color: "white", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={opened}
+      >
+        <CircularProgress style={{ color: "white" }} />
+      </Backdrop> */}
     </div>
   );
 }

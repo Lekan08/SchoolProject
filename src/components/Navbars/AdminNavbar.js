@@ -15,7 +15,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 import Navigate from "useNavigate";
@@ -46,7 +46,7 @@ import { validateLocaleAndSetLanguage } from "typescript";
 function AdminNavbar(props) {
   const [collapseOpen, setcollapseOpen] = React.useState(false);
   const [modalSearch, setmodalSearch] = React.useState(false);
-  const [showProfile, setShowProfile] = React.useState(false);
+  const [showProfile, setShowProfile] = useState(false);
   const [color, setcolor] = React.useState("navbar-transparent");
   React.useEffect(() => {
     window.addEventListener("resize", updateColor);
@@ -80,20 +80,26 @@ function AdminNavbar(props) {
   useEffect(() => {
     handleOnGets();
   }, []);
-  const handleOnGets = () => {
-    const route = routes;
-    const mapp = route.map((val) => {
-      if (val.admin === true) {
-        console.log("showw");
-        setShowProfile(true);
-      } else if (val.admin === false) {
-        console.log("students");
-        setShowProfile(false);
-      }
-    });
-    console.log(mapp);
 
-    console.log(route);
+  // if ()
+  const handleOnGets = () => {
+    // const route = routes;
+    // const filterAdmin = route.filter((val) => val.admin === true);
+    // console.log(filterAdmin);
+    const adminStudent = JSON.parse(localStorage.getItem("adminStudent"));
+    console.log(adminStudent);
+    // const mapp = route.map((val) => {
+    if (adminStudent.userType === "STAFF") {
+      console.log("Admin");
+      setShowProfile(true);
+    } else if (adminStudent.userType === "STUDENT") {
+      console.log("Student");
+      setShowProfile(false);
+    }
+    // });
+    // console.log(mapp);
+
+    // console.log(route);
   };
 
   return (
@@ -177,6 +183,10 @@ function AdminNavbar(props) {
                 </DropdownToggle>
                 <DropdownMenu className="dropdown-navbar" right tag="ul">
                   {showProfile ? (
+                    <NavLink tag="li" onClick={() => Navigate("/adminProfile")}>
+                      <DropdownItem className="nav-item">Profile</DropdownItem>
+                    </NavLink>
+                  ) : (
                     <NavLink
                       tag="li"
                       onClick={() => Navigate("/student-profile-update")}
@@ -184,10 +194,6 @@ function AdminNavbar(props) {
                       <DropdownItem className="nav-item">
                         Student Profile
                       </DropdownItem>
-                    </NavLink>
-                  ) : (
-                    <NavLink tag="li" onClick={() => Navigate("/adminProfile")}>
-                      <DropdownItem className="nav-item">Profile</DropdownItem>
                     </NavLink>
                   )}
 
