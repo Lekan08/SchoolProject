@@ -26,15 +26,21 @@ export default function StudentUpdate() {
   const [lname, setLname] = useState("");
   const [type, setType] = useState("");
   const [matric, setMatric] = useState("");
-  const [faculties, setFaculties] = useState([]);
-  const [departments, setDepartments] = useState([]);
-  const [faculty, setFaculty] = useState("");
+  // const [faculties, setFaculties] = useState([]);
+  // const [departments, setDepartments] = useState([]);
+  // const [faculty, setFaculty] = useState("");
   const [department, setDepartment] = useState("");
   const [sex, setSex] = useState("");
   const [email, setEmail] = useState("");
   const [oName, setOName] = useState("");
   const [levelx, setLevelx] = useState("");
   const [levelss, setLevelsss] = useState([]);
+  const [facultyx, setFaculty] = useState("");
+  const [faculties, setFaculties] = useState([]);
+  const [headOfDepart, setHeadOfDepart] = useState("");
+  const [depart, setDepart] = useState([]);
+  const [otherProgram, setOtherProg] = useState("");
+  const [otherProgams, setOtherPrograms] = useState([]);
 
   const [items, setItems] = useState({});
 
@@ -44,6 +50,7 @@ export default function StudentUpdate() {
   useEffect(() => {
     handleGetLevel();
     handleGetFaculties();
+    handleGetOtherProgram();
   }, []);
 
   // useEffect(() => {
@@ -75,34 +82,34 @@ export default function StudentUpdate() {
       });
   };
   // }, []);
-  const handleDepartment = (w) => {
-    setOpened(true);
-    const headers = miHeaders;
-    fetch(
-      `${process.env.REACT_APP_SCHPROJECT_URL}/departments/getByFacultyID/${w}`,
-      {
-        headers,
-      }
-    )
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        setOpened(false);
-        console.log(result);
-        setDepartments(result);
-      })
-      .catch((error) => {
-        setOpened(false);
-        Swal.fire({
-          title: error.status,
-          icon: "error",
-          text: error.message,
-        });
-      });
-  };
+  // const handleDepartment = (w) => {
+  //   setOpened(true);
+  //   const headers = miHeaders;
+  //   fetch(
+  //     `${process.env.REACT_APP_SCHPROJECT_URL}/departments/getByFacultyID/${w}`,
+  //     {
+  //       headers,
+  //     }
+  //   )
+  //     .then(async (res) => {
+  //       const aToken = res.headers.get("token-1");
+  //       localStorage.setItem("rexxdex", aToken);
+  //       return res.json();
+  //     })
+  //     .then((result) => {
+  //       setOpened(false);
+  //       console.log(result);
+  //       setDepartments(result);
+  //     })
+  //     .catch((error) => {
+  //       setOpened(false);
+  //       Swal.fire({
+  //         title: error.status,
+  //         icon: "error",
+  //         text: error.message,
+  //       });
+  //     });
+  // };
   useEffect(() => {
     setOpened(true);
     const queryString = window.location.search;
@@ -141,9 +148,10 @@ export default function StudentUpdate() {
         setMatric(result[0].matricNumber);
         setDob(`${new Date(dateOfBirth).getFullYear()}-${month()}-${day()}`);
         setPhonex(`+${result[0].phoneNumber}`);
-        handleDepartment(result[0].facultyID);
+        handleOnChangeDepart(result[0].facultyID);
         setFaculty(result[0].facultyID);
-        setDepartment(result[0].depID);
+        setHeadOfDepart(result[0].depID);
+        setOtherProg(result[0].otherProgramsID);
         setLevelx(result[0].levelID);
         setItems(result[0]);
       })
@@ -204,10 +212,11 @@ export default function StudentUpdate() {
       dateOfBirth: new Date(dob).getTime(),
       schoolID: userInfo.schoolID,
       depID: department,
-      facultyID: faculty,
+      facultyID: facultyx,
       departmentName: items.departmentName,
       facultyName: items.facultyName,
       matricNumber: matric,
+      otherProgramsID: otherProgram,
       collegeID: "string",
       levelID: levelx,
       // studentType: Number(type),
@@ -271,6 +280,133 @@ export default function StudentUpdate() {
         });
       });
   };
+
+  const handleGetOtherProgram = () => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/otherPrograms/gets/${schID}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setOtherPrograms(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+
+  const handleOnGetOtherProgram = (value) => {
+    console.log(value);
+    setOtherProg(value);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const IDs = userInfo.courseAdviserID;
+    console.log(IDs);
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const idx = urlParams.get("id");
+    console.log(idx);
+    const headers = miHeaders;
+    // setItems
+
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/otherPrograms/getByDepID/${value}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setDepart(result);
+        // setDepart(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+  const handleOnChangeDepart = (value) => {
+    console.log(value);
+    setFaculty(value);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const IDs = userInfo.courseAdviserID;
+    console.log(IDs);
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const idx = urlParams.get("id");
+    console.log(idx);
+    const headers = miHeaders;
+    // setItems
+
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/departments/getByFacultyID/${value}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setDepart(result);
+        // setDepart(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+
+  const handleOtherProgFalc = (value, item) => {
+    console.log(value);
+    console.log(item);
+    if (item === "oP") {
+      console.log("other_program");
+      // setOtherProg(value);
+      handleOnGetOtherProgram(value);
+    } else if (item === "faculty") {
+      console.log("facultyDepartment");
+      handleOnChangeDepart(value);
+    }
+  };
+
   return (
     <div className="content">
       <Card mx={2}>
@@ -378,12 +514,12 @@ export default function StudentUpdate() {
             </Col>
           </Row>
           <Row style={{ marginTop: 20 }}>
-            <Col className="pl-md-1" md="4">
+            {/* <Col className="pl-md-1" md="4">
               <FormGroup>
                 <label>Faculty</label>
                 <Form.Select
                   style={{ marginBottom: "20px" }}
-                  value={faculty || ""}
+                  value={facultyx || ""}
                   size="sm"
                   aria-label="Default select example"
                   onChange={(e) => {
@@ -400,8 +536,8 @@ export default function StudentUpdate() {
                   ))}
                 </Form.Select>
               </FormGroup>
-            </Col>
-            <Col className="pl-md-1" md="4">
+            </Col> */}
+            {/* <Col className="pl-md-1" md="4">
               <FormGroup>
                 <label>Department</label>
                 <Form.Select
@@ -419,8 +555,74 @@ export default function StudentUpdate() {
                   ))}
                 </Form.Select>
               </FormGroup>
+            </Col> */}
+            <Col md="4" className="pl-md-1">
+              <FormGroup>
+                <label>Other Programs</label>
+                <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  value={otherProgram || ""}
+                  aria-label="Default select example"
+                  onChange={(e) => handleOtherProgFalc(e.target.value, "oP")}
+                >
+                  <option value="">--Select Other Program--</option>
+                  {otherProgams.map((apic) => (
+                    <option key={apic.id} value={apic.id}>
+                      {apic.name}
+                    </option>
+                  ))}
+                </Form.Select>
+              </FormGroup>
             </Col>
             <Col className="pl-md-1" md="4">
+              <FormGroup>
+                <label>Faculty</label>
+                <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  value={facultyx || ""}
+                  aria-label="Default select example"
+                  onChange={(e) =>
+                    handleOtherProgFalc(e.target.value, "faculty")
+                  }
+                >
+                  <option value="">--Select Faculty--</option>
+                  {faculties.map((apic) => (
+                    <option key={apic.id} value={apic.id}>
+                      {apic.name}
+                    </option>
+                  ))}
+                </Form.Select>
+              </FormGroup>
+              {/* <FormGroup>
+                <label>Faculty</label>
+                <Select
+                  options={faculties}
+                  onChange={(e) => {
+                    handleDepartment(e.value);
+                    setFaculty(e.value);
+                  }}
+                />
+              </FormGroup> */}
+            </Col>
+            <Col className="pl-md-1" md="4">
+              <FormGroup>
+                <label>Department</label>
+                <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  value={headOfDepart || ""}
+                  aria-label="Default select example"
+                  onChange={(e) => setHeadOfDepart(e.target.value)}
+                >
+                  <option value="">--Department--</option>
+                  {depart.map((apic) => (
+                    <option key={apic.id} value={apic.id}>
+                      {apic.name}
+                    </option>
+                  ))}
+                </Form.Select>
+              </FormGroup>
+            </Col>
+            {/* <Col className="pl-md-1" md="4">
               <FormGroup>
                 <label>College (optional) </label>
                 <Form.Select
@@ -431,11 +633,9 @@ export default function StudentUpdate() {
                   // onChange={(e) => setSex(e.target.value)}
                 >
                   <option value="">--Choose--</option>
-                  {/* <option value="Male">Male</option>
-                  <option value="Female">Female</option> */}
                 </Form.Select>
               </FormGroup>
-            </Col>
+            </Col> */}
           </Row>
           <Row style={{ marginTop: 20 }}>
             <Col md="4" className="pl-md-1">

@@ -72,6 +72,8 @@ export default function StudentMultiple() {
   const [department, setDepartment] = useState("");
   const [levelx, setLevelx] = useState("");
   const [level, setLevel] = useState([]);
+  const [otherProgram, setOtherProg] = useState("");
+  const [otherProgams, setOtherPrograms] = useState([]);
 
   const [opened, setOpened] = useState(false);
   // const changeHandler = (event) => {
@@ -157,6 +159,7 @@ export default function StudentMultiple() {
   useEffect(() => {
     handleLevel();
     handleFaculty();
+    handleGetOtherProgram();
   }, []);
   const handleLevel = () => {
     setOpened(true);
@@ -178,6 +181,41 @@ export default function StudentMultiple() {
         // setLevel(result);
         const spec = result.map((r) => ({ value: r.id, label: r.name }));
         setLevel(spec);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+  
+  const handleGetOtherProgram = () => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/otherPrograms/gets/${schID}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        // setOtherPrograms(result);
+        const spec = result.map((r) => ({ value: r.id, label: r.name }));
+
+        setOtherPrograms(spec);
       })
       .catch((error) => {
         setOpened(false);
@@ -304,6 +342,107 @@ export default function StudentMultiple() {
         });
       });
   };
+
+  const handleOnGetOtherProgram = (value) => {
+    console.log(value);
+    setOtherProg(value);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const IDs = userInfo.courseAdviserID;
+    console.log(IDs);
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const idx = urlParams.get("id");
+    console.log(idx);
+    const headers = miHeaders;
+    // setItems
+
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/otherPrograms/getByDepID/${value}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        // setDepart(result);
+        
+        const newdp = result.map((r) => ({ value: r.id, label: r.name }));
+        setDepartments(newdp);
+        // setDepart(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+  const handleOnChangeDepart = (value) => {
+    console.log(value);
+    setFaculty(value);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const IDs = userInfo.courseAdviserID;
+    console.log(IDs);
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const idx = urlParams.get("id");
+    console.log(idx);
+    const headers = miHeaders;
+    // setItems
+
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/departments/getByFacultyID/${value}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        // setDepart(result);
+        
+        const newdp = result.map((r) => ({ value: r.id, label: r.name }));
+        setDepartments(newdp);
+        // setDepart(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+
+  const handleOtherProgFalc = (value, item) => {
+    console.log(value);
+    console.log(item);
+    if (item === "oP") {
+      console.log("other_program");
+      // setOtherProg(value);
+      handleOnGetOtherProgram(value);
+    } else if (item === "faculty") {
+      console.log("facultyDepartment");
+      handleOnChangeDepart(value);
+    }
+  };
+
   return (
     <div className="content">
       <Card mx={2}>
@@ -331,19 +470,33 @@ export default function StudentMultiple() {
           </Button>
           <br />
           <Row style={{ marginTop: 20 }}>
-            <Col className="pl-md-1" md="4">
+              <Col md="6" className="pl-md-1">
+                <FormGroup>
+                  <label>Other Programs</label>
+                  <Select
+                  options={level}
+                  onChange={(e) => {
+                    handleOtherProgFalc(e.value, "oP");
+                    // setLevelx(e.value);
+                  }}
+                />
+                </FormGroup>
+              </Col>
+            <Col className="pl-md-1" md="6">
               <FormGroup>
                 <label>Faculty</label>
                 <Select
                   options={faculties}
                   onChange={(e) => {
-                    handleDepartment(e.value);
-                    setFaculty(e.value);
+                    handleOtherProgFalc(e.value, "faculty");
+                    // setFaculty(e.value);
                   }}
                 />
               </FormGroup>
             </Col>
-            <Col className="pl-md-1" md="4">
+          </Row>
+          <Row style={{ marginTop: 20 }}>
+            <Col className="pl-md-1" md="6">
               <FormGroup>
                 <label>Department</label>
                 <Select
@@ -354,7 +507,7 @@ export default function StudentMultiple() {
                 />
               </FormGroup>
             </Col>
-            <Col className="pl-md-1" md="4">
+            <Col className="pl-md-1" md="6">
               <FormGroup>
                 <label>Level</label>
                 <Select
