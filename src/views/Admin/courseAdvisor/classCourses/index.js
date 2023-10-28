@@ -47,6 +47,7 @@ export default function ClassCourses() {
   const [otherProgram, setOtherProg] = useState("");
   const [facultyx, setFaculty] = useState("");
   const [faculties, setFaculties] = useState([]);
+  const [totalCourseUnit, setTotalCourseUnit] = useState("");
   // const [courseAdviserx, setCourseAdviserx] = useState([]);
 
   const style = {
@@ -829,6 +830,7 @@ export default function ClassCourses() {
                     })
                     .then((resultc) => {
                       setOpened(false);
+                      setTotalCourseUnit(resultc[0].totalCourseUnit)
                       const newCompul = [];
                       const compdep = resultc.filter(
                         (val) => val.depID === headOfDepart

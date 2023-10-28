@@ -132,34 +132,34 @@ function InvitedStaff() {
         });
       });
   }, []);
-  useEffect(() => {
-    setOpened(true);
-    const userInfo = JSON.parse(localStorage.getItem("user"));
-    console.log(userInfo);
-    const schID = userInfo.schoolID;
-    const headers = miHeaders;
-    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/departments/gets/${schID}`, {
-      headers,
-    })
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        setOpened(false);
-        console.log(result);
-        setDepartments(result);
-      })
-      .catch((error) => {
-        setOpened(false);
-        Swal.fire({
-          title: error.status,
-          icon: "error",
-          text: error.message,
-        });
-      });
-  }, []);
+  // useEffect(() => {
+  //   setOpened(true);
+  //   const userInfo = JSON.parse(localStorage.getItem("user"));
+  //   console.log(userInfo);
+  //   const schID = userInfo.schoolID;
+  //   const headers = miHeaders;
+  //   fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/departments/gets/${schID}`, {
+  //     headers,
+  //   })
+  //     .then(async (res) => {
+  //       const aToken = res.headers.get("token-1");
+  //       localStorage.setItem("rexxdex", aToken);
+  //       return res.json();
+  //     })
+  //     .then((result) => {
+  //       setOpened(false);
+  //       console.log(result);
+  //       setDepartments(result);
+  //     })
+  //     .catch((error) => {
+  //       setOpened(false);
+  //       Swal.fire({
+  //         title: error.status,
+  //         icon: "error",
+  //         text: error.message,
+  //       });
+  //     });
+  // }, []);
 
   const handleClick = (e) => {
     if (passwordx === confirmPassword) {
@@ -262,14 +262,16 @@ function InvitedStaff() {
                   text: error.message,
                 });
               });
+          } else {
+            MySwal.fire({
+            title: result.status,
+            type: "error",
+            text: result.message,
+          }).then(() => {
+            window.location.reload();
+          });
           }
-          // MySwal.fire({
-          //   title: result.status,
-          //   type: "success",
-          //   text: result.message,
-          // }).then(() => {
-          //   window.location.reload();
-          // });
+          
         })
         .catch((error) => {
           setOpened(false);
@@ -291,9 +293,11 @@ function InvitedStaff() {
     if (passwordx !== confirmPassword) {
       event.preventDefault();
       event.stopPropagation();
-      confirmationError.current.style.display = null;
+      console.log(confirmationError);
+      // confirmationError.current.style.display = null;
     } else {
-      confirmationError.current.style.display = "none";
+      console.log(confirmationError);
+      // confirmationError.current.style.display = "none";
       handleClick();
       console.log("barry_jhay");
     }
@@ -371,6 +375,38 @@ function InvitedStaff() {
     width: "30vw",
     transitionDuration: "0.3s",
     height: "45vw",
+  };
+
+  const handleDepartment = (value) => {
+    setFaculty(value)
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(value);
+    const headers = miHeaders;
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/departments/getByFacultyID/${value}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setDepartments(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
   };
 
   return (
@@ -459,7 +495,7 @@ function InvitedStaff() {
                       style={{ marginBottom: "20px" }}
                       value={facultyx || ""}
                       aria-label="Default select example"
-                      onChange={(e) => setFaculty(e.target.value)}
+                      onChange={(e) => handleDepartment(e.target.value)}
                     >
                       <option value="">--Select Faculty--</option>
                       {faculties.map((apic) => (
