@@ -20,7 +20,7 @@ function CourseRegistartion() {
   const [lname, setLname] = useState("");
   const [matric, setMatric] = useState("");
   const [department, setDepartment] = useState("");
-  const [faculty, setFaculty] = useState("");
+  // const [faculty, setFaculty] = useState("");
   const [levelx, setLevelx] = useState("");
   const [levelss, setLevelsss] = useState([]);
   const [depart, setDepart] = useState([]);
@@ -33,15 +33,56 @@ function CourseRegistartion() {
   const [elective, setElective] = useState([]);
   const [showEmpty, setShowEmpty] = useState(false);
   const [totalUnits, setTotalUnits] = useState([]);
+  // const [depart, setDepart] = useState([]);
+  const [otherProgram, setOtherProg] = useState("");
+  const [otherProgams, setOtherPrograms] = useState([]);
+  const [facultyx, setFaculty] = useState("");
+  const [faculties, setFaculties] = useState([]);
   //   const [faculties, setFaculties] = useState([]);
   //   const [departments, setDepartments] = useState([]);
 
   useEffect(() => {
     handleGetStudents();
-    handleGetDepartments();
+    // handleGetDepartments();
     handleGetLevels();
     handleGets();
+    handleGetOtherProgram();
+    handleGetFaculties();
   }, []);
+
+  
+  // useEffect(() => {
+    const handleGetFaculties = () => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/faculties/gets/${schID}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        const spec = result.map((r) => ({ value: r.id, label: r.name }));
+
+        setFaculties(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+    }
+  // }, []);
 
   // useEffect(() => {
   const handleGetStudents = () => {
@@ -81,34 +122,34 @@ function CourseRegistartion() {
   // }, []);
 
   // useEffect(() => {
-  const handleGetDepartments = () => {
-    setOpened(true);
-    const userInfo = JSON.parse(localStorage.getItem("user2"));
-    console.log(userInfo);
-    const schID = userInfo.schoolID;
-    const headers = miHeaders;
-    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/departments/gets/${schID}`, {
-      headers,
-    })
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        setOpened(false);
-        console.log(result);
-        setDepart(result);
-      })
-      .catch((error) => {
-        setOpened(false);
-        Swal.fire({
-          title: error.status,
-          icon: "error",
-          text: error.message,
-        });
-      });
-  };
+  // const handleGetDepartments = () => {
+  //   setOpened(true);
+  //   const userInfo = JSON.parse(localStorage.getItem("user2"));
+  //   console.log(userInfo);
+  //   const schID = userInfo.schoolID;
+  //   const headers = miHeaders;
+  //   fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/departments/gets/${schID}`, {
+  //     headers,
+  //   })
+  //     .then(async (res) => {
+  //       const aToken = res.headers.get("token-1");
+  //       localStorage.setItem("rexxdex", aToken);
+  //       return res.json();
+  //     })
+  //     .then((result) => {
+  //       setOpened(false);
+  //       console.log(result);
+  //       setDepart(result);
+  //     })
+  //     .catch((error) => {
+  //       setOpened(false);
+  //       Swal.fire({
+  //         title: error.status,
+  //         icon: "error",
+  //         text: error.message,
+  //       });
+  //     });
+  // };
   // }, []);
 
   // useEffect(() => {
@@ -417,9 +458,11 @@ function CourseRegistartion() {
                     console.log(newCompulx);
                     setElective(newCompulx);
 
-                    const combinedArray = newCompulx.concat(result);
-                    setTotalUnits(combinedArray);
-                    console.log(combinedArray);
+                    // const combinedArray = newCompulx.concat(result);
+                    if (resultrz[0].totalCourseUnits === "") {
+                      setTotalUnits(resultrz[0].totalCourseUnits);
+                    }
+                    // console.log(combinedArray);
                     const newCompulxx = [];
                     console.log(newCompulxx);
                     const newCompulz = [];
@@ -586,6 +629,132 @@ function CourseRegistartion() {
       });
   };
 
+  const handleOnGetOtherProgram = (value) => {
+    console.log(value);
+    setOtherProg(value);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const IDs = userInfo.courseAdviserID;
+    console.log(IDs);
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const idx = urlParams.get("id");
+    console.log(idx);
+    const headers = miHeaders;
+    // setItems
+
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/otherPrograms/getByDepID/${value}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setDepart(result);
+        // setDepart(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+  const handleOnChangeDepart = (value) => {
+    console.log(value);
+    setFaculty(value);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const IDs = userInfo.courseAdviserID;
+    console.log(IDs);
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const idx = urlParams.get("id");
+    console.log(idx);
+    const headers = miHeaders;
+    // setItems
+
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/departments/getByFacultyID/${value}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setDepart(result);
+        // setDepart(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+
+  const handleOtherProgFalc = (value, item) => {
+    console.log(value);
+    console.log(item);
+    if (item === "oP") {
+      console.log("other_program");
+      // setOtherProg(value);
+      handleOnGetOtherProgram(value);
+    } else if (item === "faculty") {
+      console.log("facultyDepartment");
+      handleOnChangeDepart(value);
+    }
+  };
+
+  const handleGetOtherProgram = () => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/otherPrograms/gets/${schID}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setOtherPrograms(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+
   const isChecked = (item) =>
     checked.includes(item) ? "checked-item" : "not-checked-item";
 
@@ -683,6 +852,9 @@ function CourseRegistartion() {
                     Register Course
                   </Typography>
                 </Button>
+                <label style={{ color: "red", marginTop: 10 }}>
+                  Note: You can only select either Other program or Faculty
+                </label>
                 <br />
                 <Row>
                   <Col md="6" className="pl-md-1">
@@ -719,6 +891,48 @@ function CourseRegistartion() {
                       </Form.Select>
                     </FormGroup>
                   </Col>{" "}
+                  <Col md="6" className="pl-md-1">
+                    <FormGroup>
+                      <label>Other Programs</label>
+                      <Form.Select
+                        style={{ marginBottom: "20px" }}
+                        value={otherProgram || ""}
+                        aria-label="Default select example"
+                        onChange={(e) =>
+                          handleOtherProgFalc(e.target.value, "oP")
+                        }
+                      >
+                        <option value="">--Select Other Program--</option>
+                        {otherProgams.map((apic) => (
+                          <option key={apic.id} value={apic.id}>
+                            {apic.name}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </FormGroup>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col className="pl-md-1" md="6">
+                    <FormGroup>
+                      <label>Faculty</label>
+                      <Form.Select
+                        style={{ marginBottom: "20px" }}
+                        value={facultyx || ""}
+                        aria-label="Default select example"
+                        onChange={(e) =>
+                          handleOtherProgFalc(e.target.value, "faculty")
+                        }
+                      >
+                        <option value="">--Select Faculty--</option>
+                        {faculties.map((apic) => (
+                          <option key={apic.id} value={apic.id}>
+                            {apic.name}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </FormGroup>
+                  </Col>
                   <Col md="6" className="pl-md-1">
                     <FormGroup>
                       <label>Department</label>
@@ -862,7 +1076,8 @@ function CourseRegistartion() {
                   </div>
                 ))}
               </Row>
-              {totalUnits.map((items) => {
+              <h4>Total units = {totalUnits}</h4>;
+              {/* {totalUnits.map((items) => {
                 // eslint-disable-next-line no-unused-expressions
                 const units = items.courseUnit;
                 console.log(units);
@@ -870,8 +1085,7 @@ function CourseRegistartion() {
 
                 for (var i = 0, sum = 0; i < array.length; sum += array[i++]);
                 console.log(sum);
-                <h4>Total units = {units}</h4>;
-              })}
+              })} */}
             </CardBody>
           </Card>
         </Paper>
