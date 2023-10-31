@@ -399,7 +399,7 @@ export default function OtherPrograms() {
               color="info"
               onClick={() => handleAdd()}
             >
-              Add Programs
+              Add Program
             </Button>
           </CardBody>
         </Card>

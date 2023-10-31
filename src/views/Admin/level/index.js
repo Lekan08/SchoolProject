@@ -371,6 +371,14 @@ export default function Level() {
                   <Dropdown.Menu>
                     <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}
+                      onClick={() =>
+                        Navigate(`/level/update?id=${cell.row.id}`)
+                      }
+                    >
+                      Update
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      style={{ fontweight: "bold", color: "black" }}
                       onClick={() => handleDelete(cell.row.id)}
                     >
                       Delete
@@ -381,14 +389,6 @@ export default function Level() {
                     >
                       Update
                     </Dropdown.Item> */}
-                    <Dropdown.Item
-                      style={{ fontweight: "bold", color: "black" }}
-                      onClick={() =>
-                        Navigate(`/level/update?id=${cell.row.id}`)
-                      }
-                    >
-                      Update
-                    </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
               ),

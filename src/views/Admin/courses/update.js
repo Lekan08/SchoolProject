@@ -432,12 +432,12 @@ export default function CourseUpdate() {
                 }}
               />
             </Col>
-            <Col className="pl-md-1" md="4">
+            {/* <Col className="pl-md-1" md="4">
               <FormGroup>
                 <label>College (optional) </label>
                 <Select />
               </FormGroup>
-            </Col>
+            </Col> */}
           </Row>
           <Button
             variant="gradient"

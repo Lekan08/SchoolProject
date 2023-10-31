@@ -96,7 +96,7 @@ export default function FacultyAdd() {
       description: description,
       schoolID: schID,
       head: head,
-      collegeID: college,
+      // collegeID: college,
       // college:
     });
     console.log(raw);
@@ -265,7 +265,7 @@ export default function FacultyAdd() {
                 </Form.Select>
               </FormGroup>
             </Col>{" "}
-            <Col md="6" className="pl-md-1">
+            {/* <Col md="6" className="pl-md-1">
               <FormGroup>
                 <label>College</label>
                 <Form.Select
@@ -282,7 +282,7 @@ export default function FacultyAdd() {
                   ))}
                 </Form.Select>
               </FormGroup>
-            </Col>{" "}
+            </Col>{" "} */}
             {/* <Col md="4" className="pl-md-1">
               <FormGroup>
                 <label>School</label>

@@ -30,6 +30,7 @@ export default function GradingUpdate() {
   const [zino, setZino] = useState("");
   const [minScorex, setMinScore] = useState("");
   const [maxScorex, setMaxScore] = useState("");
+  const [gradePoint, setGradePoint] = useState("");
 
   useEffect(() => {
     setOpened(true);
@@ -56,6 +57,7 @@ export default function GradingUpdate() {
         setMinScore(result[0].minScore);
         setGrade(result[0].grade);
         setValue(result[0].value);
+        setGradePoint(result[0].gradePoint);
         // setCourseCode(result[0].courseCode);
         // setUnit(result[0].unit);
         // setFaculty({
@@ -81,23 +83,11 @@ export default function GradingUpdate() {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
     const raw2 = JSON.stringify({
-      //   name: fname,
-      //   description: lname,
-      //   head: email,
-      //   schoolID: userInfo.schoolID,
-      //   depID: department.value,
-      //   facultyID: faculty.value,
-      //   facultyName: dara.facultyName,
-      //   collegeID: dara.collegeID,
-      //   collegeName: dara.collegeName,
-      //   schoolName: dara.schoolName,
-      //   courseCode: courseCodex,
-      //   unit: unitx,
-
       id: zino.id,
       schoolID: userInfo.schoolID,
       value: valuex,
       grade: gradex,
+      gradePoint: Number(gradePoint),
       //   colorCode: colorCodex,
       minScore: minScorex,
       maxScore: maxScorex,
@@ -170,15 +160,15 @@ export default function GradingUpdate() {
               <FormGroup>
                 <label>Grade Point</label>
                 <Input
-                  onChange={(e) => {
-                    setValue(e.target.value);
-                  }}
-                  placeholder="e.g A for 7, B for 6"
-                  // defaultValue={`${data11.firstName}`}
-                  //   placeholder="Value"
-                  value={valuex}
-                  type="text"
-                />
+                    onChange={(e) => {
+                      setGradePoint(e.target.value);
+                    }}
+                    placeholder="e.g A for 7, B for 6"
+                    // defaultValue={`${data11.firstName}`}
+                    //   placeholder="Value"
+                    //   value={firstName}
+                    type="text"
+                  />
               </FormGroup>
             </Col>
             <Col className="pl-md-1" md="6">
@@ -226,6 +216,23 @@ export default function GradingUpdate() {
               </FormGroup>
             </Col>
           </Row>
+            <Row>
+              <Col className="pl-md-1" md="6">
+                <FormGroup>
+                  <label>Value</label>
+                  <Input
+                    onChange={(e) => {
+                      setValue(e.target.value);
+                    }}
+                    placeholder="e.g Excellent, Faillure"
+                    // defaultValue={`${data11.firstName}`}
+                    //   placeholder="Value"
+                    //   value={firstName}
+                    type="text"
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
           <Button
             variant="gradient"
             style={{

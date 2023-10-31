@@ -217,7 +217,7 @@ export default function OtherProgramUpdate() {
                 <label>Head Of Program</label>
                 <Form.Select
                   style={{ marginBottom: "20px" }}
-                  value={headOfProgram || ""}
+                  value={headOfProgram}
                   aria-label="Default select example"
                   onChange={(e) => setHead(e.target.value)}
                 >

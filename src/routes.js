@@ -312,13 +312,13 @@ var routes = [
     component: Result,
     admin: true,
   },
-  {
-    path: "/college",
-    name: "College",
-    icon: "menu_book",
-    component: College,
-    admin: true,
-  },
+  // {
+  //   path: "/college",
+  //   name: "College",
+  //   icon: "menu_book",
+  //   component: College,
+  //   admin: true,
+  // },
   {
     path: "/faculties",
     name: "faculties",

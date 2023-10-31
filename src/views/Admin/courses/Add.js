@@ -387,8 +387,8 @@ export default function CourseAdd() {
             </Col>
             <Col className="pl-md-1" md="4">
               <FormGroup>
-                <label>College (optional) </label>
-                <Select />
+                {/* <label>College (optional) </label> */}
+                {/* <Select /> */}
               </FormGroup>
             </Col>
           </Row>
