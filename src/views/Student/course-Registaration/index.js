@@ -290,7 +290,7 @@ function CourseRegistartion() {
           //   icon: "success",
           //   text: result.message,
           // }).then(() => {
-          window.location.reload();
+          // window.location.reload();
           // });
         } else {
           Swal.fire({
@@ -1076,7 +1076,7 @@ function CourseRegistartion() {
                   </div>
                 ))}
               </Row>
-              <h4>Total units = {totalUnits}</h4>;
+              {/* <h4>Total units = {totalUnits}</h4>; */}
               {/* {totalUnits.map((items) => {
                 // eslint-disable-next-line no-unused-expressions
                 const units = items.courseUnit;

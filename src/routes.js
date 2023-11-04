@@ -521,14 +521,14 @@ var routes = [
     admin: true,
     redirect: true,
   },
-  {
-    path: "/dashboard-student",
-    name: "Student Dashboard",
-    icon: "dashboard",
-    component: DashboardStudent,
-    admin: false,
-    // redirect: true,
-  },
+  // {
+  //   path: "/dashboard-student",
+  //   name: "Student Dashboard",
+  //   icon: "dashboard",
+  //   component: DashboardStudent,
+  //   admin: false,
+  //   // redirect: true,
+  // },
   {
     path: "/student-profile-update",
     name: "Your Profile",
