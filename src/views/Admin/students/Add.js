@@ -32,13 +32,23 @@ export default function StudentAdd() {
   const [matric, setMatric] = useState("");
   const [sex, setSex] = useState("");
   const [email, setEmail] = useState("");
-  const [faculties, setFaculties] = useState([]);
+  // const [faculties, setFaculties] = useState([]);
   const [departments, setDepartments] = useState([]);
-  const [faculty, setFaculty] = useState("");
+  // const [faculty, setFaculty] = useState("");
   const [department, setDepartment] = useState("");
   const [oName, setOName] = useState("");
   const [levelx, setLevelx] = useState("");
   const [level, setLevel] = useState([]);
+  const [facultyx, setFaculty] = useState("");
+  const [faculties, setFaculties] = useState([]);
+  const [headOfDepart, setHeadOfDepart] = useState("");
+  const [depart, setDepart] = useState([]);
+  const [otherProgram, setOtherProg] = useState("");
+  const [otherProgams, setOtherPrograms] = useState([]);
+
+  useEffect(() => {
+    handleGetOtherProgram();
+  }, []);
 
   useEffect(() => {
     setOpened(true);
@@ -59,7 +69,7 @@ export default function StudentAdd() {
         console.log(result);
         const spec = result.map((r) => ({ value: r.id, label: r.name }));
 
-        setFaculties(spec);
+        setFaculties(result);
       })
       .catch((error) => {
         setOpened(false);
@@ -109,15 +119,12 @@ export default function StudentAdd() {
       firstName: fname,
       lastName: lname,
       otherName: oName,
-      // email: email,
-      // phoneNumber: phonex,
-      // sex: sex,
-      // dateOfBirth: new Date(dob).getTime(),
-      // schoolID: userInfo.schoolID,
-      depID: department,
-      facultyID: faculty,
+      schoolID: userInfo.schoolID,
+      depID: headOfDepart,
+      facultyID: facultyx,
       matricNumber: matric,
       levelID: levelx,
+      otherProgramsID: otherProgram,
       // studentType: Number(type),
     });
     console.log(raw2);
@@ -244,6 +251,172 @@ export default function StudentAdd() {
       });
   }, []);
 
+  // const handleOnChange = (value) => {
+  //   console.log("ben___D");
+  //   // setFaculty(value);
+  //   setHeadOfDepart(value);
+  //   const userInfo = JSON.parse(localStorage.getItem("user"));
+  //   console.log(userInfo);
+  //   const IDs = userInfo.courseAdviserID;
+  //   console.log(IDs);
+  //   const queryString = window.location.search;
+  //   const urlParams = new URLSearchParams(queryString);
+  //   const idx = urlParams.get("id");
+  //   console.log(idx);
+  //   const headers = miHeaders;
+  //   // setItems
+
+  //   fetch(
+  //     `${process.env.REACT_APP_SCHPROJECT_URL}/courses/getByDepID/${value}`,
+  //     {
+  //       headers,
+  //     }
+  //   )
+  //     .then(async (res) => {
+  //       const aToken = res.headers.get("token-1");
+  //       localStorage.setItem("rexxdex", aToken);
+  //       return res.json();
+  //     })
+  //     .then((result) => {
+  //       setOpened(false);
+  //       console.log(result);
+  //       // setCourse(result);
+  //     })
+  //     .catch((error) => {
+  //       setOpened(false);
+  //       Swal.fire({
+  //         title: error.status,
+  //         icon: "error",
+  //         text: error.message,
+  //       });
+  //     });
+  // };
+  const handleOnGetOtherProgram = (value) => {
+    console.log(value);
+    setOtherProg(value);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const IDs = userInfo.courseAdviserID;
+    console.log(IDs);
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const idx = urlParams.get("id");
+    console.log(idx);
+    const headers = miHeaders;
+    // setItems
+
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/otherPrograms/getByDepID/${value}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setDepart(result);
+        // setDepart(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+  const handleOnChangeDepart = (value) => {
+    console.log(value);
+    setFaculty(value);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const IDs = userInfo.courseAdviserID;
+    console.log(IDs);
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const idx = urlParams.get("id");
+    console.log(idx);
+    const headers = miHeaders;
+    // setItems
+
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/departments/getByFacultyID/${value}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setDepart(result);
+        // setDepart(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+
+  const handleOtherProgFalc = (value, item) => {
+    console.log(value);
+    console.log(item);
+    if (item === "oP") {
+      console.log("other_program");
+      // setOtherProg(value);
+      handleOnGetOtherProgram(value);
+    } else if (item === "faculty") {
+      console.log("facultyDepartment");
+      handleOnChangeDepart(value);
+    }
+  };
+
+  const handleGetOtherProgram = () => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/otherPrograms/gets/${schID}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setOtherPrograms(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+
   return (
     <div className="content">
       <Card mx={2}>
@@ -299,8 +472,44 @@ export default function StudentAdd() {
             </Col>
           </Row>
           <Row style={{ marginTop: 20 }}>
+            <Col md="4" className="pl-md-1">
+              <FormGroup>
+                <label>Other Programs</label>
+                <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  value={otherProgram || ""}
+                  aria-label="Default select example"
+                  onChange={(e) => handleOtherProgFalc(e.target.value, "oP")}
+                >
+                  <option value="">--Select Other Program--</option>
+                  {otherProgams.map((apic) => (
+                    <option key={apic.id} value={apic.id}>
+                      {apic.name}
+                    </option>
+                  ))}
+                </Form.Select>
+              </FormGroup>
+            </Col>
             <Col className="pl-md-1" md="4">
               <FormGroup>
+                <label>Faculty</label>
+                <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  value={facultyx || ""}
+                  aria-label="Default select example"
+                  onChange={(e) =>
+                    handleOtherProgFalc(e.target.value, "faculty")
+                  }
+                >
+                  <option value="">--Select Faculty--</option>
+                  {faculties.map((apic) => (
+                    <option key={apic.id} value={apic.id}>
+                      {apic.name}
+                    </option>
+                  ))}
+                </Form.Select>
+              </FormGroup>
+              {/* <FormGroup>
                 <label>Faculty</label>
                 <Select
                   options={faculties}
@@ -309,10 +518,26 @@ export default function StudentAdd() {
                     setFaculty(e.value);
                   }}
                 />
-              </FormGroup>
+              </FormGroup> */}
             </Col>
             <Col className="pl-md-1" md="4">
               <FormGroup>
+                <label>Department</label>
+                <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  value={headOfDepart || ""}
+                  aria-label="Default select example"
+                  onChange={(e) => setHeadOfDepart(e.target.value)}
+                >
+                  <option value="">--Department--</option>
+                  {depart.map((apic) => (
+                    <option key={apic.id} value={apic.id}>
+                      {apic.name}
+                    </option>
+                  ))}
+                </Form.Select>
+              </FormGroup>
+              {/* <FormGroup>
                 <label>Department</label>
                 <Select
                   options={departments}
@@ -320,13 +545,7 @@ export default function StudentAdd() {
                     setDepartment(e.value);
                   }}
                 />
-              </FormGroup>
-            </Col>
-            <Col className="pl-md-1" md="4">
-              <FormGroup>
-                <label>College (optional) </label>
-                <Select />
-              </FormGroup>
+              </FormGroup> */}
             </Col>
           </Row>
           <Row style={{ marginTop: 20 }}>
@@ -364,6 +583,12 @@ export default function StudentAdd() {
                 </Form.Select>
               </FormGroup>
             </Col>
+            {/* <Col className="pl-md-1" md="4">
+              <FormGroup>
+                <label>College (optional) </label>
+                <Select />
+              </FormGroup>
+            </Col> */}
           </Row>
           <Button
             variant="gradient"

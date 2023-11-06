@@ -64,6 +64,18 @@ function DashboardStudent(props) {
     <>
       <div className="content">
         <Row>
+          <Col lg="6">
+            <Card>
+              <CardBody>
+                Name: Emmanuel
+                <hr />
+                <br />
+                School: SChoool
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
+        {/* <Row>
           <Col lg="4">
             <Card className="card-chart">
               <CardHeader>
@@ -451,7 +463,7 @@ function DashboardStudent(props) {
               </CardBody>
             </Card>
           </Col>
-        </Row>
+        </Row> */}
       </div>
     </>
   );

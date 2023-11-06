@@ -30,6 +30,7 @@ export default function Grading() {
   const [colorCodex, setColorCode] = useState("");
   const [minScorex, setMinScore] = useState("");
   const [maxScorex, setMaxScore] = useState("");
+  const [gradePoint, setGradePoint] = useState("");
 
   useEffect(() => {
     setOpened(true);
@@ -129,6 +130,7 @@ export default function Grading() {
 
     const raw = JSON.stringify({
       schoolID: schID,
+      gradePoint: Number(gradePoint),
       value: valuex,
       grade: gradex,
       //   colorCode: colorCodex,
@@ -207,10 +209,10 @@ export default function Grading() {
             <Row>
               <Col className="pl-md-1" md="6">
                 <FormGroup>
-                  <label>Value</label>
+                  <label>Grade Point</label>
                   <Input
                     onChange={(e) => {
-                      setValue(e.target.value);
+                      setGradePoint(e.target.value);
                     }}
                     placeholder="e.g A for 7, B for 6"
                     // defaultValue={`${data11.firstName}`}
@@ -259,6 +261,23 @@ export default function Grading() {
                     }}
                     // defaultValue={`${data11.firstName}`}
                     placeholder="Maximum Score"
+                    //   value={firstName}
+                    type="text"
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
+            <Row>
+              <Col className="pl-md-1" md="6">
+                <FormGroup>
+                  <label>Value</label>
+                  <Input
+                    onChange={(e) => {
+                      setValue(e.target.value);
+                    }}
+                    placeholder="e.g Excellent, Faillure"
+                    // defaultValue={`${data11.firstName}`}
+                    //   placeholder="Value"
                     //   value={firstName}
                     type="text"
                   />

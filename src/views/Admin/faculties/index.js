@@ -514,6 +514,14 @@ export default function Faculties() {
                   <Dropdown.Menu>
                     <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}
+                      onClick={() =>
+                        Navigate(`/faculties/update?id=${cell.row.id}`)
+                      }
+                    >
+                      Update
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      style={{ fontweight: "bold", color: "black" }}
                       onClick={() => handleDelete(cell.row.id)}
                     >
                       Delete
@@ -524,14 +532,6 @@ export default function Faculties() {
                     >
                       Update
                     </Dropdown.Item> */}
-                    <Dropdown.Item
-                      style={{ fontweight: "bold", color: "black" }}
-                      onClick={() =>
-                        Navigate(`/faculties/update?id=${cell.row.id}`)
-                      }
-                    >
-                      Update
-                    </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
               ),

@@ -112,10 +112,12 @@ function SignIn() {
     margin: "auto",
     position: "relative",
     zIndex: 1,
-    backgroundColor:
-      theme.palette.mode === "dark" ? "rgba(0,0,0,0.6)" : "#30A2FF",
+    backgroundImage: "linear-gradient(yellow,lightgreen)",
+    // backgroundColor:
+    //   theme.palette.mode === "dark" ? "rgba(247, 249, 249)" : "#F7F9F9",
     backdropFilter: "blur(40px)",
   }));
+
   return (
     <div>
       <img
@@ -139,17 +141,18 @@ function SignIn() {
           alignContent: "center",
         }}
       >
-        <h2
+        <h1
           style={{
-            color: "#ffff",
-            textTransform: "uppercase",
+            color: "#000",
+            // textTransform: "uppercase",
             fontWeight: "bold",
-            fontSize: 20,
+            fontSize: 50,
             marginTop: 20,
+            // background: `linear-gradient(to bottom,  ${color1} 0%,${color2} 100%)`,
           }}
         >
-          School Portal
-        </h2>
+          EduPlan
+        </h1>
       </Widget>
       <div
         className="row-res"

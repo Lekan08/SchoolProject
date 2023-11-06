@@ -20,7 +20,7 @@ function CourseRegistartion() {
   const [lname, setLname] = useState("");
   const [matric, setMatric] = useState("");
   const [department, setDepartment] = useState("");
-  const [faculty, setFaculty] = useState("");
+  // const [faculty, setFaculty] = useState("");
   const [levelx, setLevelx] = useState("");
   const [levelss, setLevelsss] = useState([]);
   const [depart, setDepart] = useState([]);
@@ -31,10 +31,61 @@ function CourseRegistartion() {
   const [checked, setChecked] = useState([]);
   const [sessionx, setSession] = useState("");
   const [elective, setElective] = useState([]);
+  const [showEmpty, setShowEmpty] = useState(false);
+  const [totalUnits, setTotalUnits] = useState([]);
+  // const [depart, setDepart] = useState([]);
+  const [otherProgram, setOtherProg] = useState("");
+  const [otherProgams, setOtherPrograms] = useState([]);
+  const [facultyx, setFaculty] = useState("");
+  const [faculties, setFaculties] = useState([]);
   //   const [faculties, setFaculties] = useState([]);
   //   const [departments, setDepartments] = useState([]);
 
   useEffect(() => {
+    handleGetStudents();
+    // handleGetDepartments();
+    handleGetLevels();
+    handleGets();
+    handleGetOtherProgram();
+    handleGetFaculties();
+  }, []);
+
+  
+  // useEffect(() => {
+    const handleGetFaculties = () => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/faculties/gets/${schID}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        const spec = result.map((r) => ({ value: r.id, label: r.name }));
+
+        setFaculties(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+    }
+  // }, []);
+
+  // useEffect(() => {
+  const handleGetStudents = () => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user2"));
     const idx = userInfo.id;
@@ -67,38 +118,42 @@ function CourseRegistartion() {
           text: error.message,
         });
       });
-  }, []);
+  };
+  // }, []);
 
-  useEffect(() => {
-    setOpened(true);
-    const userInfo = JSON.parse(localStorage.getItem("user2"));
-    console.log(userInfo);
-    const schID = userInfo.schoolID;
-    const headers = miHeaders;
-    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/departments/gets/${schID}`, {
-      headers,
-    })
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        setOpened(false);
-        console.log(result);
-        setDepart(result);
-      })
-      .catch((error) => {
-        setOpened(false);
-        Swal.fire({
-          title: error.status,
-          icon: "error",
-          text: error.message,
-        });
-      });
-  }, []);
+  // useEffect(() => {
+  // const handleGetDepartments = () => {
+  //   setOpened(true);
+  //   const userInfo = JSON.parse(localStorage.getItem("user2"));
+  //   console.log(userInfo);
+  //   const schID = userInfo.schoolID;
+  //   const headers = miHeaders;
+  //   fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/departments/gets/${schID}`, {
+  //     headers,
+  //   })
+  //     .then(async (res) => {
+  //       const aToken = res.headers.get("token-1");
+  //       localStorage.setItem("rexxdex", aToken);
+  //       return res.json();
+  //     })
+  //     .then((result) => {
+  //       setOpened(false);
+  //       console.log(result);
+  //       setDepart(result);
+  //     })
+  //     .catch((error) => {
+  //       setOpened(false);
+  //       Swal.fire({
+  //         title: error.status,
+  //         icon: "error",
+  //         text: error.message,
+  //       });
+  //     });
+  // };
+  // }, []);
 
-  useEffect(() => {
+  // useEffect(() => {
+  const handleGetLevels = () => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user2"));
     console.log(userInfo);
@@ -125,14 +180,17 @@ function CourseRegistartion() {
           text: error.message,
         });
       });
-  }, []);
+  };
+  // }, []);
 
   console.log(levelx);
   console.log(headOfDepart);
   const userInfo = JSON.parse(localStorage.getItem("user2"));
   const schID = userInfo.schoolID;
+  const schoolName = userInfo.schoolName;
+  const levelName = userInfo.levelName;
   console.log(schID);
-  console.log(studentId);
+  console.log(userInfo);
 
   const handleAdd = (value) => {
     const userInfo = JSON.parse(localStorage.getItem("user2"));
@@ -178,13 +236,14 @@ function CourseRegistartion() {
         setOpened(false);
         console.log(result);
         if (result.status === "SUCCESS") {
-          Swal.fire({
-            title: result.status,
-            icon: "success",
-            text: result.message,
-          }).then(() => {
-            window.location.reload();
-          });
+          handleGets();
+          // Swal.fire({
+          //   title: result.status,
+          //   icon: "success",
+          //   text: result.message,
+          // }).then(() => {
+          //   window.location.reload();
+          // });
         } else {
           Swal.fire({
             title: result.status,
@@ -203,14 +262,15 @@ function CourseRegistartion() {
       });
   };
 
-  const handleRemove = (value) => {
+  const handleRemove = (value, inn) => {
+    console.log(value);
     const requestOptions = {
       method: "DELETE",
       headers: miHeaders,
     };
     setOpened(true);
     fetch(
-      `${process.env.REACT_APP_SCHPROJECT_URL}/courseRegistration/remove/${value}`,
+      `${process.env.REACT_APP_SCHPROJECT_URL}/courseRegistration/remove/${value.target.value}`,
       requestOptions
     )
       .then(async (res) => {
@@ -222,13 +282,16 @@ function CourseRegistartion() {
         setOpened(false);
         console.log(result);
         if (result.status === "SUCCESS") {
-          Swal.fire({
-            title: result.status,
-            icon: "success",
-            text: result.message,
-          }).then(() => {
-            window.location.reload();
-          });
+          handleGets();
+          // coursex[inn].checked = false;
+          // setCoursex(coursex);
+          // Swal.fire({
+          //   title: result.status,
+          //   icon: "success",
+          //   text: result.message,
+          // }).then(() => {
+          // window.location.reload();
+          // });
         } else {
           Swal.fire({
             title: result.status,
@@ -291,7 +354,8 @@ function CourseRegistartion() {
       });
   };
 
-  useEffect(() => {
+  // useEffect(() => {
+  const handleGets = () => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user2"));
     console.log(userInfo);
@@ -311,6 +375,7 @@ function CourseRegistartion() {
       })
       .then((result) => {
         setOpened(false);
+        console.log("zerrydl");
         console.log(result);
         if (result.length) {
           // setShow(true);
@@ -392,6 +457,12 @@ function CourseRegistartion() {
                     });
                     console.log(newCompulx);
                     setElective(newCompulx);
+
+                    // const combinedArray = newCompulx.concat(result);
+                    if (resultrz[0].totalCourseUnits === "") {
+                      setTotalUnits(resultrz[0].totalCourseUnits);
+                    }
+                    // console.log(combinedArray);
                     const newCompulxx = [];
                     console.log(newCompulxx);
                     const newCompulz = [];
@@ -400,7 +471,7 @@ function CourseRegistartion() {
                       let comp = resultrz.filter(
                         (valx) => valx.courseID === val.id
                       );
-                      console.log(val);
+                      // console.log(val);
                       if (comp.length) {
                         // console.log(comp);
                         return null;
@@ -440,7 +511,8 @@ function CourseRegistartion() {
           text: error.message,
         });
       });
-  }, []);
+  };
+  // }, []);
   console.log(elective);
 
   const handleCheck = (event, inn) => {
@@ -451,16 +523,19 @@ function CourseRegistartion() {
       // console.log(coursex);
       handleAdd(event.target.value);
       setCoursex(coursex);
+      console.log(coursex);
       // setOpened(false);
     } else {
       console.log("unchecked", "courseID:", event.target.value);
       setOpened(true);
       // setTimeout(() => setOpened(false), 500);
+      console.log(event);
       console.log("checked", "courseID:", event.target.value);
       coursex[inn].checked = false;
       console.log(coursex);
-      handleRemove(event.target.value);
-      setCoursex(coursex);
+      // handleRemove(event.target.value);
+      // setCoursex(coursex);
+      console.log(coursex);
       // setOpened(false);
     }
     // var updatedList = [...checked];
@@ -518,6 +593,7 @@ function CourseRegistartion() {
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         console.log(result);
         const every = [];
         console.log(compulsory);
@@ -536,10 +612,138 @@ function CourseRegistartion() {
             }
           }
 
+          setShowEmpty(false);
           setCoursex(every);
-          setOpened(false);
           console.log("eeeeeeeee", every);
+        } else {
+          setShowEmpty(true);
         }
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+
+  const handleOnGetOtherProgram = (value) => {
+    console.log(value);
+    setOtherProg(value);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const IDs = userInfo.courseAdviserID;
+    console.log(IDs);
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const idx = urlParams.get("id");
+    console.log(idx);
+    const headers = miHeaders;
+    // setItems
+
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/otherPrograms/getByDepID/${value}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setDepart(result);
+        // setDepart(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+  const handleOnChangeDepart = (value) => {
+    console.log(value);
+    setFaculty(value);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const IDs = userInfo.courseAdviserID;
+    console.log(IDs);
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const idx = urlParams.get("id");
+    console.log(idx);
+    const headers = miHeaders;
+    // setItems
+
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/departments/getByFacultyID/${value}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setDepart(result);
+        // setDepart(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+
+  const handleOtherProgFalc = (value, item) => {
+    console.log(value);
+    console.log(item);
+    if (item === "oP") {
+      console.log("other_program");
+      // setOtherProg(value);
+      handleOnGetOtherProgram(value);
+    } else if (item === "faculty") {
+      console.log("facultyDepartment");
+      handleOnChangeDepart(value);
+    }
+  };
+
+  const handleGetOtherProgram = () => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/otherPrograms/gets/${schID}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setOtherPrograms(result);
       })
       .catch((error) => {
         setOpened(false);
@@ -560,44 +764,32 @@ function CourseRegistartion() {
         <Paper elevation={8}>
           <Card mx={2}>
             <CardBody>
+              <Typography
+                className="card-category"
+                style={{
+                  textTransform: "uppercase",
+                  fontSize: 25,
+                  fontWeight: "bold",
+                  textAlign: "center",
+                  color: "#7D7C7C",
+                }}
+              >
+                University of {schoolName}
+              </Typography>
+              <Typography
+                className="card-category"
+                style={{
+                  // textTransform: "uppercase",
+                  // fontSize: 25,
+                  // fontWeight: "bold",
+                  textAlign: "center",
+                  color: "#7D7C7C",
+                }}
+              >
+                <h4> {levelName}Level</h4>
+              </Typography>
               <Row>
-                <Col md="6" className="pl-md-1">
-                  <FormGroup>
-                    <label>Session</label>
-                    <Form.Select
-                      style={{ marginBottom: "20px" }}
-                      value={sessionx || ""}
-                      aria-label="Default select example"
-                      onChange={(e) => setSession(e.target.value)}
-                    >
-                      <option value="">--Sessions--</option>
-                      <option value="2019/2020">2019/2020</option>
-                      <option value="2020/2021">2020/2021</option>
-                      <option value="2021/2022">2021/2022</option>
-                      <option value="2022/2023">2022/2023</option>
-                      <option value="2023/2024">2023/2024</option>
-                      <option value="2024/2025">2024/2025</option>
-                      <option value="2025/2026">2025/2026</option>
-                      <option value="2026/2027">2026/2027</option>
-                      <option value="2027/2028">2027/2028</option>
-                      <option value="2028/2029">2028/2029</option>
-                      <option value="2029/2030">2029/2030</option>
-                      <option value="2030/2031">2030/2031</option>
-                      <option value="2031/2032">2031/2032</option>
-                      <option value="2032/2033">2032/2033</option>
-                      <option value="2033/2034">2033/2034</option>
-                      <option value="2034/2035">2034/2035</option>
-                      <option value="2035/2036">2035/2036</option>
-                      <option value="2036/2037">2036/2037</option>
-                      <option value="2037/2038">2037/2038</option>
-                      <option value="2037/2039">2037/2039</option>
-                      <option value="2039/2040">2039/2040</option>
-                    </Form.Select>
-                  </FormGroup>
-                </Col>{" "}
-              </Row>
-              <Row>
-                <Col md="4" className="pl-md-1">
+                {/* <Col md="4" className="pl-md-1">
                   <Button
                     tag="label"
                     className="data1"
@@ -635,12 +827,158 @@ function CourseRegistartion() {
                       </span>{" "}
                     </div>
                   ))}
-                </Col>
-                <Col md="3">
+                </Col> */}
+                {/* <Col md="3">
                   <></>
-                </Col>
-                <Col md="4" className="pl-md-1">
-                  <Button
+                </Col> */}
+                <Button
+                  tag="label"
+                  className="data1"
+                  color="secondary"
+                  style={{
+                    width: "45vw",
+                    fontSize: "15px",
+                    marginRight: "auto",
+                    marginLeft: "auto",
+                    // height: "50px",
+                    marginTop: "20px",
+                  }}
+                >
+                  <Typography
+                    style={{ color: "white", fontSize: "1.5rem" }}
+                    variant="h5"
+                    className="head"
+                  >
+                    Register Course
+                  </Typography>
+                </Button>
+                <label style={{ color: "red", marginTop: 10 }}>
+                  Note: You can only select either Other program or Faculty
+                </label>
+                <br />
+                <Row>
+                  <Col md="6" className="pl-md-1">
+                    <FormGroup>
+                      <label>Session</label>
+                      <Form.Select
+                        style={{ marginBottom: "20px" }}
+                        value={sessionx || ""}
+                        aria-label="Default select example"
+                        onChange={(e) => setSession(e.target.value)}
+                      >
+                        <option value="">--Sessions--</option>
+                        <option value="2019/2020">2019/2020</option>
+                        <option value="2020/2021">2020/2021</option>
+                        <option value="2021/2022">2021/2022</option>
+                        <option value="2022/2023">2022/2023</option>
+                        <option value="2023/2024">2023/2024</option>
+                        <option value="2024/2025">2024/2025</option>
+                        <option value="2025/2026">2025/2026</option>
+                        <option value="2026/2027">2026/2027</option>
+                        <option value="2027/2028">2027/2028</option>
+                        <option value="2028/2029">2028/2029</option>
+                        <option value="2029/2030">2029/2030</option>
+                        <option value="2030/2031">2030/2031</option>
+                        <option value="2031/2032">2031/2032</option>
+                        <option value="2032/2033">2032/2033</option>
+                        <option value="2033/2034">2033/2034</option>
+                        <option value="2034/2035">2034/2035</option>
+                        <option value="2035/2036">2035/2036</option>
+                        <option value="2036/2037">2036/2037</option>
+                        <option value="2037/2038">2037/2038</option>
+                        <option value="2037/2039">2037/2039</option>
+                        <option value="2039/2040">2039/2040</option>
+                      </Form.Select>
+                    </FormGroup>
+                  </Col>{" "}
+                  <Col md="6" className="pl-md-1">
+                    <FormGroup>
+                      <label>Other Programs</label>
+                      <Form.Select
+                        style={{ marginBottom: "20px" }}
+                        value={otherProgram || ""}
+                        aria-label="Default select example"
+                        onChange={(e) =>
+                          handleOtherProgFalc(e.target.value, "oP")
+                        }
+                      >
+                        <option value="">--Select Other Program--</option>
+                        {otherProgams.map((apic) => (
+                          <option key={apic.id} value={apic.id}>
+                            {apic.name}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </FormGroup>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col className="pl-md-1" md="6">
+                    <FormGroup>
+                      <label>Faculty</label>
+                      <Form.Select
+                        style={{ marginBottom: "20px" }}
+                        value={facultyx || ""}
+                        aria-label="Default select example"
+                        onChange={(e) =>
+                          handleOtherProgFalc(e.target.value, "faculty")
+                        }
+                      >
+                        <option value="">--Select Faculty--</option>
+                        {faculties.map((apic) => (
+                          <option key={apic.id} value={apic.id}>
+                            {apic.name}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </FormGroup>
+                  </Col>
+                  <Col md="6" className="pl-md-1">
+                    <FormGroup>
+                      <label>Department</label>
+                      <Form.Select
+                        style={{ marginBottom: "20px" }}
+                        value={headOfDepart || ""}
+                        aria-label="Default select example"
+                        onChange={(e) => handleOnChange(e.target.value)}
+                      >
+                        <option value="">--Department--</option>
+                        {depart.map((apic) => (
+                          <option key={apic.id} value={apic.id}>
+                            {apic.name}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </FormGroup>
+                  </Col>{" "}
+                  {/* {showEmpty ? 
+                    
+                   : (
+                    <></>
+                  )} */}
+                  {showEmpty ? (
+                    <h4>No Course in this departments</h4>
+                  ) : (
+                    coursex.map((item, index) => (
+                      <div key={index}>
+                        <input
+                          value={item.courseID ? item.courseID : item.id}
+                          type="checkbox"
+                          onChange={(e) => handleCheck(e, index)}
+                          checked={item.checked ? true : false}
+                        />
+                        &nbsp;
+                        <span className={isChecked(item.name)}>
+                          {item.courseCode ? item.courseCode : item.courseCode}{" "}
+                          ({item.unit}
+                          {item.courseUnit} units)
+                        </span>{" "}
+                      </div>
+                    ))
+                  )}
+                </Row>
+                {/* <Col md="8" className="pl-md-1"> */}
+                {/* <Button
                     tag="label"
                     className="data1"
                     color="secondary"
@@ -660,40 +998,8 @@ function CourseRegistartion() {
                     >
                       Elective Course:
                     </Typography>
-                  </Button>
-                  <Col md="6" className="pl-md-1">
-                    <FormGroup>
-                      <label>Department</label>
-                      <Form.Select
-                        style={{ marginBottom: "20px" }}
-                        value={headOfDepart || ""}
-                        aria-label="Default select example"
-                        onChange={(e) => handleOnChange(e.target.value)}
-                      >
-                        <option value="">--Department--</option>
-                        {depart.map((apic) => (
-                          <option key={apic.id} value={apic.id}>
-                            {apic.name}
-                          </option>
-                        ))}
-                      </Form.Select>
-                    </FormGroup>
-                  </Col>{" "}
-                  {coursex.map((item, index) => (
-                    <div key={index}>
-                      <input
-                        value={item.courseID ? item.courseID : item.id}
-                        type="checkbox"
-                        onChange={(e) => handleCheck(e, index)}
-                        checked={item.checked ? true : false}
-                      />
-                      &nbsp;
-                      <span className={isChecked(item.name)}>
-                        {item.name ? item.name : item.courseName}
-                      </span>{" "}
-                    </div>
-                  ))}
-                  {/* {elective.map((item, index) => (
+                  </Button> */}
+                {/* {elective.map((item, index) => (
                     <div key={index}>
                       <input
                         value={item.id}
@@ -707,7 +1013,7 @@ function CourseRegistartion() {
                       </span>{" "}
                     </div>
                   ))} */}
-                </Col>
+                {/* </Col> */}
                 {/* <Col md="2">
                   <></>
                 </Col> */}
@@ -731,7 +1037,7 @@ function CourseRegistartion() {
                     variant="h5"
                     className="head"
                   >
-                    Total Course:
+                    Total Course
                   </Typography>
                 </Button>
                 <label style={{ color: "red", marginTop: 10 }}>
@@ -748,6 +1054,7 @@ function CourseRegistartion() {
                     />
                     &nbsp;
                     <span className={isChecked(item.courseName)}>
+                      {item.courseCode} ({item.courseUnit} units) -{" "}
                       {item.courseName} (Compulsory)
                     </span>{" "}
                   </div>
@@ -757,16 +1064,28 @@ function CourseRegistartion() {
                     <input
                       value={item.id}
                       type="checkbox"
+                      onChange={(e) => handleRemove(e, index)}
                       // onChange={handleUnCheck}
                       checked={true}
                     />
                     &nbsp;
                     <span className={isChecked(item.courseName)}>
+                      {item.courseCode} ({item.courseUnit} units) -{" "}
                       {item.courseName}
                     </span>{" "}
                   </div>
                 ))}
               </Row>
+              {/* <h4>Total units = {totalUnits}</h4>; */}
+              {/* {totalUnits.map((items) => {
+                // eslint-disable-next-line no-unused-expressions
+                const units = items.courseUnit;
+                console.log(units);
+                var array = units;
+
+                for (var i = 0, sum = 0; i < array.length; sum += array[i++]);
+                console.log(sum);
+              })} */}
             </CardBody>
           </Card>
         </Paper>

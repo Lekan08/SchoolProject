@@ -37,7 +37,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import Form from "react-bootstrap/Form";
 import { FloatingLabel } from "react-bootstrap";
 
-export default function CompleteResetPassword() {
+export default function AdminChangePassword() {
   // const [emailx, setEmail] = useState("");
   const [confirm, setConfirm] = useState("");
   const [opened, setOpened] = useState(false);
@@ -53,41 +53,11 @@ export default function CompleteResetPassword() {
 
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
-  // const emailx = urlParams.get("email");
-  // React.useEffect(() => {
-  //   setOpened(true);
-  //   const headers = miHeaders;
-  //   fetch(`${process.env.REACT_APP_MAZA_URL}/users/getByIds/${idx}`, {
-  //     headers,
-  //   })
-  //     .then(async (res) => {
-  //       const aToken = res.headers.get("token-1");
-  //       localStorage.setItem("rexxdex", aToken);
-  //       return res.json();
-  //     })
-  //     .then((result) => {
-  //       // console.log(result);
-  //       setEmail(result[0].email);
-  //       setOpened(false);
-  //     })
-  //     .catch((error) => {
-  //       setOpened(false);
-  //       Swal.fire({
-  //         title: error.status,
-  //         icon: "error",
-  //         text: error.message,
-  //       });
-  //     });
-  // }, []);
+
   const confirmationError = useRef(null);
   //   const [password, setPassword] = useState("");
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-  // const handleMouseDownPassword = (
-  //   event: React.MouseEvent<HTMLButtonElement>
-  // ) => {
-  //   event.preventDefault();
-  // };
 
   const handleOnPasswordKeys = (value) => {
     const passwordValidate = new RegExp(
@@ -129,64 +99,6 @@ export default function CompleteResetPassword() {
       setValpass("Password is required");
     }
   };
-  //   const [showPassword, setShowPassword] = useState(false);
-  // const handleClick = () => {
-  //   // const data11 = JSON.parse(localStorage.getItem("user1"));
-  //   // const id = data11.id;
-  //   handleOnPasswordKeys(password);
-  //   handleOnRTPasswordKeys(confirm);
-  //   if (valpass === "" && password.length > 0 && confirm.length > 0) {
-  //     const raw = JSON.stringify({
-  //       username: emailx,
-  //       password: password,
-  //       userType: 3,
-  //     });
-  //     console.log(raw);
-  //     const requestOptions = {
-  //       method: "POST",
-  //       headers: myHeaders,
-  //       body: raw,
-  //       redirect: "follow",
-  //     };
-  //     setOpened(true);
-  //     fetch(
-  //       `${process.env.REACT_APP_MAZA_URL}/login/complete-reset-password`,
-  //       requestOptions
-  //     )
-  //       .then(async (res) => {
-  //         // console.log(res.headers);;;;
-  //         const aToken = res.headers.get("token-1");
-  //         localStorage.setItem("rexxdex1", aToken);
-  //         return res.json();
-  //       })
-  //       .then((result) => {
-  //         // console.log(result);
-  //         if (result.status === "SUCCESS") {
-  //           Swal.fire({
-  //             title: result.status,
-  //             icon: "success",
-  //             text: result.message,
-  //           }).then(() => Navigate("/sign-in"));
-  //         } else {
-  //           // alert(result.message);
-  //           Swal.fire({
-  //             title: result.status,
-  //             icon: "error",
-  //             text: result.message,
-  //           });
-  //         }
-  //         setOpened(false);
-  //       })
-  //       .catch((error) => {
-  //         setOpened(false);
-  //         Swal.fire({
-  //           title: error.status,
-  //           icon: "error",
-  //           text: error.message,
-  //         });
-  //       });
-  //   }
-  // };
 
   const handleClick = () => {
     setShowLoader(true);

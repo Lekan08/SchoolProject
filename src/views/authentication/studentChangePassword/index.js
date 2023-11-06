@@ -49,6 +49,7 @@ export default function StudentChangePassword() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showLoader, setShowLoader] = useState(false);
   const [emailx, setEmail] = useState("");
+  const [oPassword, setOPassword] = useState("");
 
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
@@ -107,7 +108,7 @@ export default function StudentChangePassword() {
     myHeaders.append("Content-Type", "application/json");
     const raw = JSON.stringify({
       username: emailx,
-      password: password,
+      password: oPassword,
       npassword: password,
       // userType: 3,
     });
@@ -236,11 +237,11 @@ export default function StudentChangePassword() {
                       </p>
                       <br />
                       <div style={{ padding: 10, lineHeight: "7vh" }}>
-                        <TextField
+                        {/* <TextField
                           id="outlined-required"
-                          label="email"
-                          value={emailx}
-                          onChange={(e) => setEmail(e.target.value)}
+                          label="ssword"
+                          value={oPassword}
+                          onChange={(e) => setOPassword(e.target.value)}
                           // InputProps={{ readOnly: true }}
                           sx={{
                             input: {
@@ -249,14 +250,54 @@ export default function StudentChangePassword() {
                               height: "1vh",
                             },
                           }}
-                        />
+                        /> */}
+                        <FormControl
+                          sx={{ m: 1, width: "17rem" }}
+                          variant="outlined"
+                        >
+                          <InputLabel htmlFor="outlined-adornment-password">
+                            Old Password
+                          </InputLabel>
+                          <OutlinedInput
+                            onChange={(e) => {
+                              // handleOnPasswordKeys(e.target.value);
+                              setOPassword(e.target.value);
+                            }}
+                            id="outlined-adornment-password"
+                            type={showPassword ? "text" : "password"}
+                            sx={{
+                              input: {
+                                // color: "white",
+                                height: "1vh",
+                                fontSize: "0.8em",
+                              },
+                            }}
+                            endAdornment={
+                              <InputAdornment position="end">
+                                <IconButton
+                                  aria-label="toggle password visibility"
+                                  onClick={handleClickShowPassword}
+                                  // onMouseDown={handleMouseDownPassword}
+                                  edge="end"
+                                >
+                                  {/* {showPassword ? (
+                                    <VisibilityOff />
+                                  ) : (
+                                    <Visibility />
+                                  )} */}
+                                </IconButton>
+                              </InputAdornment>
+                            }
+                            label="Password"
+                          />
+                        </FormControl>
                         <br />
                         <FormControl
                           sx={{ m: 1, width: "17rem" }}
                           variant="outlined"
                         >
                           <InputLabel htmlFor="outlined-adornment-password">
-                            Password
+                            New Password
                           </InputLabel>
                           <OutlinedInput
                             onChange={(e) => {
@@ -297,7 +338,7 @@ export default function StudentChangePassword() {
                           variant="outlined"
                         >
                           <InputLabel htmlFor="outlined-adornment-password">
-                            Confirm Password
+                            Confirm New Password
                           </InputLabel>
                           <OutlinedInput
                             onChange={(e) => {

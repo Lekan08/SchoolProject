@@ -32,7 +32,7 @@ export default function CourseAdvisorUpdate() {
   const [items, setItems] = useState("");
   const [showOtherFac, setShowOtherFac] = useState(false);
   const [otherProgFac, setOtherProgFac] = useState("");
-  const [otherProgFaculties, setOtherProgFaculties] = useState([]);
+  // const [otherProgFaculties, setOtherProgFaculties] = useState([]);
   const [depart, setDepart] = useState([]);
   const [getAllStaff, setGetAllStaff] = useState([]);
   const [levelx, setLevelx] = useState("");
@@ -40,6 +40,8 @@ export default function CourseAdvisorUpdate() {
   const [staff, setStaff] = useState("");
   const [fac, setFac] = useState([]);
   const [facultyx, setFaculty] = useState("");
+  const [otherProgFaculties, setOtherProgFaculties] = useState([]);
+  const [otherProgram, setOtherProg] = useState("");
   //   const { allPHeaders: myHeaders } = PHeaders();
   //   const { allGHeaders: miHeaders } = GHeaders();
   //   const queryString = window.location.search;
@@ -47,6 +49,16 @@ export default function CourseAdvisorUpdate() {
   //   const idx = urlParams.get("id");
 
   console.log(faculties);
+
+  useEffect(() => {
+    // handleGetDepartment();
+    handleGetLevel();
+    handleGetFaculties();
+    handleGetOtherProgram();
+    handleGetAll();
+    handleGetStaff();
+  }, []);
+
   // useEffect(() => {
   //   setOpened(true);
   //   const userData = JSON.parse(localStorage.getItem("user"));
@@ -114,7 +126,8 @@ export default function CourseAdvisorUpdate() {
   //       isMounted = false;
   //     };
   //   }, []);
-  useEffect(() => {
+  // useEffect(() => {
+  const handleGetAll = () => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
     console.log(userInfo);
@@ -152,8 +165,10 @@ export default function CourseAdvisorUpdate() {
           text: error.message,
         });
       });
-  }, []);
-  useEffect(() => {
+  };
+  // }, []);
+  // useEffect(() => {
+  const handleGetDepartment = () => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
     console.log(userInfo);
@@ -180,7 +195,8 @@ export default function CourseAdvisorUpdate() {
           text: error.message,
         });
       });
-  }, []);
+  };
+  // }, []);
   const handleUpdate = () => {
     // sessionStorage.getItem("user");
     const userData = JSON.parse(localStorage.getItem("user"));
@@ -245,7 +261,8 @@ export default function CourseAdvisorUpdate() {
     // }
   };
 
-  useEffect(() => {
+  // useEffect(() => {
+  const handleGetLevel = () => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
     console.log(userInfo);
@@ -272,9 +289,11 @@ export default function CourseAdvisorUpdate() {
           text: error.message,
         });
       });
-  }, []);
+  };
+  // }, []);
 
-  useEffect(() => {
+  // useEffect(() => {
+  const handleGetFaculties = () => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
     console.log(userInfo);
@@ -291,7 +310,8 @@ export default function CourseAdvisorUpdate() {
       .then((result) => {
         setOpened(false);
         console.log(result);
-        setFaculties(result);
+        setFac(result);
+        // setFaculties(result);
       })
       .catch((error) => {
         setOpened(false);
@@ -301,9 +321,11 @@ export default function CourseAdvisorUpdate() {
           text: error.message,
         });
       });
-  }, []);
+  };
+  // }, []);
 
-  useEffect(() => {
+  // useEffect(() => {
+  const handleGetOtherProgram = () => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
     console.log(userInfo);
@@ -333,9 +355,11 @@ export default function CourseAdvisorUpdate() {
           text: error.message,
         });
       });
-  }, []);
+  };
+  // }, []);
 
-  useEffect(() => {
+  // useEffect(() => {
+  const handleGetStaff = () => {
     setOpened(true);
     const headers = miHeaders;
 
@@ -363,17 +387,29 @@ export default function CourseAdvisorUpdate() {
           text: error.message,
         });
       });
-  }, []);
+  };
+  // }, []);
 
-  useEffect(() => {
-    setOpened(true);
+  const handleOnChangeDepart = (value) => {
+    console.log(value);
+    setFaculty(value);
     const userInfo = JSON.parse(localStorage.getItem("user"));
     console.log(userInfo);
-    const schID = userInfo.schoolID;
+    const IDs = userInfo.courseAdviserID;
+    console.log(IDs);
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const idx = urlParams.get("id");
+    console.log(idx);
     const headers = miHeaders;
-    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/faculties/gets/${schID}`, {
-      headers,
-    })
+    // setItems
+
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/departments/getByFacultyID/${value}`,
+      {
+        headers,
+      }
+    )
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -382,7 +418,9 @@ export default function CourseAdvisorUpdate() {
       .then((result) => {
         setOpened(false);
         console.log(result);
-        setFac(result);
+        setDepart(result);
+        // console.log(compulsory);
+        // setDepart(result);
       })
       .catch((error) => {
         setOpened(false);
@@ -392,7 +430,35 @@ export default function CourseAdvisorUpdate() {
           text: error.message,
         });
       });
-  }, []);
+  };
+
+  // useEffect(() => {
+  //   setOpened(true);
+  //   const userInfo = JSON.parse(localStorage.getItem("user"));
+  //   console.log(userInfo);
+  //   const schID = userInfo.schoolID;
+  //   const headers = miHeaders;
+  //   fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/faculties/gets/${schID}`, {
+  //     headers,
+  //   })
+  //     .then(async (res) => {
+  //       const aToken = res.headers.get("token-1");
+  //       localStorage.setItem("rexxdex", aToken);
+  //       return res.json();
+  //     })
+  //     .then((result) => {
+  //       setOpened(false);
+  //       console.log(result);
+  //     })
+  //     .catch((error) => {
+  //       setOpened(false);
+  //       Swal.fire({
+  //         title: error.status,
+  //         icon: "error",
+  //         text: error.message,
+  //       });
+  //     });
+  // }, []);
 
   return (
     <div className="content">
@@ -408,7 +474,51 @@ export default function CourseAdvisorUpdate() {
           />
           <br />
           <Row>
-            <Col md="6" className="pl-md-1">
+            <Col md="4" className="pl-md-1">
+              <FormGroup>
+                <label>Faculty</label>
+                <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  value={facultyx || ""}
+                  aria-label="Default select example"
+                  onChange={(e) => handleOnChangeDepart(e.target.value)}
+                >
+                  <option value="">--Faculty--</option>
+                  {fac.map((apic) => (
+                    <option key={apic.id} value={apic.id}>
+                      {apic.name}
+                    </option>
+                  ))}
+                </Form.Select>
+              </FormGroup>
+            </Col>{" "}
+            <Col
+              md="4"
+              className="pl-md-1"
+              style={{
+                justifyContent: "center",
+                marginLeft: "auto",
+                marginRight: "auto",
+              }}
+            >
+              <FormGroup>
+                <label>Other Program</label>
+                <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  value={otherProgram || ""}
+                  aria-label="Default select example"
+                  onChange={(e) => setOtherProg(e.target.value)}
+                >
+                  <option value="">--Select Other Program--</option>
+                  {otherProgFaculties.map((apic) => (
+                    <option key={apic.id} value={apic.id}>
+                      {apic.name}
+                    </option>
+                  ))}
+                </Form.Select>
+              </FormGroup>
+            </Col>
+            <Col md="4" className="pl-md-1">
               <FormGroup>
                 <label>Department</label>
                 <Form.Select
@@ -426,6 +536,8 @@ export default function CourseAdvisorUpdate() {
                 </Form.Select>
               </FormGroup>
             </Col>{" "}
+          </Row>
+          <Row style={{ marginTop: 20 }}>
             <Col md="6" className="pl-md-1">
               <FormGroup>
                 <label>Level</label>
@@ -444,8 +556,6 @@ export default function CourseAdvisorUpdate() {
                 </Form.Select>
               </FormGroup>
             </Col>{" "}
-          </Row>
-          <Row style={{ marginTop: 20 }}>
             <Col md="6" className="pl-md-1">
               <FormGroup>
                 <label>Staff</label>
@@ -459,24 +569,6 @@ export default function CourseAdvisorUpdate() {
                   {getAllStaff.map((apic) => (
                     <option key={apic.id} value={apic.id}>
                       {apic.firstName} {apic.lastName}
-                    </option>
-                  ))}
-                </Form.Select>
-              </FormGroup>
-            </Col>{" "}
-            <Col md="6" className="pl-md-1">
-              <FormGroup>
-                <label>Faculty</label>
-                <Form.Select
-                  style={{ marginBottom: "20px" }}
-                  value={facultyx || ""}
-                  aria-label="Default select example"
-                  onChange={(e) => setFaculty(e.target.value)}
-                >
-                  <option value="">--Faculty--</option>
-                  {fac.map((apic) => (
-                    <option key={apic.id} value={apic.id}>
-                      {apic.name}
                     </option>
                   ))}
                 </Form.Select>

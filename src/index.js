@@ -43,6 +43,7 @@ import Department from "views/authentication/registration/department";
 import InvitedStaff from "views/authentication/invitedStaff";
 import ForgotPassword from "views/authentication/forgotPassword";
 import CompleteForgotPassword from "views/authentication/complete-forgotPassword";
+import StudentChangePassword from "views/authentication/studentChangePassword";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
@@ -67,6 +68,10 @@ root.render(
             path="/reset-student-password"
             element={<ResetStudentPassword />}
           />
+          <Route
+          path="/reset-student-password"
+          element={<ResetStudentPassword />}
+        />
           <Route
             path="/complete-resetStudent-password"
             element={<CompleteResetStudentPassword />}

@@ -111,7 +111,7 @@ export default function AdminProfile() {
   const handleAdd = () => {
     // const data11 = JSON.parse(localStorage.getItem("user1"));
     // const id = data11.id;
-    const id = JSON.parse(localStorage.getItem("user1"));
+    const id = JSON.parse(localStorage.getItem("user"));
     const dob = new Date(startDate).getTime();
 
     const raw = JSON.stringify({

@@ -24,10 +24,10 @@ export default function CourseUpdate() {
   const [opened, setOpened] = useState(false);
   const [dara, setDara] = useState([]);
   const [dob, setDob] = useState([]);
-  const [fname, setFname] = useState("");
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
-  const [lname, setLname] = useState("");
+  const [courseName, setCourseName] = useState("");
+  const [descriptionx, setDescription] = useState("");
   const [email, setEmail] = useState("");
   const [faculties, setFaculties] = useState([]);
   const [departments, setDepartments] = useState([]);
@@ -35,7 +35,17 @@ export default function CourseUpdate() {
   const [department, setDepartment] = useState("");
   const [unitx, setUnit] = useState("");
   const [courseCodex, setCourseCode] = useState("");
+  const [otherProgFaculties, setOtherProgFaculties] = useState([]);
+  const [otherProgram, setOtherProg] = useState("");
+
   useEffect(() => {
+    handleGetFaculties();
+    handleGetCourses();
+    handleGetOtherProgram();
+  }, []);
+
+  // useEffect(() => {
+  const handleGetFaculties = () => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
     // console.log(userInfo);
@@ -64,8 +74,10 @@ export default function CourseUpdate() {
           text: error.message,
         });
       });
-  }, []);
-  useEffect(() => {
+  };
+  // }, []);
+  // useEffect(() => {
+  const handleGetCourses = () => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
     console.log(userInfo);
@@ -86,8 +98,8 @@ export default function CourseUpdate() {
       .then((result) => {
         setOpened(false);
         console.log(result);
-        setFname(result[0].name);
-        setLname(result[0].description);
+        setCourseName(result[0].name);
+        setDescription(result[0].description);
         setEmail(result[0].head);
         handleDepartment(result[0].facultyID);
         setCourseCode(result[0].courseCode);
@@ -110,7 +122,8 @@ export default function CourseUpdate() {
           text: error.message,
         });
       });
-  }, []);
+  };
+  // }, []);
   const handleDepartment = (w) => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
@@ -147,8 +160,8 @@ export default function CourseUpdate() {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
     const raw2 = JSON.stringify({
-      name: fname,
-      description: lname,
+      name: courseName,
+      description: descriptionx,
       head: email,
       schoolID: userInfo.schoolID,
       depID: department.value,
@@ -161,6 +174,18 @@ export default function CourseUpdate() {
       courseCode: courseCodex,
       unit: unitx,
       id: dara.id,
+      otherProgramsID: otherProgram,
+
+      // id: "string",
+      // name: "string",
+      // description: "string",
+      // courseCode: "string",
+      // schoolID: "string",
+      // collegeID: "string",
+      // facultyID: "string",
+      // depID: "string",
+      // unit: 0,
+      // deleteFlag: 0,
     });
     console.log(raw2);
     const requestOptions2 = {
@@ -210,6 +235,39 @@ export default function CourseUpdate() {
         });
       });
   };
+
+  const handleGetOtherProgram = () => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/otherPrograms/gets/${schID}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setOtherProgFaculties(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+
   return (
     <div className="content">
       <Card mx={2}>
@@ -229,11 +287,11 @@ export default function CourseUpdate() {
                 <label>Course Name</label>
                 <Input
                   onChange={(e) => {
-                    setFname(e.target.value);
+                    setCourseName(e.target.value);
                   }}
                   // defaultValue={`${data11.firstName}`}
                   placeholder="Name"
-                  value={fname}
+                  value={courseName}
                   //   disabled
                   type="text"
                 />
@@ -248,7 +306,7 @@ export default function CourseUpdate() {
                   }}
                   // defaultValue={`${data11.firstName}`}
                   placeholder="Course Code"
-                  //   value={firstName}
+                  value={courseCodex}
                   //   disabled
                   type="text"
                 />
@@ -263,7 +321,7 @@ export default function CourseUpdate() {
                   }}
                   // defaultValue={`${data11.firstName}`}
                   placeholder="Unit"
-                  //   value={firstName}
+                  value={unitx}
                   //   disabled
                   type="text"
                 />
@@ -276,15 +334,41 @@ export default function CourseUpdate() {
                 <label>Description</label>
                 <Input
                   onChange={(e) => {
-                    setLname(e.target.value);
+                    setDescription(e.target.value);
                   }}
                   // defaultValue={`${data11.lastName}`}
                   placeholder="Description"
                   // onChange={() => console.log()}
                   type="textarea"
-                  //   value={items[0]?.lastName}
+                  value={descriptionx}
                   // disabled
                 />
+              </FormGroup>
+            </Col>
+            <Col
+              md="4"
+              className="pl-md-1"
+              style={{
+                justifyContent: "center",
+                marginLeft: "auto",
+                marginRight: "auto",
+              }}
+            >
+              <FormGroup>
+                <label>Other Program</label>
+                <Form.Select
+                  style={{ marginBottom: "20px" }}
+                  value={otherProgram || ""}
+                  aria-label="Default select example"
+                  onChange={(e) => setOtherProg(e.target.value)}
+                >
+                  <option value="">--Select Other Program--</option>
+                  {otherProgFaculties.map((apic) => (
+                    <option key={apic.id} value={apic.id}>
+                      {apic.name}
+                    </option>
+                  ))}
+                </Form.Select>
               </FormGroup>
             </Col>
           </Row>
@@ -348,12 +432,12 @@ export default function CourseUpdate() {
                 }}
               />
             </Col>
-            <Col className="pl-md-1" md="4">
+            {/* <Col className="pl-md-1" md="4">
               <FormGroup>
                 <label>College (optional) </label>
                 <Select />
               </FormGroup>
-            </Col>
+            </Col> */}
           </Row>
           <Button
             variant="gradient"

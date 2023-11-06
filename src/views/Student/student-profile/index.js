@@ -34,6 +34,8 @@ export default function StudentProfileUpdate() {
   const [sex, setSex] = useState("");
   const [email, setEmail] = useState("");
   const [oName, setOName] = useState("");
+  const [level, setLevel] = useState("");
+  const [show, setShow] = useState(false);
 
   const [items, setItems] = useState({});
 
@@ -78,6 +80,7 @@ export default function StudentProfileUpdate() {
         setPhonex(`+${result[0].phoneNumber}`);
         setFaculty(result[0].facultyName);
         setDepartment(result[0].departmentName);
+        setLevel(result[0].levelName);
         setItems(result[0]);
       })
       .catch((error) => {
@@ -89,6 +92,13 @@ export default function StudentProfileUpdate() {
         });
       });
   }, []);
+
+  const handleOnChange = (val) => {
+    console.log(val);
+    console.log("val");
+    setEdit(val);
+    setShow(false);
+  };
 
   const userInfo = JSON.parse(localStorage.getItem("user2"));
   console.log(userInfo);
@@ -118,6 +128,7 @@ export default function StudentProfileUpdate() {
                   placeholder="First Name"
                   value={fname}
                   type="text"
+                  // onInput={show}
                 />
               </FormGroup>
             </Col>
@@ -134,6 +145,7 @@ export default function StudentProfileUpdate() {
                   type="text"
                   value={lname}
                   disabled
+                  // onInput={show}
                 />
               </FormGroup>
             </Col>
@@ -150,6 +162,7 @@ export default function StudentProfileUpdate() {
                   type="text"
                   value={oName}
                   disabled
+                  // onInput={show}
                 />
               </FormGroup>
             </Col>
@@ -167,6 +180,7 @@ export default function StudentProfileUpdate() {
                   //   onChange={() => console.log()}
                   type="text"
                   value={email}
+                  // onInput={show}
                   disabled={true}
                 />
               </FormGroup>
@@ -178,6 +192,7 @@ export default function StudentProfileUpdate() {
                   style={{ marginBottom: "20px" }}
                   value={sex || ""}
                   disabled
+                  // onInput={show}
                   aria-label="Default select example"
                   onChange={(e) => setSex(e.target.value)}
                 >
@@ -294,7 +309,7 @@ export default function StudentProfileUpdate() {
                 />
               </FormGroup>
             </Col>
-            <Col md="6" className="pl-md-1">
+            <Col md="4" className="pl-md-1">
               <FormGroup>
                 <label>Matric Number</label>
                 <Input
@@ -304,6 +319,20 @@ export default function StudentProfileUpdate() {
                   //   onChange={() => console.log()}
                   type="text"
                   value={matric}
+                  disabled
+                />
+              </FormGroup>
+            </Col>
+            <Col md="4" className="pl-md-1">
+              <FormGroup>
+                <label>Level</label>
+                <Input
+                  onChange={(e) => setLevel(e.target.value)}
+                  // defaultValue={`${data11.lastName}`}
+                  // placeholder="0000-0000-0000"
+                  //   onChange={() => console.log()}
+                  type="text"
+                  value={level}
                   disabled
                 />
               </FormGroup>
@@ -318,7 +347,7 @@ export default function StudentProfileUpdate() {
               marginTop: "20px",
             }}
             color="info"
-            onClick={() => setEdit((edi) => !edi)}
+            onClick={() => handleOnChange((edi) => !edi)}
           >
             {edit ? "Edit" : "Save"}
           </Button>

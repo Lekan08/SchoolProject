@@ -22,6 +22,18 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import GHeaders from "getHeader";
 import { FormGroup } from "reactstrap";
+import { Card } from "@mui/material";
+import { Input, CardBody } from "reactstrap";
+import Grid from "@mui/material/Grid";
+import {
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+} from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+// import Grid from "@material-ui/core/Grid";
 
 function InvitedStaff() {
   const Navigate = useNavigate();
@@ -68,6 +80,10 @@ function InvitedStaff() {
   const { allGHeaders: miHeaders } = GHeaders();
   const [departx, setDepart] = useState("");
   const [departments, setDepartments] = useState([]);
+  const [otherNamex, setOtherName] = useState("");
+  // const [showPassword, setShowPassword] = useState(false);
+  const [valpass, setValpass] = useState("");
+  const [confirm, setConfirm] = useState("");
 
   const handleOnChangeRCCountry = (e) => {
     const filteredItems = AlCountry.filter(
@@ -85,6 +101,8 @@ function InvitedStaff() {
     // inverse the boolean state of passwordShown
     setPasswordShown(!passwordShown);
   };
+  
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   useEffect(() => {
     setOpened(true);
@@ -114,34 +132,34 @@ function InvitedStaff() {
         });
       });
   }, []);
-  useEffect(() => {
-    setOpened(true);
-    const userInfo = JSON.parse(localStorage.getItem("user"));
-    console.log(userInfo);
-    const schID = userInfo.schoolID;
-    const headers = miHeaders;
-    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/departments/gets/${schID}`, {
-      headers,
-    })
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        setOpened(false);
-        console.log(result);
-        setDepartments(result);
-      })
-      .catch((error) => {
-        setOpened(false);
-        Swal.fire({
-          title: error.status,
-          icon: "error",
-          text: error.message,
-        });
-      });
-  }, []);
+  // useEffect(() => {
+  //   setOpened(true);
+  //   const userInfo = JSON.parse(localStorage.getItem("user"));
+  //   console.log(userInfo);
+  //   const schID = userInfo.schoolID;
+  //   const headers = miHeaders;
+  //   fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/departments/gets/${schID}`, {
+  //     headers,
+  //   })
+  //     .then(async (res) => {
+  //       const aToken = res.headers.get("token-1");
+  //       localStorage.setItem("rexxdex", aToken);
+  //       return res.json();
+  //     })
+  //     .then((result) => {
+  //       setOpened(false);
+  //       console.log(result);
+  //       setDepartments(result);
+  //     })
+  //     .catch((error) => {
+  //       setOpened(false);
+  //       Swal.fire({
+  //         title: error.status,
+  //         icon: "error",
+  //         text: error.message,
+  //       });
+  //     });
+  // }, []);
 
   const handleClick = (e) => {
     if (passwordx === confirmPassword) {
@@ -157,6 +175,7 @@ function InvitedStaff() {
       const raw2 = JSON.stringify({
         firstName: firstNamex,
         lastName: lastNamex,
+        otherName: otherNamex,
         email: emailx,
         phoneNumber: phonex,
         sex: sexx,
@@ -243,14 +262,16 @@ function InvitedStaff() {
                   text: error.message,
                 });
               });
+          } else {
+            MySwal.fire({
+            title: result.status,
+            type: "error",
+            text: result.message,
+          }).then(() => {
+            window.location.reload();
+          });
           }
-          // MySwal.fire({
-          //   title: result.status,
-          //   type: "success",
-          //   text: result.message,
-          // }).then(() => {
-          //   window.location.reload();
-          // });
+          
         })
         .catch((error) => {
           setOpened(false);
@@ -272,9 +293,11 @@ function InvitedStaff() {
     if (passwordx !== confirmPassword) {
       event.preventDefault();
       event.stopPropagation();
-      confirmationError.current.style.display = null;
+      console.log(confirmationError);
+      // confirmationError.current.style.display = null;
     } else {
-      confirmationError.current.style.display = "none";
+      console.log(confirmationError);
+      // confirmationError.current.style.display = "none";
       handleClick();
       console.log("barry_jhay");
     }
@@ -306,385 +329,435 @@ function InvitedStaff() {
     // progressBar.current.style.backgroundColor = color;
   };
 
+  const handleOnPasswordKeys = (value) => {
+    const passwordValidate = new RegExp(
+      "^(?=.*[a-z!@#$%^&*])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})"
+    );
+    if (!value.match(passwordValidate)) {
+      // eslint-disable-next-line no-unused-expressions
+      setValpass(
+        "Password - Password must be at least 8 characters, must include a capital letter, small letter, a number and any of these symbol (!@#$%^&*)"
+      );
+    }
+    if (value.match(passwordValidate)) {
+      // eslint-disable-next-line no-unused-expressions
+      setValpass("");
+    }
+    if (confirmPassword.length !== 0) {
+      if (confirmPassword !== value) {
+        // eslint-disable-next-line no-unused-expressions
+        setValpass("Passwords do not match");
+      } else {
+        // eslint-disable-next-line no-unused-expressions
+        setValpass("");
+      }
+    }
+    if (value.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      setValpass("Password is required");
+    }
+  };
+  const handleOnRTPasswordKeys = (value) => {
+    if (value === passwordx) {
+      // eslint-disable-next-line no-unused-expressions
+      setValpass("");
+    } else {
+      // eslint-disable-next-line no-unused-expressions
+      setValpass("Passwords do not match");
+    }
+    if (value === passwordx && value.length === 0) {
+      setValpass("Password is required");
+    }
+  };
+
+  var cardStyle = {
+    display: "block",
+    width: "30vw",
+    transitionDuration: "0.3s",
+    height: "45vw",
+  };
+
+  const handleDepartment = (value) => {
+    setFaculty(value)
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(value);
+    const headers = miHeaders;
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/departments/getByFacultyID/${value}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setDepartments(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+
   return (
-    <div className="form-wrapper">
-      <Form noValidate validated={validated}>
-        <h2 style={{ marginBottom: "15px", textAlign: "center" }}>
-          School Information
-        </h2>
-        <Container fluid>
-          <Row>
-            <Col sm={6} style={{ marginBottom: "10px" }}>
-              <Form.Group>
-                <FloatingLabel controlId="firstnamLabel" label="Name of School">
-                  <Form.Control
-                    type="text"
-                    value={namex}
-                    onChange={(e) => setName(e.target.value)}
-                    // placeholder="First name"
-                    required
-                  />
-                </FloatingLabel>
-                <Form.Control.Feedback type="invalid">
-                  Do not leave empty
-                </Form.Control.Feedback>
-              </Form.Group>
-            </Col>
-            <Col sm={6} style={{ marginBottom: "10px" }}>
-              <Form.Group>
-                <FloatingLabel
-                  controlId="Head of school"
-                  label="Head of school name"
-                >
-                  <Form.Control
-                    type="text"
-                    value={headOfSch}
-                    onChange={(e) => setHeadOfSch(e.target.value)}
-                    // placeholder="First name"
-                    required
-                  />
-                </FloatingLabel>
-                <Form.Control.Feedback type="invalid">
-                  Do not leave empty
-                </Form.Control.Feedback>
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Typography
-                variant="button"
-                fontWeight="regular"
-                color="text"
-                mt={2}
-              >
-                Country
-              </Typography>
-              <Box textAlign="left">
-                <Form.Select
-                  value={countryx || ""}
-                  aria-label="Default select example"
-                  onChange={handleOnChangeRCCountry}
-                  required
-                >
-                  <option>--Select Country--</option>
-                  {AlCountry.map((apic) => (
-                    <option key={apic.code3} value={apic.name}>
-                      {apic.name}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Box>
-            </Col>
-            <Col>
-              <Typography
-                variant="button"
-                fontWeight="regular"
-                color="text"
-                mt={2}
-              >
-                State
-              </Typography>
-              <Box textAlign="left">
-                <Form.Select
-                  value={statex || ""}
-                  aria-label="Default select example"
-                  onChange={handleOnChangeRCState}
-                  required
-                >
-                  <option>--Select State--</option>
-                  {allStates.map((apis) => (
-                    <option key={apis.code} value={apis.name}>
-                      {apis.name}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Box>
-            </Col>
-          </Row>
-          <br />
-          <Row>
-            <Col sm={6} style={{ marginBottom: "10px" }}>
-              <Form.Group>
-                <FloatingLabel controlId="Street" label="Street">
-                  <Form.Control
-                    type="text"
-                    value={streetx}
-                    onChange={(e) => setStreet(e.target.value)}
-                    // placeholder="First name"
-                    required
-                  />
-                </FloatingLabel>
-                <Form.Control.Feedback type="invalid">
-                  Do not leave empty
-                </Form.Control.Feedback>
-              </Form.Group>
-            </Col>
-            <Col sm={6} style={{ marginBottom: "10px" }}>
-              <Form.Group>
-                <FloatingLabel controlId="City" label="City">
-                  <Form.Control
-                    type="text"
-                    value={cityx}
-                    onChange={(e) => setCity(e.target.value)}
-                    // placeholder="First name"
-                    required
-                  />
-                </FloatingLabel>
-                <Form.Control.Feedback type="invalid">
-                  Do not leave empty
-                </Form.Control.Feedback>
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col sm={6}>
-              <Box mb={4}>
-                {/* <Typography variant="button" fontWeight="regular" color="text">
-                  School Type
-                </Typography> */}
-                <Form.Select
-                  onChange={(e) => setSchoolType(e.target.value)}
-                  value={schoolTypex || ""}
-                  aria-label="Default select example"
-                >
-                  <option>---School Type---</option>
-                  <option value="0">University</option>
-                  <option value="1">Polytechnic</option>
-                  <option value="2">College of Education</option>
-                </Form.Select>
-              </Box>
-            </Col>
-          </Row>
+    <div className="content">
+      <Grid
+        container
+        spacing={0}
+        direction="column"
+        alignItems="center"
+        justify="center"
+        style={{ minHeight: "100vh", paddingTop: "50px" }}
+      >
+        <Grid item xs={3}>
+          <Card mx={2}>
+            <CardBody>
+              {/* <Container fluid> */}
+              <h2 style={{ marginBottom: "15px", textAlign: "center" }}>
+                Lecturer's Information
+              </h2>
 
-          <Row style={{ marginTop: 20 }}>
-            <Col
-              md="4"
-              className="pl-md-1"
-              style={{
-                justifyContent: "center",
-                marginLeft: "auto",
-                marginRight: "auto",
-              }}
-            >
-              <FormGroup>
-                <Form.Select
-                  style={{ marginBottom: "20px" }}
-                  value={facultyx || ""}
-                  aria-label="Default select example"
-                  onChange={(e) => setFaculty(e.target.value)}
-                >
-                  <option value="">--Select Faculty--</option>
-                  {faculties.map((apic) => (
-                    <option key={apic.id} value={apic.id}>
-                      {apic.name}
-                    </option>
-                  ))}
-                </Form.Select>
-              </FormGroup>
-            </Col>
-            <Col
-              md="4"
-              className="pl-md-1"
-              style={{
-                justifyContent: "center",
-                marginLeft: "auto",
-                marginRight: "auto",
-              }}
-            >
-              <FormGroup>
-                <Form.Select
-                  style={{ marginBottom: "20px" }}
-                  value={departx || ""}
-                  aria-label="Default select example"
-                  onChange={(e) => setDepart(e.target.value)}
-                >
-                  <option value="">--Select Department--</option>
-                  {departments.map((apic) => (
-                    <option key={apic.id} value={apic.id}>
-                      {apic.name}
-                    </option>
-                  ))}
-                </Form.Select>
-              </FormGroup>
-            </Col>
-          </Row>
-          <h2 style={{ marginBottom: "15px", textAlign: "center" }}>
-            Personal Information
-          </h2>
+              <Row>
+                <Col sm={4} style={{ marginBottom: "10px" }}>
+                  <Form.Group>
+                    <FloatingLabel controlId="firstnamLabel" label="First name">
+                      <Form.Control
+                        type="text"
+                        value={firstNamex}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        // placeholder="First name"
+                        required
+                      />
+                    </FloatingLabel>
+                    <Form.Control.Feedback type="invalid">
+                      Do not leave empty
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                </Col>
+                <Col sm={4} style={{ marginBottom: "10px" }}>
+                  <FloatingLabel controlId="lastnameLabel" label="Last name">
+                    <Form.Control
+                      type="text"
+                      value={lastNamex}
+                      onChange={(e) => setLastName(e.target.value)}
+                      // placeholder="Last name"
+                      required
+                    />
+                  </FloatingLabel>
+                </Col>
+                <Col sm={4} style={{ marginBottom: "10px" }}>
+                  <FloatingLabel controlId="othernameLabel" label="Other name">
+                    <Form.Control
+                      type="text"
+                      value={otherNamex}
+                      onChange={(e) => setOtherName(e.target.value)}
+                      // placeholder="Last name"
+                      required
+                    />
+                  </FloatingLabel>
+                </Col>
+              </Row>
+              <br />
 
-          <Row>
-            <Col sm={6} style={{ marginBottom: "10px" }}>
-              <Form.Group>
-                <FloatingLabel controlId="firstnamLabel" label="First name">
-                  <Form.Control
-                    type="text"
-                    value={firstNamex}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    // placeholder="First name"
-                    required
+              <Row>
+                <Col>
+                  <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <FloatingLabel controlId="emailLabel" label="Enter email">
+                      <Form.Control
+                        type="email"
+                        // placeholder="Enter email"
+                        value={emailx}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+                      />
+                    </FloatingLabel>
+                    <Form.Text className="text-muted">
+                      We'll never share your email with anyone else.
+                    </Form.Text>
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row style={{ marginTop: 20 }}>
+                <Col md="6" className="pl-md-3">
+                  <FormGroup>
+                    <Form.Select
+                      style={{ marginBottom: "20px" }}
+                      value={facultyx || ""}
+                      aria-label="Default select example"
+                      onChange={(e) => handleDepartment(e.target.value)}
+                    >
+                      <option value="">--Select Faculty--</option>
+                      {faculties.map((apic) => (
+                        <option key={apic.id} value={apic.id}>
+                          {apic.name}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </FormGroup>
+                </Col>
+                <Col md="6" className="pl-md-3">
+                  <FormGroup>
+                    <Form.Select
+                      style={{ marginBottom: "20px" }}
+                      value={departx || ""}
+                      aria-label="Default select example"
+                      onChange={(e) => setDepart(e.target.value)}
+                    >
+                      <option value="">--Select Department--</option>
+                      {departments.map((apic) => (
+                        <option key={apic.id} value={apic.id}>
+                          {apic.name}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row>
+                <Col sm={4}>
+                  <Typography
+                    variant="button"
+                    fontWeight="regular"
+                    color="text"
+                  >
+                    Phone Number
+                  </Typography>
+                  <PhoneInput
+                    value={phonex}
+                    inputStyle={{ width: "100%" }}
+                    buttonStyle={{}}
+                    onChange={setPhone}
                   />
-                </FloatingLabel>
-                <Form.Control.Feedback type="invalid">
-                  Do not leave empty
-                </Form.Control.Feedback>
-              </Form.Group>
-            </Col>
-            <Col sm={6} style={{ marginBottom: "10px" }}>
-              <FloatingLabel controlId="lastnameLabel" label="Last name">
-                <Form.Control
-                  type="text"
-                  value={lastNamex}
-                  onChange={(e) => setLastName(e.target.value)}
-                  // placeholder="Last name"
-                  required
-                />
-              </FloatingLabel>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col>
-              <Form.Group className="mb-3" controlId="formBasicEmail">
-                <FloatingLabel controlId="emailLabel" label="Enter email">
-                  <Form.Control
-                    type="email"
-                    // placeholder="Enter email"
-                    value={emailx}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
-                  />
-                </FloatingLabel>
-                <Form.Text className="text-muted">
-                  We'll (hopefully) never share your email with anyone else.
-                </Form.Text>
-              </Form.Group>
-            </Col>
-
-            <Col>
-              <Box mb={4}>
-                {/* <Typography variant="button" fontWeight="regular" color="text">
-                  School Type
-                </Typography> */}
-                <Form.Select
-                  onChange={(e) => setSex(e.target.value)}
-                  value={sexx || ""}
-                  aria-label="Default select example"
-                >
-                  <option>---Sex---</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                </Form.Select>
-              </Box>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Typography variant="button" fontWeight="regular" color="text">
-                Phone Number
-              </Typography>
-              <PhoneInput
-                value={phonex}
-                inputStyle={{ width: "100%" }}
-                buttonStyle={{}}
-                onChange={setPhone}
-              />
-            </Col>
-            <Col>
-              <Typography
-                variant="button"
-                fontWeight="regular"
-                color="black"
-                mt={1}
-              >
-                Date Of Birth
-              </Typography>
-              <Box mb={6} mt={1}>
-                <div>
-                  <style>
-                    {`.date-picker input {
+                </Col>
+                <Col sm={4}>
+                  <Typography
+                    variant="button"
+                    fontWeight="regular"
+                    color="black"
+                    mt={1}
+                  >
+                    Sex
+                  </Typography>
+                  <Box mb={4}>
+                    {/* <Typography variant="button" fontWeight="regular" color="text">
+      School Type
+    </Typography> */}
+                    <Form.Select
+                      onChange={(e) => setSex(e.target.value)}
+                      value={sexx || ""}
+                      aria-label="Default select example"
+                    >
+                      <option>---Sex---</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                    </Form.Select>
+                  </Box>
+                </Col>
+                <Col sm={4}>
+                  <Typography
+                    variant="button"
+                    fontWeight="regular"
+                    color="black"
+                    mt={1}
+                  >
+                    Date Of Birth
+                  </Typography>
+                  <Box mb={6} mt={1}>
+                    <div>
+                      <style>
+                        {`.date-picker input {
                       width: 100%
                  }`}
-                  </style>
-                  <DatePicker
-                    date={startDate}
-                    wrapperClassName="date-picker"
-                    placeholder="Select Birth Date"
-                    dateFormat="dd/MM/yyyy"
-                    confirmBtnText="Confirm"
-                    showCancelButton="true"
-                    customStyles={{
-                      placeholderText: {
-                        fontSize: 5,
-                      },
-                      dateIcon: {
-                        height: 0,
-                        width: 0,
-                      },
-                      dateText: {
-                        color: "#b3b4b5",
-                        fontSize: 16,
-                      },
-                      dateInput: {
-                        borderWidth: 0,
+                      </style>
+                      <DatePicker
+                        date={startDate}
+                        wrapperClassName="date-picker"
+                        placeholder="Select Birth Date"
+                        dateFormat="dd/MM/yyyy"
+                        confirmBtnText="Confirm"
+                        showCancelButton="true"
+                        customStyles={{
+                          placeholderText: {
+                            fontSize: 16,
+                          },
+                          dateIcon: {
+                            height: 0,
+                            width: 0,
+                          },
+                          dateText: {
+                            color: "#b3b4b5",
+                            fontSize: 16,
+                          },
+                          dateInput: {
+                            borderWidth: 0,
+                          },
+                        }}
+                        selected={startDate}
+                        onChange={(date) => setStartDate(date)}
+                        peekNextMonth
+                        showMonthDropdown
+                        showYearDropdown
+                        dropdownMode="select"
+                      />
+                    </div>
+                  </Box>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col sm="6">
+                <FormControl sx={{ m: 1, width: "25rem" }} variant="outlined">
+                  <InputLabel htmlFor="outlined-adornment-password">
+                    Password
+                  </InputLabel>
+                  <OutlinedInput
+                    onChange={(e) => {
+                      handleOnPasswordKeys(e.target.value);
+                      handlePasswordChange(e.target.value);
+                    }}
+                    id="outlined-adornment-password"
+                    type={showPassword ? "text" : "password"}
+                    sx={{
+                      input: {
+                        // color: "white",
+                        height: "1vh",
+                        fontSize: "0.8em",
                       },
                     }}
-                    selected={startDate}
-                    onChange={(date) => setStartDate(date)}
-                    peekNextMonth
-                    showMonthDropdown
-                    showYearDropdown
-                    dropdownMode="select"
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          // onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {/* {showPassword ? (
+                                    <VisibilityOff />
+                                  ) : (
+                                    <Visibility />
+                                  )} */}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                    label="Password"
                   />
+                </FormControl>
+                </Col>
+                <Col sm="6">
+                <FormControl sx={{ m: 1, width: "25rem" }} variant="outlined">
+                  <InputLabel htmlFor="outlined-adornment-password">
+                    Confirm Password
+                  </InputLabel>
+                  <OutlinedInput
+                    onChange={(e) => {
+                      handleOnRTPasswordKeys(e.target.value);
+                      setConfirmPassword(e.target.value);
+                    }}
+                    type={showPassword ? "text" : "password"}
+                    sx={{
+                      input: {
+                        // color: "white",
+                        height: "1vh",
+                        fontSize: "0.8em",
+                      },
+                    }}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          // onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                    label="Password"
+                  />
+                </FormControl></Col>
+              </Row>
+              <Row>
+                <div
+                  className="vibr"
+                  style={{
+                    width: "80%",
+                    marginTop: "0px",
+                    position: "inherit",
+                    fontSize: "11px",
+                  }}
+                >
+                  {valpass}
                 </div>
-              </Box>
-            </Col>
-          </Row>
+              </Row>
 
-          <Row>
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <FloatingLabel controlId="passwordLabel" label="Password">
-                <Form.Control
-                  type="password"
-                  placeholder="Password"
-                  required
-                  pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
-                  onChange={(e) => handlePasswordChange(e.target.value)}
-                />
-              </FloatingLabel>
-              <Form.Text className="text-muted">
-                Must be 8 characters long, contain a number, an uppercase letter
-                and a special character.
-              </Form.Text>
-            </Form.Group>
-          </Row>
+              {/* <Row>
+                <Form.Group className="mb-3" controlId="formBasicPassword">
+                  <FloatingLabel controlId="passwordLabel" label="Password">
+                    <Form.Control
+                      type="password"
+                      placeholder="Password"
+                      required
+                      pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
+                      onChange={(e) => handlePasswordChange(e.target.value)}
+                    />
+                  </FloatingLabel>
+                  <Form.Text className="text-muted">
+                    Must be 8 characters long, contain a number, an uppercase
+                    letter and a special character.
+                  </Form.Text>
+                </Form.Group>
+              </Row> */}
 
-          <Row>
-            <Form.Group className="mb-3" controlId="formBasicConfirmation">
-              <FloatingLabel controlId="confirmationLabel" label="Confirmation">
-                <Form.Control
-                  type="password"
-                  placeholder="Confirmation"
-                  value={confirmPassword}
-                  required
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                />
-              </FloatingLabel>
-              <p
-                style={{ color: "red", display: "none" }}
-                ref={confirmationError}
-              >
-                Password and confirmation are not the same
-              </p>
-            </Form.Group>
-          </Row>
+              {/* <Row>
+                <Form.Group className="mb-3" controlId="formBasicConfirmation">
+                  <FloatingLabel
+                    controlId="confirmationLabel"
+                    label="Confirmation"
+                  >
+                    <Form.Control
+                      type="password"
+                      placeholder="Confirmation"
+                      value={confirmPassword}
+                      required
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                    />
+                  </FloatingLabel>
+                  <p
+                    style={{ color: "red", display: "none" }}
+                    ref={confirmationError}
+                  >
+                    Password and confirmation are not the same
+                  </p>
+                </Form.Group>
+              </Row> */}
 
-          <Button variant="primary" onClick={handleSubmit}>
-            Register
-          </Button>
-        </Container>
-      </Form>
+              <Button variant="primary" onClick={handleSubmit}>
+                Register
+              </Button>
+              {/* </Container> */}
+            </CardBody>
+          </Card>
+        </Grid>
+      </Grid>
+      {/* <Backdrop
+        sx={{ color: "white", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={opened}
+      >
+        <CircularProgress style={{ color: "white" }} />
+      </Backdrop> */}
     </div>
   );
 }

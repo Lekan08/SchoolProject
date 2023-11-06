@@ -98,6 +98,7 @@ function SignInStudent() {
           // localStorage.setItem("user", result.data);
           localStorage.setItem("user2", JSON.stringify(result.data));
           localStorage.setItem("user3", JSON.stringify(result.data));
+          localStorage.setItem("adminStudent", JSON.stringify(result));
         } else {
           Swal.fire({
             title: result.status,
@@ -163,19 +164,19 @@ function SignInStudent() {
                       display: "flex",
                     }}
                   />
-                  {/* <h1
+                  <h1
                     className="maza"
                     style={{
                       letterSpacing: "0.4vh",
                       fontSize: "1.1vw",
                       textAlign: "center",
-                      paddingTop: "2.5vh",
+                      paddingTop: "2vh",
                       textShadow: "2px 2px 4px #000000",
                       fontFamily: "Comic Sans MS",
                     }}
                   >
-                    MAZA WAYS
-                  </h1> */}
+                    Student
+                  </h1>
                   <div className="font-icon-detail">
                     <p
                       style={{
@@ -190,7 +191,7 @@ function SignInStudent() {
                         fontFamily: "Comic Sans MS",
                       }}
                     >
-                      Sign in, welcome.
+                      Welcome.
                     </p>
                     <div style={{ padding: 5, lineHeight: "7vh" }}>
                       <TextField

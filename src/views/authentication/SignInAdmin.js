@@ -98,6 +98,7 @@ function SignInAdmin() {
           // localStorage.setItem("user", result.data);
           localStorage.setItem("user", JSON.stringify(result.data[0]));
           localStorage.setItem("user1", JSON.stringify(result.data[0]));
+          localStorage.setItem("adminStudent", JSON.stringify(result));
         } else {
           Swal.fire({
             title: result.status,

@@ -302,17 +302,17 @@ export default function Departments() {
                   <Dropdown.Menu>
                     <Dropdown.Item
                       style={{ fontweight: "bold", color: "black" }}
-                      onClick={() => handleDelete(cell.row.id)}
-                    >
-                      Delete
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      style={{ fontweight: "bold", color: "black" }}
                       onClick={() =>
                         Navigate(`/departments/update?id=${cell.row.id}`)
                       }
                     >
                       Update
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      style={{ fontweight: "bold", color: "black" }}
+                      onClick={() => handleDelete(cell.row.id)}
+                    >
+                      Delete
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>

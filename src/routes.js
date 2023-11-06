@@ -80,6 +80,7 @@ import ViewLecturer from "views/Admin/inviteLecturer/view";
 import CompleteResetPassword from "views/authentication/complete-resetPassword";
 import StudentChangePassword from "views/authentication/studentChangePassword";
 import AdminProfile from "views/Admin/adminProfile";
+import AdminChangePassword from "views/authentication/changePassword";
 
 var routes = [
   {
@@ -138,7 +139,7 @@ var routes = [
   },
   {
     path: "/dashboard",
-    name: "Admin Dashboard",
+    name: "Dashboard",
     icon: "dashboard",
     component: Dashboard,
     // redirect: "true",
@@ -193,7 +194,7 @@ var routes = [
   },
   {
     path: "/adminProfile",
-    name: "Admin Profile",
+    name: "User Profile",
     icon: "account_circle",
     component: AdminProfile,
     admin: true,
@@ -311,6 +312,27 @@ var routes = [
     component: Result,
     admin: true,
   },
+  // {
+  //   path: "/college",
+  //   name: "College",
+  //   icon: "menu_book",
+  //   component: College,
+  //   admin: true,
+  // },
+  {
+    path: "/faculties",
+    name: "faculties",
+    icon: "corporate_fare",
+    component: Faculties,
+    admin: true,
+  },
+  {
+    path: "/otherPrograms",
+    name: "Other Programs",
+    icon: "grading",
+    component: OtherPrograms,
+    admin: true,
+  },
   {
     path: "/result/update",
     name: "Result Update",
@@ -376,13 +398,6 @@ var routes = [
     redirect: true,
   },
   {
-    path: "/faculties",
-    name: "faculties",
-    icon: "corporate_fare",
-    component: Faculties,
-    admin: true,
-  },
-  {
     path: "/faculties/add",
     name: "Add faculty",
     icon: "school",
@@ -417,13 +432,6 @@ var routes = [
     component: LevelUpdate,
     // admin: true,
     redirect: true,
-  },
-  {
-    path: "/otherPrograms",
-    name: "Other Programs",
-    icon: "grading",
-    component: OtherPrograms,
-    admin: true,
   },
   {
     path: "/otherPrograms/update",
@@ -482,13 +490,6 @@ var routes = [
   //   admin: true,
   // },
   {
-    path: "/college",
-    name: "College",
-    icon: "menu_book",
-    component: College,
-    admin: true,
-  },
-  {
     path: "/college/update",
     // name: "Level",
     // icon: "grading",
@@ -497,21 +498,37 @@ var routes = [
     redirect: true,
   },
   {
+    path: "/changepassword",
+    name: "Change Password",
+    icon: "password",
+    component: AdminChangePassword,
+    // redirect: "true",
+    admin: true,
+  },
+  // {
+  //   path: "/complete-reset-password",
+  //   name: "Change Password",
+  //   icon: "password",
+  //   component: CompleteResetPassword,
+  //   // redirect: "true",
+  //   admin: true,
+  // },
+  {
     path: "/complete-reset-password",
     name: "Change Password",
     icon: "password",
     component: CompleteResetPassword,
-    // redirect: "true",
     admin: true,
-  },
-  {
-    path: "/dashboard-student",
-    name: "Student Dashboard",
-    icon: "dashboard",
-    component: DashboardStudent,
-    admin: false,
     redirect: true,
   },
+  // {
+  //   path: "/dashboard-student",
+  //   name: "Student Dashboard",
+  //   icon: "dashboard",
+  //   component: DashboardStudent,
+  //   admin: false,
+  //   // redirect: true,
+  // },
   {
     path: "/student-profile-update",
     name: "Your Profile",
@@ -552,6 +569,14 @@ var routes = [
     name: "Student Transcript",
     icon: "how_to_reg",
     component: Transcript,
+  },
+  {
+    path: "/studentChangepassword",
+    name: "Change Password",
+    icon: "password",
+    component: StudentChangePassword,
+    // redirect: "true",
+    admin: false,
   },
 ];
 export default routes;

@@ -35,6 +35,19 @@ export default function ResultAdd() {
   // const [mySession, setSession] = useState([]);
   const [course, setCourse] = useState([]);
   const [coursex, setCoursex] = useState("");
+  const [facultyx, setFaculty] = useState("");
+  const [faculties, setFaculties] = useState([]);
+  const [headOfDepart, setHeadOfDepart] = useState("");
+  const [depart, setDepart] = useState([]);
+  const [student, setStudent] = useState([]);
+  const [otherProgram, setOtherProg] = useState("");
+  const [otherProgams, setOtherPrograms] = useState([]);
+
+  const [open2, setOpen2] = useState(false);
+  const handleOpen2 = () => setOpen2(true);
+  const handleClose2 = () => {
+    setOpen2(false);
+  };
 
   const mySession = [
     { value: "2019/2020", key: 1 },
@@ -59,8 +72,30 @@ export default function ResultAdd() {
     { value: "2038/2039", key: 20 },
     { value: "2039/2040", key: 21 },
   ];
+  const style2 = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "78vw",
+    bgcolor: "background.paper",
+    border: "2px solid gray",
+    boxShadow: 24,
+    p: 4,
+    textAlign: "center",
+  };
 
   useEffect(() => {
+    // handleGetCourse();
+    handleGetFaculties();
+    handleGetStudents();
+    handleGetLevels();
+    handleGetResult();
+    handleGetOtherProgram();
+  }, []);
+
+  // useEffect(() => {
+  const handleGetCourse = () => {
     setOpened(true);
 
     const userInfo = JSON.parse(localStorage.getItem("user"));
@@ -87,9 +122,42 @@ export default function ResultAdd() {
           text: error.message,
         });
       });
-  }, []);
+  };
+  // }, []);
 
-  useEffect(() => {
+  // useEffect(() => {
+  const handleGetFaculties = () => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/faculties/gets/${schID}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setFaculties(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+  // }, []);
+
+  // useEffect(() => {
+  const handleGetStudents = () => {
     setOpened(true);
 
     const userInfo = JSON.parse(localStorage.getItem("user"));
@@ -116,9 +184,11 @@ export default function ResultAdd() {
           text: error.message,
         });
       });
-  }, []);
+  };
+  // }, []);
 
-  useEffect(() => {
+  // useEffect(() => {
+  const handleGetLevels = () => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
     console.log(userInfo);
@@ -145,9 +215,11 @@ export default function ResultAdd() {
           text: error.message,
         });
       });
-  }, []);
+  };
+  // }, []);
 
-  useEffect(() => {
+  // useEffect(() => {
+  const handleGetResult = () => {
     setOpened(true);
     const userInfo = JSON.parse(localStorage.getItem("user"));
     console.log(userInfo);
@@ -174,69 +246,8 @@ export default function ResultAdd() {
           text: error.message,
         });
       });
-  }, []);
-
-  const handleDelete = (val) => {
-    console.log(val);
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const requestOptions = {
-          method: "DELETE",
-          headers: miHeaders,
-        };
-
-        fetch(
-          `${process.env.REACT_APP_SCHPROJECT_URL}/result/delete/${val}`,
-          requestOptions
-        )
-          .then(async (res) => {
-            const aToken = res.headers.get("token-1");
-            localStorage.setItem("rexxdex", aToken);
-            const resultres = await res.text();
-            if (
-              resultres === null ||
-              resultres === undefined ||
-              resultres === ""
-            ) {
-              return {};
-            }
-            return JSON.parse(resultres);
-          })
-          .then((result) => {
-            if (result.status === "SUCCESS") {
-              Swal.fire({
-                title: result.status,
-                type: "success",
-                text: result.message,
-              }).then(() => {
-                window.location.reload();
-              });
-            } else {
-              Swal.fire({
-                title: result.status,
-                type: "error",
-                text: result.message,
-              });
-            }
-          })
-          .catch((error) => {
-            Swal.fire({
-              title: error.status,
-              type: "error",
-              text: error.message,
-            });
-          });
-      }
-    });
   };
+  // }, []);
 
   const handleAdd = () => {
     const userInfo = JSON.parse(localStorage.getItem("user"));
@@ -296,6 +307,219 @@ export default function ResultAdd() {
       });
   };
 
+  const handleOnChangeDepart = (value) => {
+    console.log(value);
+    setFaculty(value);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const IDs = userInfo.courseAdviserID;
+    console.log(IDs);
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const idx = urlParams.get("id");
+    console.log(idx);
+    const headers = miHeaders;
+    // setItems
+
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/departments/getByFacultyID/${value}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setDepart(result);
+        // setDepart(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+
+  const handleOnChange = (value) => {
+    console.log("ben___D");
+    // setFaculty(value);
+    setHeadOfDepart(value);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const IDs = userInfo.courseAdviserID;
+    console.log(IDs);
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const idx = urlParams.get("id");
+    console.log(idx);
+    const headers = miHeaders;
+    // setItems
+
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/courses/getByDepID/${value}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setCourse(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+
+  const handleOnGetStudent = (value) => {
+    console.log("ben___D");
+    // setFaculty(value);
+    setMatNumerx(value);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const IDs = userInfo.courseAdviserID;
+    console.log(IDs);
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const idx = urlParams.get("id");
+    console.log(idx);
+    // const userInfo = JSON.parse(localStorage.getItem("user"));
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    // setItems
+
+    fetch(`${process.env.REACT_APP_SCHPROJECT_URL}/students/gets/${schID}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        if (result.length) {
+          const getStuInfo = result.filter((val) => val.matricNumber === value);
+          console.log(getStuInfo);
+          setStudent(getStuInfo);
+        }
+        // setCourse(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+
+  const handleGetOtherProgram = () => {
+    setOpened(true);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const schID = userInfo.schoolID;
+    const headers = miHeaders;
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/otherPrograms/gets/${schID}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setOtherPrograms(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+
+  const handleOnGetOtherProgram = (value) => {
+    console.log(value);
+    setOtherProg(value);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
+    const IDs = userInfo.courseAdviserID;
+    console.log(IDs);
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const idx = urlParams.get("id");
+    console.log(idx);
+    const headers = miHeaders;
+    // setItems
+
+    fetch(
+      `${process.env.REACT_APP_SCHPROJECT_URL}/otherPrograms/getByDepID/${value}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        console.log(result);
+        setDepart(result);
+        // setDepart(result);
+      })
+      .catch((error) => {
+        setOpened(false);
+        Swal.fire({
+          title: error.status,
+          icon: "error",
+          text: error.message,
+        });
+      });
+  };
+
+  const handleOtherProgFalc = (value, item) => {
+    console.log(value);
+    console.log(item);
+    if (item === "oP") {
+      console.log("other_program");
+      // setOtherProg(value);
+      handleOnGetOtherProgram(value);
+    } else if (item === "faculty") {
+      console.log("facultyDepartment");
+      handleOnChangeDepart(value);
+    }
+  };
+
   return (
     <div className="content">
       <Paper elevation={8}>
@@ -323,14 +547,114 @@ export default function ResultAdd() {
           </Button>
           <CardBody>
             <Row>
-              <Col md="6" className="pl-md-1">
+              <Col md="4" className="pl-md-1">
+                <FormGroup>
+                  <label>Session</label>
+                  <Form.Select
+                    style={{ marginBottom: "20px" }}
+                    value={sessionx || ""}
+                    aria-label="Default select example"
+                    onChange={(e) => setSessionx(e.target.value)}
+                  >
+                    <option value="">--Session--</option>
+                    {mySession.map((apic) => (
+                      <option key={apic.key} value={apic.value}>
+                        {apic.value}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </FormGroup>
+              </Col>
+              <Col md="4" className="pl-md-1">
+                <FormGroup>
+                  <label>Other Programs</label>
+                  <Form.Select
+                    style={{ marginBottom: "20px" }}
+                    value={otherProgram || ""}
+                    aria-label="Default select example"
+                    onChange={(e) => handleOtherProgFalc(e.target.value, "oP")}
+                  >
+                    <option value="">--Select Other Program--</option>
+                    {otherProgams.map((apic) => (
+                      <option key={apic.id} value={apic.id}>
+                        {apic.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </FormGroup>
+              </Col>
+              <Col
+                md="4"
+                className="pl-md-1"
+                style={{
+                  justifyContent: "center",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                }}
+              >
+                <FormGroup>
+                  <label>Faculty</label>
+                  <Form.Select
+                    style={{ marginBottom: "20px" }}
+                    value={facultyx || ""}
+                    aria-label="Default select example"
+                    onChange={(e) => handleOtherProgFalc(e.target.value, "faculty")}
+                  >
+                    <option value="">--Select Faculty--</option>
+                    {faculties.map((apic) => (
+                      <option key={apic.id} value={apic.id}>
+                        {apic.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </FormGroup>
+              </Col>
+            </Row>
+            <Row>
+              <Col md="4" className="pl-md-1">
+                <FormGroup>
+                  <label>Department</label>
+                  <Form.Select
+                    style={{ marginBottom: "20px" }}
+                    value={headOfDepart || ""}
+                    aria-label="Default select example"
+                    onChange={(e) => handleOnChange(e.target.value)}
+                  >
+                    <option value="">--Department--</option>
+                    {depart.map((apic) => (
+                      <option key={apic.id} value={apic.id}>
+                        {apic.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </FormGroup>
+              </Col>
+              <Col md="4" className="pl-md-1">
+                <FormGroup>
+                  <label>Course</label>
+                  <Form.Select
+                    style={{ marginBottom: "20px" }}
+                    value={coursex || ""}
+                    aria-label="Default select example"
+                    onChange={(e) => setCoursex(e.target.value)}
+                  >
+                    <option value="">--Course--</option>
+                    {course.map((apic) => (
+                      <option key={apic.id} value={apic.id}>
+                        {apic.courseCode}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </FormGroup>
+              </Col>
+              <Col md="4" className="pl-md-1">
                 <FormGroup>
                   <label>Matric Number</label>
                   <Form.Select
                     style={{ marginBottom: "20px" }}
                     value={matNumerx || ""}
                     aria-label="Default select example"
-                    onChange={(e) => setMatNumerx(e.target.value)}
+                    onChange={(e) => handleOnGetStudent(e.target.value)}
                   >
                     <option value="">--Matric Number--</option>
                     {matNumer.map((apic) => (
@@ -339,18 +663,6 @@ export default function ResultAdd() {
                       </option>
                     ))}
                   </Form.Select>
-                </FormGroup>
-              </Col>
-              <Col className="pl-md-1" md="6">
-                <FormGroup>
-                  <label>Score</label>
-                  <Input
-                    onChange={(e) => {
-                      setScore(e.target.value);
-                    }}
-                    placeholder="Score"
-                    type="text"
-                  />
                 </FormGroup>
               </Col>
             </Row>
@@ -374,6 +686,18 @@ export default function ResultAdd() {
                   </Form.Select>
                 </FormGroup>
               </Col>
+              <Col className="pl-md-1" md="6">
+                <FormGroup>
+                  <label>Score</label>
+                  <Input
+                    onChange={(e) => {
+                      setScore(e.target.value);
+                    }}
+                    placeholder="Score"
+                    type="text"
+                  />
+                </FormGroup>
+              </Col>
               {/* <Col className="pl-md-1" md="6">
                 <FormGroup>
                   <label>Session</label>
@@ -386,42 +710,6 @@ export default function ResultAdd() {
                   />
                 </FormGroup>
               </Col> */}
-              <Col md="6" className="pl-md-1">
-                <FormGroup>
-                  <label>Session</label>
-                  <Form.Select
-                    style={{ marginBottom: "20px" }}
-                    value={sessionx || ""}
-                    aria-label="Default select example"
-                    onChange={(e) => setSessionx(e.target.value)}
-                  >
-                    <option value="">--Session--</option>
-                    {mySession.map((apic) => (
-                      <option key={apic.key} value={apic.value}>
-                        {apic.value}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </FormGroup>
-              </Col>
-              <Col md="6" className="pl-md-1">
-                <FormGroup>
-                  <label>Course</label>
-                  <Form.Select
-                    style={{ marginBottom: "20px" }}
-                    value={coursex || ""}
-                    aria-label="Default select example"
-                    onChange={(e) => setCoursex(e.target.value)}
-                  >
-                    <option value="">--Course--</option>
-                    {course.map((apic) => (
-                      <option key={apic.id} value={apic.id}>
-                        {apic.courseCode}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </FormGroup>
-              </Col>
             </Row>
             <Button
               variant="gradient"
@@ -432,10 +720,55 @@ export default function ResultAdd() {
                 marginTop: "20px",
               }}
               color="info"
-              onClick={() => handleAdd()}
+              onClick={() => handleOpen2()}
             >
               Add Result
             </Button>
+            <Modal
+              open={open2}
+              onClose={handleClose2}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box mt={3} sx={style2} className="preview">
+                <h3>Verifiy Student Information</h3>
+                {student.length ? (
+                  <>
+                    <Row>
+                      <Col sm="4">
+                        <h4>
+                          Student Name: {student[0].firstName}{" "}
+                          {student.lastName}
+                        </h4>
+                      </Col>
+                      <Col sm="4">
+                        <h4>Matric Number: {student[0].matricNumber}</h4>
+                      </Col>
+                      <Col sm="4">
+                        <h4>Department: {student[0].matricNumber}</h4>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col sm="5">
+                        <h4>Faculty: {student[0].facultyName}</h4>
+                      </Col>
+                      <Col sm="5">
+                        <h4>Level: {student[0].levelName}</h4>
+                      </Col>
+                      {/* <Col sm="4">{"Course"}</Col> */}
+                    </Row>
+                  </>
+                ) : (
+                  <></>
+                )}
+                <Button onClick={handleAdd} variant="success">
+                  Confirm
+                </Button>
+                <Button onClick={handleClose2} color="danger">
+                  Close
+                </Button>
+              </Box>
+            </Modal>
           </CardBody>
         </Card>
       </Paper>

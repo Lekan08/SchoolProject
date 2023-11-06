@@ -283,7 +283,7 @@ export default function FacultyUpdate() {
                 </Form.Select>
               </FormGroup>
             </Col>{" "}
-            <Col md="6" className="pl-md-1">
+            {/* <Col md="6" className="pl-md-1">
               <FormGroup>
                 <label>College</label>
                 <Form.Select
@@ -300,7 +300,7 @@ export default function FacultyUpdate() {
                   ))}
                 </Form.Select>
               </FormGroup>
-            </Col>{" "}
+            </Col>{" "} */}
           </Row>
           <Button
             variant="gradient"
