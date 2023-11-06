@@ -462,9 +462,7 @@ function Transcript() {
                     style={{
                       textTransform: "capitalize",
                       fontSize: 11,
-                      // fontWeight: "bold",
                       textAlign: "center",
-                      // color: "#BB2525",
                       color: "red",
                     }}
                   >
